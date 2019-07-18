@@ -1,0 +1,45 @@
+{
+  "public": true,
+  "name": "@webcarrot/router",
+  "version": "0.0.1",
+  "description": "Isomorphic typed react router",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build:cjs": "tsc",
+    "build:esm": "tsc",
+    "build": "npm run clean && npm run build:cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webcarrot/router.git"
+  },
+  "keywords": [
+    "router",
+    "typescript",
+    "microframework",
+    "react",
+    "isomorphic"
+  ],
+  "author": {
+    "email": "admin@webcarrot.pl",
+    "name": "webcarrot"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/webcarrot/router/issues"
+  },
+  "homepage": "https://github.com/webcarrot/router#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.23",
+    "csstype": "^2.6.6",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "path-to-regexp": "^3.0.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "declaration": false,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es2017",
+    "lib": ["es7", "es2017", "dom"],
+    "jsx": "react",
+    "paths": {
+      "@webcarrot/router": ["./index"],
+      "@webcarrot/router/*": ["./*"]
+    }
+  },
+  "exclude": ["./trash/**/*", "./dist/**/*"],
+  "esModuleInterop": true,
+  "allowSyntheticDefaultImports": true
+}
