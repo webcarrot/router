@@ -11,7 +11,7 @@ import { RouteContext, ComponentProps } from "../../types";
 
 export type ID = "b";
 
-export type Match = { params?: { bb?: string } };
+export type Match = { params: { bb: string }; query: { id: string } };
 
 export type Action = ActionInt<Payload, Match, Output, RouteContext>;
 

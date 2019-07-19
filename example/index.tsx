@@ -8,7 +8,8 @@ import {
   ContextWrapper,
   RouteInfo,
   makeReactDisplay,
-  makeReactLink
+  makeReactLink,
+  Link as NLink
 } from "@webcarrot/router";
 
 import { appContext } from "./context";
@@ -20,7 +21,7 @@ const fullContext = makeContext(routes, appContext);
 const ReactRouteContext = makeReactContextProvider<
   Routes,
   Payload,
-  RouteContext,
+  typeof appContext,
   ComponentProps
 >();
 
@@ -57,6 +58,14 @@ const App = ({
       >
         test a to zz:w
       </Link>
+      <NLink
+        route="b"
+        ReactContext={ReactRouteContext}
+        payload={{ params: { bb: "w" }, query: { id: "" } }}
+        style={{ color: "red" }}
+      >
+        test a to zz:w
+      </NLink>
     </ContextWrapper>
   );
 };

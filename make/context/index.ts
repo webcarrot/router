@@ -40,7 +40,7 @@ export const make = <
   routes: MAP,
   context: C,
   onStart?: OnStart,
-  onEnd?: OnEnd<MAP, P, C, CP>,
+  onEnd?: OnEnd<typeof routes, P, C, CP>,
   onError?: OnError
 ) => {
   const routeContext = {} as RouteContext<typeof routes, P, typeof context, CP>;

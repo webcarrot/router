@@ -30,10 +30,13 @@ export const make = <
   routes: MAP,
   context: C,
   onStart?: OnStart,
-  onEnd?: OnEnd<MAP, P, C, CP>,
+  onEnd?: OnEnd<typeof routes, P, C, CP>,
   onError?: OnError
 ) => {
-  const linkProvider = makeLinkProvider<MAP, P, C, CP>(routes, context);
+  const linkProvider = makeLinkProvider<typeof routes, P, C, CP>(
+    routes,
+    context
+  );
 
   type NavigateProvider<D extends MAP> = {
     <N extends keyof D>(

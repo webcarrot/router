@@ -54,7 +54,7 @@ export const ContextWrapper = <
     | {
         type: "END";
         no: number;
-        info: RouteInfo<MAP, P, C, CP>;
+        info: RouteInfo<typeof routes, P, C, CP>;
       }
     | {
         type: "ERROR";
