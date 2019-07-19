@@ -4,15 +4,12 @@ import {
   Output,
   ComponentProps,
   MatchInfo,
-  Context,
-  Build
-} from "../types";
+  Context
+} from "../../types";
 
-export type LinkPayload<
-  M extends MatchInfo,
-  C extends Context,
-  T extends Build<M, C>
-> = T extends (p: infer LP, c: C) => any ? LP : never;
+import { LinkPayload } from "./types";
+
+export { LinkPayload };
 
 export const make = <
   MAP extends {

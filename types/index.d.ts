@@ -10,6 +10,9 @@ import {
 import { ComponentType } from "react";
 import { Method } from "./method";
 
+export type Unpacked<T> = T extends Promise<infer U> ? U : T;
+export type Retrun<T extends (...args: any) => any> = Unpacked<ReturnType<T>>;
+
 export {
   Status,
   ClientError,
@@ -83,6 +86,28 @@ export type Build<M extends MatchInfo, C extends Context> = (
 ) => string | false;
 
 export type OnStart = (id: number) => void;
+
+export type OnEnd<
+  MAP extends {
+    [key: string]: RouteInterface<
+      Extract<keyof MAP, string>,
+      P,
+      MatchInfo,
+      Output,
+      C,
+      ComponentProps
+    >;
+  },
+  P extends Payload = Payload,
+  C extends Context = Context
+> = (
+  id: number,
+  out: Exclude<
+    Unpacked<ReturnType<MAP[Extract<keyof MAP, string>]["execute"]>>,
+    false
+  >
+) => void;
+
 export type OnError = (id: number, err: any) => boolean | void;
 
 export type Execute<

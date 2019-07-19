@@ -2,23 +2,10 @@ import * as pathToRegexp from "path-to-regexp";
 
 import { compile as pathCompiler, Key, PathFunction } from "path-to-regexp";
 
-import { Match, Build, Payload, MatchInfo, Context } from "../types";
+import { Match, Build, Payload, MatchInfo, Context } from "../../types";
+import { MatchParams, RoutePath, Path } from "./types";
 
-type MatchParams = { [key: string]: string | string[] };
-
-export type Path<P extends Payload, M extends MatchInfo, C extends Context> =
-  | string
-  | RegExp
-  | {
-      match?: Match<P, M, C> | string | RegExp | Array<string | RegExp>;
-      build?: Build<M, C> | string;
-    };
-
-export type RoutePath<
-  P extends Payload,
-  M extends MatchInfo,
-  C extends Context
-> = Path<P, M, C> | Array<Path<P, M, C>>;
+export { MatchParams, RoutePath, Path };
 
 const matchByRegExp = <M extends MatchInfo>(
   url: URL,

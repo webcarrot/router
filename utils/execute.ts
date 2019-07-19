@@ -6,11 +6,9 @@ import {
   MatchInfo,
   Context,
   OnStart,
-  OnError
+  OnError,
+  Retrun
 } from "../types";
-
-type Unpacked<T> = T extends Promise<infer U> ? U : T;
-type Retrun<T extends (...args: any) => any> = Unpacked<ReturnType<T>>;
 
 export const execute = async <
   MAP extends {

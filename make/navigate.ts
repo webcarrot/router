@@ -6,7 +6,8 @@ import {
   MatchInfo,
   Context,
   OnStart,
-  OnError
+  OnError,
+  OnEnd
 } from "../types";
 import { make as makeLinkProvider, LinkPayload } from "./link";
 import { execute } from "../utils/execute";
@@ -28,6 +29,7 @@ export const make = <
   routes: MAP,
   context: C,
   onStart?: OnStart,
+  onEnd?: OnEnd<MAP, P, C>,
   onError?: OnError
 ) => {
   const linkProvider = makeLinkProvider<MAP, P, C>(routes, context);
@@ -68,7 +70,7 @@ export const make = <
               method: "GET",
               url
             } as P);
-      await execute<typeof routes, P, C>(
+      const output = await execute<typeof routes, P, C>(
         routes,
         payload,
         context,
@@ -76,6 +78,9 @@ export const make = <
         onStart,
         onError
       );
+      if (onEnd) {
+        onEnd(id, output);
+      }
     } else {
       throw new Error("Unknown link");
     }

@@ -4,10 +4,12 @@ import {
   Output,
   ComponentProps,
   MatchInfo,
-  Context,
-  OnStart,
-  OnError
-} from "../types";
+  Context
+} from "../../types";
+
+import { ReactContextValue } from "./types";
+
+import { createContext } from "react";
 
 export const make = <
   MAP extends {
@@ -22,11 +24,4 @@ export const make = <
   },
   P extends Payload,
   C extends Context
->(
-  routes: MAP,
-  context: C,
-  onStart: OnStart,
-  onError: OnError
-) => {
-  console.log(routes, context, onStart, onError);
-};
+>() => createContext({} as ReactContextValue<MAP, P, C>);
