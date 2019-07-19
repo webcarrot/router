@@ -14,8 +14,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var Link_1 = require("../component/Link");
 exports.make = function (ReactContext) {
-    return React.memo(function (props) {
+    var Wrap = function (props) {
         return Link_1.Link(__assign({}, props, { ReactContext: ReactContext }));
-    });
+    };
+    return React.memo(Wrap);
 };
 //# sourceMappingURL=reactLink.js.map

@@ -9,7 +9,8 @@ import {
   RouteInfo,
   makeReactDisplay,
   makeReactLink,
-  Link as NLink
+  Link as NLink,
+  LinkMemo
 } from "@webcarrot/router";
 
 import { appContext } from "./context";
@@ -52,16 +53,24 @@ const App = ({
     >
       <Display bar={1} />
       <Link
-        route="a"
-        payload={{ params: { zz: "w" } }}
+        route="b"
+        payload={{ params: { bb: "" }, query: { id: "" } }}
         style={{ color: "red" }}
       >
         test a to zz:w
       </Link>
+      <LinkMemo
+        ReactContext={ReactRouteContext}
+        route="b"
+        payload={{ params: { bb: "23" }, query: { id: "3" } }}
+        style={{ color: "red" }}
+      >
+        test a to zz:w
+      </LinkMemo>
       <NLink
         route="b"
         ReactContext={ReactRouteContext}
-        payload={{ params: { bb: "w" }, query: { id: "" } }}
+        payload={{ params: { bb: "23" }, query: { id: "3" } }}
         style={{ color: "red" }}
       >
         test a to zz:w

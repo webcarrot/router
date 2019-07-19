@@ -14,8 +14,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var component_1 = require("../component");
 exports.make = function (ReactContext) {
-    return React.memo(function (props) {
-        return component_1.Display(__assign({}, props, { ReactContext: ReactContext }));
-    });
+    return React.memo(function (props) { return component_1.Display(__assign({}, props, { ReactContext: ReactContext })); });
 };
 //# sourceMappingURL=reactDisplay.js.map

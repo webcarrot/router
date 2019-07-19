@@ -28,8 +28,5 @@ export const make = <
   CP extends ComponentProps
 >(
   ReactContext: React.Context<ReactContextValue<MAP, P, C, CP>>
-) => {
-  return React.memo((props: CP) =>
-    Display<MAP, P, C, CP>({ ...props, ReactContext })
-  );
-};
+) =>
+  React.memo((props: CP) => Display<MAP, P, C, CP>({ ...props, ReactContext }));

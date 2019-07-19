@@ -25,12 +25,11 @@ export const make = <
   },
   P extends Payload,
   C extends Context,
-  CP extends ComponentProps,
-  ID extends keyof MAP
+  CP extends ComponentProps
 >(
   ReactContext: React.Context<ReactContextValue<MAP, P, C, CP>>
 ) => {
-  return React.memo((props: LinkProps<MAP, P, C, CP, ID>) =>
-    Link({ ...props, ReactContext })
-  );
+  const Wrap = <ID extends keyof MAP>(props: LinkProps<MAP, P, C, CP, ID>) =>
+    Link({ ...props, ReactContext });
+  return React.memo(Wrap) as typeof Wrap;
 };

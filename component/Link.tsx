@@ -81,4 +81,4 @@ export const Link = <
   return <a {...rest} href={link || href} onClick={handleClick} />;
 };
 
-export const LinkMemo = React.memo(Link);
+export const LinkMemo = React.memo(Link) as typeof Link;
