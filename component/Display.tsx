@@ -19,17 +19,28 @@ export const Display = <
       MatchInfo,
       Output,
       C,
-      ComponentProps
+      CP
     >;
   },
   P extends Payload,
-  C extends Context
+  C extends Context,
+  CP extends ComponentProps
 >({
-  ReactContext
-}: {
-  ReactContext: React.Context<ReactContextValue<MAP, P, C>>;
+  ReactContext,
+  ...rest
+}: CP & {
+  ReactContext: React.Context<ReactContextValue<MAP, P, C, CP>>;
 }) => {
   const { info } = React.useContext(ReactContext);
   const { Component, match, output, route } = info;
-  return <Component match={match} output={output} route={route} />;
+  return (
+    <Component
+      {...(rest as any) as CP}
+      route={route}
+      match={match}
+      output={output}
+    />
+  );
 };
+
+export const DisplayMemo = React.memo(Display);

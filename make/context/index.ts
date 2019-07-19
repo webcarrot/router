@@ -30,29 +30,31 @@ export const make = <
       MatchInfo,
       Output,
       C,
-      ComponentProps
+      CP
     >;
   },
   P extends Payload,
-  C extends Context
+  C extends Context,
+  CP extends ComponentProps
 >(
   routes: MAP,
   context: C,
   onStart?: OnStart,
-  onEnd?: OnEnd<MAP, P, C>,
+  onEnd?: OnEnd<MAP, P, C, CP>,
   onError?: OnError
 ) => {
-  const routeContext = {} as RouteContext<typeof routes, P, typeof context>;
+  const routeContext = {} as RouteContext<typeof routes, P, typeof context, CP>;
   const fullContext = { ...context, route: routeContext } as FullContext<
     typeof routes,
     P,
-    typeof context
+    typeof context,
+    CP
   >;
-  routeContext.makeLink = makeLinkProvider<typeof routes, P, C>(
+  routeContext.makeLink = makeLinkProvider<typeof routes, P, C, CP>(
     routes,
     fullContext
   );
-  routeContext.navigate = makeNavigateProvider<typeof routes, P, C>(
+  routeContext.navigate = makeNavigateProvider<typeof routes, P, C, CP>(
     routes,
     fullContext,
     onStart,

@@ -7,20 +7,25 @@ import {
   makeReactContextProvider,
   ContextWrapper,
   RouteInfo,
-  Display
+  makeReactDisplay,
+  makeReactLink
 } from "@webcarrot/router";
 
 import { appContext } from "./context";
 import { routes, Routes } from "./routes";
-import { RouteContext } from "./types";
+import { RouteContext, ComponentProps } from "./types";
 
 const fullContext = makeContext(routes, appContext);
 
 const ReactRouteContext = makeReactContextProvider<
   Routes,
   Payload,
-  RouteContext
+  RouteContext,
+  ComponentProps
 >();
+
+const Display = makeReactDisplay(ReactRouteContext);
+const Link = makeReactLink(ReactRouteContext);
 
 const payload: Payload = {
   url: "/testB/123",
@@ -35,7 +40,7 @@ execute<Routes>(routes, payload, fullContext).then(info => {
 const App = ({
   routeInfo
 }: {
-  routeInfo: RouteInfo<Routes, Payload, RouteContext>;
+  routeInfo: RouteInfo<Routes, Payload, RouteContext, ComponentProps>;
 }) => {
   return (
     <ContextWrapper
@@ -44,7 +49,14 @@ const App = ({
       context={appContext}
       initialInfo={routeInfo}
     >
-      <Display ReactContext={ReactRouteContext} />
+      <Display bar={1} />
+      <Link
+        route="a"
+        payload={{ params: { zz: "w" } }}
+        style={{ color: "red" }}
+      >
+        test a to zz:w
+      </Link>
     </ContextWrapper>
   );
 };

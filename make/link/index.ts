@@ -19,11 +19,12 @@ export const make = <
       MatchInfo,
       Output,
       C,
-      ComponentProps
+      CP
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context
+  C extends Context = Context,
+  CP extends ComponentProps = ComponentProps
 >(
   routes: MAP,
   context: C
@@ -31,7 +32,7 @@ export const make = <
   type LinkProvider<D extends MAP> = <N extends keyof D>(
     id: N,
     payload: LinkPayload<MatchInfo, C, D[N]["build"]>
-  ) => string | false;
+  ) => string;
   const linkProvider: LinkProvider<typeof routes> = (id, payload) =>
     routes[id].build(payload, context);
   return linkProvider;

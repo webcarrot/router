@@ -20,19 +20,20 @@ export const make = <
       MatchInfo,
       Output,
       C,
-      ComponentProps
+      CP
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context
+  C extends Context = Context,
+  CP extends ComponentProps = ComponentProps
 >(
   routes: MAP,
   context: C,
   onStart?: OnStart,
-  onEnd?: OnEnd<MAP, P, C>,
+  onEnd?: OnEnd<MAP, P, C, CP>,
   onError?: OnError
 ) => {
-  const linkProvider = makeLinkProvider<MAP, P, C>(routes, context);
+  const linkProvider = makeLinkProvider<MAP, P, C, CP>(routes, context);
 
   type NavigateProvider<D extends MAP> = {
     <N extends keyof D>(
@@ -70,7 +71,7 @@ export const make = <
               method: "GET",
               url
             } as P);
-      const output = await execute<typeof routes, P, C>(
+      const output = await execute<typeof routes, P, C, CP>(
         routes,
         payload,
         context,

@@ -194,7 +194,7 @@ var makeBuild = function (build) { return function (match, context) {
             return out;
         }
     }
-    return false;
+    throw new Error("Cannot build path");
 }; };
 exports.make = function (path) {
     var _a = parsePath(path), match = _a.match, build = _a.build;

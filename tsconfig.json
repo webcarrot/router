@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "outDir": "./dist/trash",
+    "module": "esnext",
+    "target": "esnext",
     "sourceMap": true,
     "declaration": false,
     "noImplicitAny": true,

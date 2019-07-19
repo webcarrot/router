@@ -23,11 +23,20 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
-exports.Display = function (_a) {
-    var ReactContext = _a.ReactContext, rest = __rest(_a, ["ReactContext"]);
-    var info = React.useContext(ReactContext).info;
-    var Component = info.Component, match = info.match, output = info.output, route = info.route;
-    return (React.createElement(Component, __assign({}, rest, { route: route, match: match, output: output })));
+exports.Link = function (_a) {
+    var route = _a.route, payload = _a.payload, ReactContext = _a.ReactContext, onClick = _a.onClick, href = _a.href, rest = __rest(_a, ["route", "payload", "ReactContext", "onClick", "href"]);
+    var _b = React.useContext(ReactContext), makeLink = _b.makeLink, navigate = _b.navigate;
+    var handleClick = React.useCallback(function (ev) {
+        if (onClick) {
+            onClick(ev);
+        }
+        if (!ev.defaultPrevented) {
+            navigate(route, payload, true, "GET");
+            ev.preventDefault();
+        }
+    }, [route, payload]);
+    var link = makeLink(route, payload);
+    return React.createElement("a", __assign({}, rest, { href: link || href, onClick: handleClick }));
 };
-exports.DisplayMemo = React.memo(exports.Display);
-//# sourceMappingURL=Display.js.map
+exports.LinkMemo = React.memo(exports.Link);
+//# sourceMappingURL=Link.js.map

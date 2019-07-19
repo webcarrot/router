@@ -41,9 +41,9 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
     const onError = (no, error) => {
         dispatch({ type: "ERROR", no, error });
     };
-    const routeContext = React.useMemo(() => makeContext(routes, context, onStart, onEnd, onError)
-        .route, []);
+    const routeContext = React.useMemo(() => makeContext(routes, context, onStart, onEnd, onError).route, []);
     const contextValue = React.useMemo(() => (Object.assign({}, routeContext, state)), [routeContext, state]);
     return (React.createElement(ReactContext.Provider, { value: contextValue }, children));
 };
+export const ContextWrapperMemo = React.memo(ContextWrapper);
 //# sourceMappingURL=ContextWrapper.js.map

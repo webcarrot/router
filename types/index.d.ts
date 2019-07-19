@@ -83,6 +83,11 @@ export type Match<P extends Payload, M extends MatchInfo, C extends Context> = (
 export type Build<M extends MatchInfo, C extends Context> = (
   match: M,
   context: C
+) => string;
+
+export type BuildCheck<M extends MatchInfo, C extends Context> = (
+  match: M,
+  context: C
 ) => string | false;
 
 export type OnStart = (id: number) => void;
@@ -95,11 +100,12 @@ export type OnEnd<
       MatchInfo,
       Output,
       C,
-      ComponentProps
+      CP
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context
+  C extends Context = Context,
+  CP extends ComponentProps = ComponentProps
 > = (
   id: number,
   out: Exclude<

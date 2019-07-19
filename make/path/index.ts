@@ -2,7 +2,14 @@ import * as pathToRegexp from "path-to-regexp";
 
 import { compile as pathCompiler, Key, PathFunction } from "path-to-regexp";
 
-import { Match, Build, Payload, MatchInfo, Context } from "../../types";
+import {
+  Match,
+  Build,
+  Payload,
+  MatchInfo,
+  Context,
+  BuildCheck
+} from "../../types";
 import { MatchParams, RoutePath, Path } from "./types";
 
 export { MatchParams, RoutePath, Path };
@@ -94,7 +101,7 @@ const parsePath = <P extends Payload, M extends MatchInfo, C extends Context>(
   info: RoutePath<P, M, C>
 ) => {
   const match: Array<Match<P, M, C>> = [];
-  const build: Array<Build<M, C>> = [];
+  const build: Array<BuildCheck<M, C>> = [];
   if (info instanceof Array) {
     info.forEach(el => {
       const ret = parsePath<P, M, C>(el);
@@ -148,7 +155,7 @@ const makeMatch = <P extends Payload, M extends MatchInfo, C extends Context>(
 };
 
 const makeBuild = <M extends MatchInfo, C extends Context>(
-  build: Array<Build<M, C>>
+  build: Array<BuildCheck<M, C>>
 ): Build<M, C> => (match: M, context: C) => {
   for (let i = 0; i < build.length; i++) {
     const out = build[i](match, context);
@@ -156,7 +163,7 @@ const makeBuild = <M extends MatchInfo, C extends Context>(
       return out;
     }
   }
-  return false;
+  throw new Error("Cannot build path");
 };
 
 export const make = <P extends Payload, M extends MatchInfo, C extends Context>(

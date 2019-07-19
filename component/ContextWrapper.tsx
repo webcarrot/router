@@ -27,11 +27,12 @@ export const ContextWrapper = <
       MatchInfo,
       Output,
       C,
-      ComponentProps
+      CP
     >;
   },
   P extends Payload,
-  C extends Context
+  C extends Context,
+  CP extends ComponentProps
 >({
   routes,
   context,
@@ -41,8 +42,8 @@ export const ContextWrapper = <
 }: {
   routes: MAP;
   context: C;
-  initialInfo: RouteInfo<typeof routes, P, C>;
-  ReactContext: React.Context<ReactContextValue<typeof routes, P, C>>;
+  initialInfo: RouteInfo<typeof routes, P, C, CP>;
+  ReactContext: React.Context<ReactContextValue<typeof routes, P, C, CP>>;
   children: React.ReactNode;
 }) => {
   type ReducerActions =
@@ -53,7 +54,7 @@ export const ContextWrapper = <
     | {
         type: "END";
         no: number;
-        info: RouteInfo<MAP, P, C>;
+        info: RouteInfo<MAP, P, C, CP>;
       }
     | {
         type: "ERROR";
@@ -62,7 +63,7 @@ export const ContextWrapper = <
       };
 
   const [state, dispatch] = React.useReducer<
-    React.Reducer<ReactContextState<typeof routes, P, C>, ReducerActions>
+    React.Reducer<ReactContextState<typeof routes, P, C, CP>, ReducerActions>
   >(
     (state, action) => {
       switch (action.type) {
@@ -114,7 +115,7 @@ export const ContextWrapper = <
     dispatch({ type: "START", no });
   };
 
-  const onEnd: OnEnd<typeof routes, P, C> = (no, info) => {
+  const onEnd: OnEnd<typeof routes, P, C, CP> = (no, info) => {
     dispatch({ type: "END", no, info });
   };
 
@@ -124,8 +125,13 @@ export const ContextWrapper = <
 
   const routeContext = React.useMemo(
     () =>
-      makeContext<typeof routes, P, C>(routes, context, onStart, onEnd, onError)
-        .route,
+      makeContext<typeof routes, P, C, CP>(
+        routes,
+        context,
+        onStart,
+        onEnd,
+        onError
+      ).route,
     []
   );
 
@@ -143,3 +149,5 @@ export const ContextWrapper = <
     </ReactContext.Provider>
   );
 };
+
+export const ContextWrapperMemo = React.memo(ContextWrapper);

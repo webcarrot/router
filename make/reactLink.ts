@@ -1,0 +1,36 @@
+import * as React from "react";
+
+import {
+  RouteInterface,
+  Payload,
+  Output,
+  ComponentProps,
+  MatchInfo,
+  Context
+} from "../types";
+
+import { ReactContextValue } from "../make/reactContextProvider/types";
+import { Link, LinkProps } from "../component/Link";
+
+export const make = <
+  MAP extends {
+    [key: string]: RouteInterface<
+      Extract<keyof MAP, string>,
+      P,
+      MatchInfo,
+      Output,
+      C,
+      CP
+    >;
+  },
+  P extends Payload,
+  C extends Context,
+  CP extends ComponentProps,
+  ID extends keyof MAP
+>(
+  ReactContext: React.Context<ReactContextValue<MAP, P, C, CP>>
+) => {
+  return React.memo((props: LinkProps<MAP, P, C, CP, ID>) =>
+    Link({ ...props, ReactContext })
+  );
+};

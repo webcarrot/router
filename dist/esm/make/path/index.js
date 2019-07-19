@@ -142,7 +142,7 @@ const makeBuild = (build) => (match, context) => {
             return out;
         }
     }
-    return false;
+    throw new Error("Cannot build path");
 };
 export const make = (path) => {
     const { match, build } = parsePath(path);

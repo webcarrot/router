@@ -18,11 +18,12 @@ export const execute = async <
       MatchInfo,
       Output,
       C,
-      ComponentProps
+      CP
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context
+  C extends Context = Context,
+  CP extends ComponentProps = ComponentProps
 >(
   routes: MAP,
   payload: P,

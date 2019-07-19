@@ -20,13 +20,14 @@ export type FullContext<
       MatchInfo,
       Output,
       C,
-      ComponentProps
+      CP
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context
+  C extends Context = Context,
+  CP extends ComponentProps = ComponentProps
 > = C & {
-  route: RouteContext<MAP, P, C>;
+  route: RouteContext<MAP, P, C, CP>;
 };
 
 export type RouteContextLink<
@@ -37,16 +38,17 @@ export type RouteContextLink<
       MatchInfo,
       Output,
       C,
-      ComponentProps
+      CP
     >;
   },
   P extends Payload = Payload,
   C extends Context = Context,
+  CP extends ComponentProps = ComponentProps,
   D extends MAP = MAP
 > = <N extends keyof D>(
   id: N,
   payload: LinkPayload<MatchInfo, C, D[N]["build"]>
-) => string | false;
+) => string;
 
 export type RouteContextNavigate<
   MAP extends {
@@ -56,11 +58,12 @@ export type RouteContextNavigate<
       MatchInfo,
       Output,
       C,
-      ComponentProps
+      CP
     >;
   },
   P extends Payload = Payload,
   C extends Context = Context,
+  CP extends ComponentProps = ComponentProps,
   D extends MAP = MAP
 > = {
   <N extends keyof D>(
@@ -86,12 +89,13 @@ export type RouteContext<
       MatchInfo,
       Output,
       C,
-      ComponentProps
+      CP
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context
+  C extends Context = Context,
+  CP extends ComponentProps = ComponentProps
 > = {
-  makeLink: RouteContextLink<MAP, P, C>;
-  navigate: RouteContextNavigate<MAP, P, C>;
+  makeLink: RouteContextLink<MAP, P, C, CP>;
+  navigate: RouteContextNavigate<MAP, P, C, CP>;
 };
