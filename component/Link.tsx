@@ -11,6 +11,7 @@ import {
 
 import { ReactContextValue } from "../make/reactContextProvider/types";
 import { LinkPayload } from "../make";
+import { ChangeType } from "../utils/enums";
 
 export type LinkProps<
   MAP extends {
@@ -34,6 +35,7 @@ export type LinkProps<
   href?: string;
   route: ID;
   payload: LinkPayload<MatchInfo, C, MAP[ID]["build"]>;
+  changeType?: ChangeType;
 };
 
 export const Link = <
@@ -57,6 +59,7 @@ export const Link = <
   ReactContext,
   onClick,
   href,
+  changeType = ChangeType.PUSH,
   ...rest
 }: LinkProps<MAP, P, C, CP, ID> & {
   ReactContext: React.Context<ReactContextValue<MAP, P, C, CP>>;
@@ -69,7 +72,7 @@ export const Link = <
         onClick(ev);
       }
       if (!ev.defaultPrevented) {
-        navigate(route, payload, true, "GET");
+        navigate(route, payload, true, "GET", Date.now(), changeType);
         ev.preventDefault();
       }
     },

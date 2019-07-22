@@ -59,8 +59,8 @@ export const make = <
     try {
       const m = await match(url, payload, context);
       if (m) {
-        if (onStart) {
-          onStart(payload.no);
+        if (onStart && onStart(payload.no) === false) {
+          return;
         }
         const o = await action(payload, m, context);
         const Component =

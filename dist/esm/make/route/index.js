@@ -20,8 +20,8 @@ export const make = (id, path, init) => {
         try {
             const m = await match(url, payload, context);
             if (m) {
-                if (onStart) {
-                    onStart(payload.no);
+                if (onStart && onStart(payload.no) === false) {
+                    return;
                 }
                 const o = await action(payload, m, context);
                 const Component = !doPrepare || isRedirect(o.status) ? null : await prepare(o);

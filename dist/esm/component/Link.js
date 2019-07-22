@@ -10,15 +10,16 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import * as React from "react";
+import { ChangeType } from "../utils/enums";
 export const Link = (_a) => {
-    var { route, payload, ReactContext, onClick, href } = _a, rest = __rest(_a, ["route", "payload", "ReactContext", "onClick", "href"]);
+    var { route, payload, ReactContext, onClick, href, changeType = ChangeType.PUSH } = _a, rest = __rest(_a, ["route", "payload", "ReactContext", "onClick", "href", "changeType"]);
     const { makeLink, navigate } = React.useContext(ReactContext);
     const handleClick = React.useCallback((ev) => {
         if (onClick) {
             onClick(ev);
         }
         if (!ev.defaultPrevented) {
-            navigate(route, payload, true, "GET");
+            navigate(route, payload, true, "GET", Date.now(), changeType);
             ev.preventDefault();
         }
     }, [route, payload]);

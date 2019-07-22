@@ -38,11 +38,13 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var link_1 = require("./link");
 var execute_1 = require("../utils/execute");
+var enums_1 = require("../utils/enums");
 exports.make = function (routes, context, onStart, onEnd, onError) {
     var linkProvider = link_1.make(routes, context);
-    var navigateProvider = function (id, payload, prepare, method, body) {
+    var navigateProvider = function (id, payload, prepare, method, no, changeType, body) {
         if (prepare === void 0) { prepare = true; }
         if (method === void 0) { method = "GET"; }
+        if (changeType === void 0) { changeType = enums_1.ChangeType.PUSH; }
         return __awaiter(_this, void 0, void 0, function () {
             var url, payload_1, output;
             return __generator(this, function (_a) {
@@ -54,11 +56,15 @@ exports.make = function (routes, context, onStart, onEnd, onError) {
                             ? {
                                 method: "POST",
                                 url: url,
+                                no: no,
+                                changeType: changeType,
                                 body: body
                             }
                             : {
                                 method: "GET",
-                                url: url
+                                url: url,
+                                no: no,
+                                changeType: changeType
                             };
                         return [4, execute_1.execute(routes, payload_1, context, prepare, onStart, onError)];
                     case 1:

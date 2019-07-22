@@ -68,8 +68,8 @@ exports.make = function (id, path, init) {
                     case 1:
                         m = _b.sent();
                         if (!m) return [3, 6];
-                        if (onStart) {
-                            onStart(payload.no);
+                        if (onStart && onStart(payload.no) === false) {
+                            return [2];
                         }
                         return [4, action(payload, m, context)];
                     case 2:

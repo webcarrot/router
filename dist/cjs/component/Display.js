@@ -26,7 +26,7 @@ var React = require("react");
 exports.Display = function (_a) {
     var ReactContext = _a.ReactContext, rest = __rest(_a, ["ReactContext"]);
     var info = React.useContext(ReactContext).info;
-    var Component = info.Component, match = info.match, output = info.output, route = info.route;
+    var _b = info(), Component = _b.Component, match = _b.match, output = _b.output, route = _b.route;
     return (React.createElement(Component, __assign({}, rest, { route: route, match: match, output: output })));
 };
 exports.DisplayMemo = React.memo(exports.Display);

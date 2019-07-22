@@ -8,7 +8,7 @@ export { LinkPayload } from "./link/types";
 export { Path, RoutePath, MatchParams } from "./path/types";
 export { RouteInit } from "./route/types";
 export {
-  ReactContextState,
+  ReactContextInfo,
   ReactContextValue,
   RouteInfo
 } from "./reactContextProvider/types";

@@ -32,7 +32,7 @@ export type RouteInfo<
   false
 >;
 
-export type ReactContextState<
+export type ReactContextInfo<
   MAP extends {
     [key: string]: RouteInterface<
       Extract<keyof MAP, string>,
@@ -47,11 +47,10 @@ export type ReactContextState<
   C extends Context,
   CP extends ComponentProps
 > = {
-  error?: any;
-  current: number;
-  next: number;
-  info: RouteInfo<MAP, P, C, CP>;
-  inProgress: boolean;
+  error: () => any;
+  info: () => RouteInfo<MAP, P, C, CP>;
+  inProgress: () => boolean;
+  isCurrent: (id: Extract<keyof MAP, string>, params?: MatchInfo) => boolean;
 };
 
 export type ReactContextValue<
@@ -68,4 +67,4 @@ export type ReactContextValue<
   P extends Payload,
   C extends Context,
   CP extends ComponentProps
-> = RouteContext<MAP, P, C, CP> & ReactContextState<MAP, P, C, CP>;
+> = RouteContext<MAP, P, C, CP> & ReactContextInfo<MAP, P, C, CP>;

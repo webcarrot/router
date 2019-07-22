@@ -1,5 +1,8 @@
 import * as React from "react";
 import { make as makeContext } from "../make/context";
+import { compare } from "../utils/compare";
+import { NAVIGATION_MODE } from "../utils/constants";
+import { NavigationMode, ChangeType } from "../utils/enums";
 export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, children }) => {
     const [state, dispatch] = React.useReducer((state, action) => {
         switch (action.type) {
@@ -27,22 +30,62 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
         }
         return state;
     }, {
+        firstLoad: true,
         current: 0,
         next: 0,
         info: initialInfo,
         inProgress: false
     });
-    const onStart = no => {
+    const onStart = React.useCallback(no => {
         dispatch({ type: "START", no });
-    };
-    const onEnd = (no, info) => {
+        if (NAVIGATION_MODE === NavigationMode.LEGACY) {
+            return false;
+        }
+    }, []);
+    const onEnd = React.useCallback((no, info) => {
         dispatch({ type: "END", no, info });
-    };
-    const onError = (no, error) => {
+    }, []);
+    const onError = React.useCallback((no, error) => {
         dispatch({ type: "ERROR", no, error });
-    };
-    const routeContext = React.useMemo(() => makeContext(routes, context, onStart, onEnd, onError).route, []);
-    const contextValue = React.useMemo(() => (Object.assign({}, routeContext, state)), [routeContext, state]);
+    }, [state.current]);
+    React.useEffect(() => {
+        if (NAVIGATION_MODE === NavigationMode.MODERN) {
+            if (!state.inProgress && state.current > 0) {
+                const historyState = {
+                    id: state.info.id,
+                    match: state.info.match
+                };
+                switch (state.info.payload.changeType) {
+                    case ChangeType.PUSH:
+                        history.pushState(historyState, state.info.output.title, state.info.output.url);
+                        break;
+                    case ChangeType.REPLACE:
+                        history.replaceState(historyState, state.info.output.title, state.info.output.url);
+                        break;
+                }
+            }
+        }
+    }, [state.inProgress]);
+    const routeContext = React.useMemo(() => makeContext(routes, context, onStart, onEnd, onError).route, [context, onStart, onEnd, onError]);
+    const reactRouteContext = React.useMemo(() => ({
+        error: () => state.error,
+        info: () => state.info,
+        inProgress: () => state.inProgress,
+        isCurrent: (id, match) => state.info.id === id && (!match || compare(match, state.info.match))
+    }), [state]);
+    const contextValue = React.useMemo(() => (Object.assign({}, routeContext, reactRouteContext)), [routeContext, reactRouteContext]);
+    React.useEffect(() => {
+        if (NAVIGATION_MODE === NavigationMode.MODERN) {
+            const handlePopState = (ev) => {
+                if (ev.state) {
+                    const { id, match } = ev.state;
+                    contextValue.navigate(id, match, true, "GET", Date.now(), ChangeType.HISTORY);
+                }
+            };
+            window.addEventListener("popstate", handlePopState);
+            return () => window.removeEventListener("popstate", handlePopState);
+        }
+    }, [contextValue]);
     return (React.createElement(ReactContext.Provider, { value: contextValue }, children));
 };
 export const ContextWrapperMemo = React.memo(ContextWrapper);

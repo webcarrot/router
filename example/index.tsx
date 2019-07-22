@@ -16,6 +16,7 @@ import {
 import { appContext } from "./context";
 import { routes, Routes } from "./routes";
 import { RouteContext, ComponentProps } from "./types";
+import { ChangeType } from "../utils/enums";
 
 const fullContext = makeContext(routes, appContext);
 
@@ -32,7 +33,8 @@ const Link = makeReactLink(ReactRouteContext);
 const payload: Payload = {
   url: "/testB/123",
   no: 0,
-  method: "GET"
+  method: "GET",
+  changeType: ChangeType.PUSH
 };
 
 execute<Routes>(routes, payload, fullContext).then(info => {

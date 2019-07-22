@@ -32,7 +32,7 @@ export const Display = <
   ReactContext: React.Context<ReactContextValue<MAP, P, C, CP>>;
 }) => {
   const { info } = React.useContext(ReactContext);
-  const { Component, match, output, route } = info;
+  const { Component, match, output, route } = info();
   return (
     <Component
       {...(rest as any) as CP}

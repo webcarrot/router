@@ -9,6 +9,7 @@ import {
 
 import { ComponentType } from "react";
 import { Method } from "./method";
+import { ChangeType } from "../utils/enums";
 
 export type Unpacked<T> = T extends Promise<infer U> ? U : T;
 export type Retrun<T extends (...args: any) => any> = Unpacked<ReturnType<T>>;
@@ -31,12 +32,14 @@ export type GetPayload = {
   method: "GET";
   no: number;
   url: string;
+  changeType: ChangeType;
 };
 
 export type PostPayload = {
   method: "POST";
   no: number;
   url: string;
+  changeType: ChangeType;
   body: any;
 };
 
@@ -90,7 +93,7 @@ export type BuildCheck<M extends MatchInfo, C extends Context> = (
   context: C
 ) => string | false;
 
-export type OnStart = (id: number) => void;
+export type OnStart = (id: number) => void | boolean;
 
 export type OnEnd<
   MAP extends {

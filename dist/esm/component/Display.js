@@ -13,7 +13,7 @@ import * as React from "react";
 export const Display = (_a) => {
     var { ReactContext } = _a, rest = __rest(_a, ["ReactContext"]);
     const { info } = React.useContext(ReactContext);
-    const { Component, match, output, route } = info;
+    const { Component, match, output, route } = info();
     return (React.createElement(Component, Object.assign({}, rest, { route: route, match: match, output: output })));
 };
 export const DisplayMemo = React.memo(Display);

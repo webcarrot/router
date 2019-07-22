@@ -16,8 +16,55 @@ import { make as makeContext } from "../make/context";
 import {
   ReactContextValue,
   RouteInfo,
-  ReactContextState
+  ReactContextInfo
 } from "../make/reactContextProvider/types";
+
+import { compare } from "../utils/compare";
+
+import { NAVIGATION_MODE } from "../utils/constants";
+import { NavigationMode, ChangeType } from "../utils/enums";
+
+export type ReactContextState<
+  MAP extends {
+    [key: string]: RouteInterface<
+      Extract<keyof MAP, string>,
+      P,
+      MatchInfo,
+      Output,
+      C,
+      CP
+    >;
+  },
+  P extends Payload,
+  C extends Context,
+  CP extends ComponentProps
+> = {
+  error?: any;
+  firstLoad: boolean;
+  current: number;
+  next: number;
+  info: RouteInfo<MAP, P, C, CP>;
+  inProgress: boolean;
+};
+
+type HistoryState<
+  MAP extends {
+    [key: string]: RouteInterface<
+      Extract<keyof MAP, string>,
+      P,
+      MatchInfo,
+      Output,
+      C,
+      CP
+    >;
+  },
+  P extends Payload,
+  C extends Context,
+  CP extends ComponentProps
+> = {
+  id: Extract<keyof MAP, string>;
+  match: MatchInfo;
+};
 
 export const ContextWrapper = <
   MAP extends {
@@ -104,6 +151,7 @@ export const ContextWrapper = <
       return state;
     },
     {
+      firstLoad: true,
       current: 0,
       next: 0,
       info: initialInfo,
@@ -111,17 +159,53 @@ export const ContextWrapper = <
     }
   );
 
-  const onStart: OnStart = no => {
+  const onStart: OnStart = React.useCallback(no => {
     dispatch({ type: "START", no });
-  };
+    if (NAVIGATION_MODE === NavigationMode.LEGACY) {
+      return false;
+    }
+  }, []);
 
-  const onEnd: OnEnd<typeof routes, P, C, CP> = (no, info) => {
-    dispatch({ type: "END", no, info });
-  };
+  const onEnd: OnEnd<typeof routes, P, C, CP> = React.useCallback(
+    (no, info) => {
+      dispatch({ type: "END", no, info });
+    },
+    []
+  );
 
-  const onError: OnError = (no, error) => {
-    dispatch({ type: "ERROR", no, error });
-  };
+  const onError: OnError = React.useCallback(
+    (no, error) => {
+      dispatch({ type: "ERROR", no, error });
+    },
+    [state.current]
+  );
+
+  React.useEffect(() => {
+    if (NAVIGATION_MODE === NavigationMode.MODERN) {
+      if (!state.inProgress && state.current > 0) {
+        const historyState: HistoryState<typeof routes, P, C, CP> = {
+          id: state.info.id,
+          match: state.info.match
+        };
+        switch (state.info.payload.changeType) {
+          case ChangeType.PUSH:
+            history.pushState(
+              historyState,
+              (state.info.output as any).title,
+              state.info.output.url
+            );
+            break;
+          case ChangeType.REPLACE:
+            history.replaceState(
+              historyState,
+              (state.info.output as any).title,
+              state.info.output.url
+            );
+            break;
+        }
+      }
+    }
+  }, [state.inProgress]);
 
   const routeContext = React.useMemo(
     () =>
@@ -132,16 +216,56 @@ export const ContextWrapper = <
         onEnd,
         onError
       ).route,
-    []
+    [context, onStart, onEnd, onError]
   );
 
-  const contextValue = React.useMemo(
+  const reactRouteContext = React.useMemo<
+    ReactContextInfo<typeof routes, P, C, CP>
+  >(
+    () => ({
+      error: () => state.error,
+      info: () => state.info,
+      inProgress: () => state.inProgress,
+      isCurrent: (id, match) =>
+        state.info.id === id && (!match || compare(match, state.info.match))
+    }),
+    [state]
+  );
+
+  const contextValue = React.useMemo<
+    ReactContextValue<typeof routes, P, C, CP>
+  >(
     () => ({
       ...routeContext,
-      ...state
+      ...reactRouteContext
     }),
-    [routeContext, state]
+    [routeContext, reactRouteContext]
   );
+
+  React.useEffect(() => {
+    if (NAVIGATION_MODE === NavigationMode.MODERN) {
+      const handlePopState = (ev: PopStateEvent) => {
+        if (ev.state) {
+          const { id, match } = ev.state as HistoryState<
+            typeof routes,
+            P,
+            C,
+            CP
+          >;
+          contextValue.navigate(
+            id,
+            match as any,
+            true,
+            "GET",
+            Date.now(),
+            ChangeType.HISTORY
+          );
+        }
+      };
+      window.addEventListener("popstate", handlePopState);
+      return () => window.removeEventListener("popstate", handlePopState);
+    }
+  }, [contextValue]);
 
   return (
     <ReactContext.Provider value={contextValue}>
