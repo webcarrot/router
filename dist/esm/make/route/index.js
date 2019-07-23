@@ -20,7 +20,6 @@ export const make = (id, path, init) => {
         try {
             const m = await match(url, payload, context);
             if (m) {
-                console.log(m);
                 if (onStart && onStart(payload.no) === false) {
                     return;
                 }
@@ -37,7 +36,6 @@ export const make = (id, path, init) => {
             }
         }
         catch (err) {
-            console.log(err);
             if (onError && onError(payload.no, err)) {
                 throw err;
             }

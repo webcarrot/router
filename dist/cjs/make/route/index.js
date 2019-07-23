@@ -68,7 +68,6 @@ exports.make = function (id, path, init) {
                     case 1:
                         m = _b.sent();
                         if (!m) return [3, 6];
-                        console.log(m);
                         if (onStart && onStart(payload.no) === false) {
                             return [2];
                         }
@@ -95,7 +94,6 @@ exports.make = function (id, path, init) {
                     case 6: return [3, 8];
                     case 7:
                         err_1 = _b.sent();
-                        console.log(err_1);
                         if (onError && onError(payload.no, err_1)) {
                             throw err_1;
                         }
