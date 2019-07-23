@@ -24,7 +24,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var enums_1 = require("../../utils/enums");
-exports.Link = function (_a) {
+exports.Link = function (_a, ref) {
     var route = _a.route, payload = _a.payload, ReactContext = _a.ReactContext, onClick = _a.onClick, href = _a.href, _b = _a.changeType, changeType = _b === void 0 ? enums_1.ChangeType.PUSH : _b, rest = __rest(_a, ["route", "payload", "ReactContext", "onClick", "href", "changeType"]);
     var _c = React.useContext(ReactContext), makeLink = _c.makeLink, navigate = _c.navigate;
     var handleClick = React.useCallback(function (ev) {
@@ -37,7 +37,7 @@ exports.Link = function (_a) {
         }
     }, [route, payload]);
     var link = makeLink(route, payload);
-    return React.createElement("a", __assign({}, rest, { href: link || href, onClick: handleClick }));
+    return React.createElement("a", __assign({}, rest, { href: link || href, onClick: handleClick, ref: ref }));
 };
-exports.LinkMemo = React.memo(exports.Link);
+exports.LinkMemo = React.memo(React.forwardRef(exports.Link));
 //# sourceMappingURL=index.js.map

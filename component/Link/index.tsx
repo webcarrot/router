@@ -28,17 +28,20 @@ export const Link = <
   C extends Context,
   CP extends ComponentProps,
   ID extends keyof MAP
->({
-  route,
-  payload,
-  ReactContext,
-  onClick,
-  href,
-  changeType = ChangeType.PUSH,
-  ...rest
-}: LinkProps<MAP, P, C, CP, ID> & {
-  ReactContext: React.Context<ReactContextValue<MAP, P, C, CP>>;
-}) => {
+>(
+  {
+    route,
+    payload,
+    ReactContext,
+    onClick,
+    href,
+    changeType = ChangeType.PUSH,
+    ...rest
+  }: LinkProps<MAP, P, C, CP, ID> & {
+    ReactContext: React.Context<ReactContextValue<MAP, P, C, CP>>;
+  },
+  ref?: any
+) => {
   const { makeLink, navigate } = React.useContext(ReactContext);
 
   const handleClick = React.useCallback(
@@ -56,7 +59,7 @@ export const Link = <
 
   const link = makeLink(route, payload);
 
-  return <a {...rest} href={link || href} onClick={handleClick} />;
+  return <a {...rest} href={link || href} onClick={handleClick} ref={ref} />;
 };
 
-export const LinkMemo = React.memo(Link) as typeof Link;
+export const LinkMemo = React.memo(React.forwardRef(Link)) as typeof Link;

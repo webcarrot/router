@@ -30,7 +30,9 @@ export const make = <
 >(
   ReactContext: React.Context<ReactContextValue<MAP, P, C, CP>>
 ) => {
-  const Wrap = <ID extends keyof MAP>(props: LinkProps<MAP, P, C, CP, ID>) =>
-    Link({ ...props, ReactContext });
-  return React.memo(Wrap) as typeof Wrap;
+  const Wrap = <ID extends keyof MAP>(
+    props: LinkProps<MAP, P, C, CP, ID>,
+    ref?: any
+  ) => Link({ ...props, ReactContext }, ref);
+  return React.memo(React.forwardRef(Wrap)) as typeof Wrap;
 };

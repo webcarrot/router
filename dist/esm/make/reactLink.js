@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link } from "../component/Link";
 export const make = (ReactContext) => {
-    const Wrap = (props) => Link(Object.assign({}, props, { ReactContext }));
-    return React.memo(Wrap);
+    const Wrap = (props, ref) => Link(Object.assign({}, props, { ReactContext }), ref);
+    return React.memo(React.forwardRef(Wrap));
 };
 //# sourceMappingURL=reactLink.js.map
