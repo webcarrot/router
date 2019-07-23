@@ -9,8 +9,6 @@ import {
 
 import { LinkPayload } from "./types";
 
-export { LinkPayload };
-
 export const make = <
   MAP extends {
     [key: string]: RouteInterface<

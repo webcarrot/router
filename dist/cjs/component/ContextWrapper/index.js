@@ -12,10 +12,10 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
-var context_1 = require("../make/context");
-var compare_1 = require("../utils/compare");
-var constants_1 = require("../utils/constants");
-var enums_1 = require("../utils/enums");
+var context_1 = require("../../make/context");
+var compare_1 = require("../../utils/compare");
+var constants_1 = require("../../utils/constants");
+var enums_1 = require("../../utils/enums");
 exports.ContextWrapper = function (_a) {
     var routes = _a.routes, context = _a.context, initialInfo = _a.initialInfo, ReactContext = _a.ReactContext, children = _a.children;
     var _b = React.useReducer(function (state, action) {
@@ -107,4 +107,4 @@ exports.ContextWrapper = function (_a) {
     return (React.createElement(ReactContext.Provider, { value: contextValue }, children));
 };
 exports.ContextWrapperMemo = React.memo(exports.ContextWrapper);
-//# sourceMappingURL=ContextWrapper.js.map
+//# sourceMappingURL=index.js.map

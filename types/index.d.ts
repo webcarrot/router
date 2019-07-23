@@ -48,6 +48,7 @@ export type Payload = GetPayload | PostPayload;
 export type Output = {
   url: string;
   status: Status;
+  title?: string;
 };
 
 export type Action<

@@ -7,36 +7,11 @@ import {
   ComponentProps,
   MatchInfo,
   Context
-} from "../types";
+} from "../../types";
 
-import { ReactContextValue } from "../make/reactContextProvider/types";
-import { LinkPayload } from "../make";
-import { ChangeType } from "../utils/enums";
-
-export type LinkProps<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C,
-      CP
-    >;
-  },
-  P extends Payload,
-  C extends Context,
-  CP extends ComponentProps,
-  ID extends keyof MAP
-> = React.DetailedHTMLProps<
-  React.AnchorHTMLAttributes<HTMLAnchorElement>,
-  HTMLAnchorElement
-> & {
-  href?: string;
-  route: ID;
-  payload: LinkPayload<MatchInfo, C, MAP[ID]["build"]>;
-  changeType?: ChangeType;
-};
+import { ReactContextValue } from "../../make/reactContextProvider/types";
+import { ChangeType } from "../../utils/enums";
+import { LinkProps } from "./types";
 
 export const Link = <
   MAP extends {

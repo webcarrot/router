@@ -1,2 +1,2 @@
-export { prepare } from "./prepare";
-export { action } from "./action";
+export * from "./prepare";
+export * from "./action";

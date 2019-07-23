@@ -10,7 +10,8 @@ import {
 } from "../types";
 
 import { ReactContextValue } from "../make/reactContextProvider/types";
-import { Link, LinkProps } from "../component/Link";
+import { Link } from "../component/Link";
+import { LinkProps } from "../component/Link/types";
 
 export const make = <
   MAP extends {

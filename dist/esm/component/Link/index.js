@@ -10,7 +10,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import * as React from "react";
-import { ChangeType } from "../utils/enums";
+import { ChangeType } from "../../utils/enums";
 export const Link = (_a) => {
     var { route, payload, ReactContext, onClick, href, changeType = ChangeType.PUSH } = _a, rest = __rest(_a, ["route", "payload", "ReactContext", "onClick", "href", "changeType"]);
     const { makeLink, navigate } = React.useContext(ReactContext);
@@ -27,4 +27,4 @@ export const Link = (_a) => {
     return React.createElement("a", Object.assign({}, rest, { href: link || href, onClick: handleClick }));
 };
 export const LinkMemo = React.memo(Link);
-//# sourceMappingURL=Link.js.map
+//# sourceMappingURL=index.js.map

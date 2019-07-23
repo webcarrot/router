@@ -6,5 +6,3 @@ export const route: Route = makeRoute(
   ["/a/:aa", "/a", { match: () => false }],
   () => import("./init")
 );
-
-export { Route };

@@ -1,4 +1,4 @@
-example
 node_modules
-tsconfig.*
-dist/trash
+./dist/trash
+./example
+.DS_Store

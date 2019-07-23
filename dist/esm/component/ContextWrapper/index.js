@@ -1,8 +1,8 @@
 import * as React from "react";
-import { make as makeContext } from "../make/context";
-import { compare } from "../utils/compare";
-import { NAVIGATION_MODE } from "../utils/constants";
-import { NavigationMode, ChangeType } from "../utils/enums";
+import { make as makeContext } from "../../make/context";
+import { compare } from "../../utils/compare";
+import { NAVIGATION_MODE } from "../../utils/constants";
+import { NavigationMode, ChangeType } from "../../utils/enums";
 export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, children }) => {
     const [state, dispatch] = React.useReducer((state, action) => {
         switch (action.type) {
@@ -89,4 +89,4 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
     return (React.createElement(ReactContext.Provider, { value: contextValue }, children));
 };
 export const ContextWrapperMemo = React.memo(ContextWrapper);
-//# sourceMappingURL=ContextWrapper.js.map
+//# sourceMappingURL=index.js.map

@@ -10,61 +10,20 @@ import {
   OnStart,
   OnError,
   OnEnd
-} from "../types";
+} from "../../types";
 
-import { make as makeContext } from "../make/context";
+import { make as makeContext } from "../../make/context";
 import {
   ReactContextValue,
   RouteInfo,
   ReactContextInfo
-} from "../make/reactContextProvider/types";
+} from "../../make/reactContextProvider/types";
 
-import { compare } from "../utils/compare";
+import { compare } from "../../utils/compare";
 
-import { NAVIGATION_MODE } from "../utils/constants";
-import { NavigationMode, ChangeType } from "../utils/enums";
-
-export type ReactContextState<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C,
-      CP
-    >;
-  },
-  P extends Payload,
-  C extends Context,
-  CP extends ComponentProps
-> = {
-  error?: any;
-  firstLoad: boolean;
-  current: number;
-  next: number;
-  info: RouteInfo<MAP, P, C, CP>;
-  inProgress: boolean;
-};
-
-type HistoryState<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C,
-      CP
-    >;
-  },
-  P extends Payload,
-  C extends Context,
-  CP extends ComponentProps
-> = {
-  id: Extract<keyof MAP, string>;
-  match: MatchInfo;
-};
+import { NAVIGATION_MODE } from "../../utils/constants";
+import { NavigationMode, ChangeType } from "../../utils/enums";
+import { ReactContextState, HistoryState } from "./types";
 
 export const ContextWrapper = <
   MAP extends {
@@ -274,4 +233,6 @@ export const ContextWrapper = <
   );
 };
 
-export const ContextWrapperMemo = React.memo(ContextWrapper);
+export const ContextWrapperMemo = React.memo(
+  ContextWrapper
+) as typeof ContextWrapper;

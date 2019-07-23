@@ -9,7 +9,8 @@ import {
   OnError,
   OnEnd
 } from "../types";
-import { make as makeLinkProvider, LinkPayload } from "./link";
+import { make as makeLinkProvider } from "./link";
+import { LinkPayload } from "./link/types";
 import { execute } from "../utils/execute";
 import { ChangeType } from "../utils/enums";
 

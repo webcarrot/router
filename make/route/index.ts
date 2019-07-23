@@ -10,11 +10,10 @@ import {
   OnStart,
   OnError
 } from "../../types";
-import { RoutePath, make as makePath } from "../path";
+import { RoutePath } from "../path/types";
+import { make as makePath } from "../path";
 import { isRedirect } from "../../utils/isRedirect";
 import { RouteInit } from "./types";
-
-export { RouteInit };
 
 export const make = <
   ID extends string,

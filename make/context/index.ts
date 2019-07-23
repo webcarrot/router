@@ -10,17 +10,10 @@ import {
   OnEnd
 } from "../../types";
 
-import {
-  RouteContext,
-  FullContext,
-  RouteContextLink,
-  RouteContextNavigate
-} from "./types";
+import { RouteContext, FullContext } from "./types";
 
 import { make as makeLinkProvider } from "./../link";
 import { make as makeNavigateProvider } from "./../navigate";
-
-export { RouteContext, FullContext, RouteContextLink, RouteContextNavigate };
 
 export const make = <
   MAP extends {

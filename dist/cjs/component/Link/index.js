@@ -23,7 +23,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
-var enums_1 = require("../utils/enums");
+var enums_1 = require("../../utils/enums");
 exports.Link = function (_a) {
     var route = _a.route, payload = _a.payload, ReactContext = _a.ReactContext, onClick = _a.onClick, href = _a.href, _b = _a.changeType, changeType = _b === void 0 ? enums_1.ChangeType.PUSH : _b, rest = __rest(_a, ["route", "payload", "ReactContext", "onClick", "href", "changeType"]);
     var _c = React.useContext(ReactContext), makeLink = _c.makeLink, navigate = _c.navigate;
@@ -40,4 +40,4 @@ exports.Link = function (_a) {
     return React.createElement("a", __assign({}, rest, { href: link || href, onClick: handleClick }));
 };
 exports.LinkMemo = React.memo(exports.Link);
-//# sourceMappingURL=Link.js.map
+//# sourceMappingURL=index.js.map

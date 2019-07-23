@@ -10,9 +10,7 @@ import {
   Context,
   BuildCheck
 } from "../../types";
-import { MatchParams, RoutePath, Path } from "./types";
-
-export { MatchParams, RoutePath, Path };
+import { MatchParams, RoutePath } from "./types";
 
 const matchByRegExp = <M extends MatchInfo>(
   url: URL,
