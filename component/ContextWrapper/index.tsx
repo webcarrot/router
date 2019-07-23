@@ -146,20 +146,14 @@ export const ContextWrapper = <
           id: state.info.id,
           match: state.info.match
         };
+        const { title, url } = state.info.output;
+        document.title = title;
         switch (state.info.payload.changeType) {
           case ChangeType.PUSH:
-            history.pushState(
-              historyState,
-              (state.info.output as any).title,
-              state.info.output.url
-            );
+            history.pushState(historyState, title, url);
             break;
           case ChangeType.REPLACE:
-            history.replaceState(
-              historyState,
-              (state.info.output as any).title,
-              state.info.output.url
-            );
+            history.replaceState(historyState, title, url);
             break;
         }
       }
@@ -204,22 +198,19 @@ export const ContextWrapper = <
   React.useEffect(() => {
     if (NAVIGATION_MODE === NavigationMode.MODERN) {
       const handlePopState = (ev: PopStateEvent) => {
-        if (ev.state) {
-          const { id, match } = ev.state as HistoryState<
-            typeof routes,
-            P,
-            C,
-            CP
-          >;
-          contextValue.navigate(
-            id,
-            match as any,
-            true,
-            "GET",
-            Date.now(),
-            ChangeType.HISTORY
-          );
-        }
+        const state: HistoryState<typeof routes, P, C, CP> = ev.state || {
+          id: initialInfo.id,
+          match: initialInfo.match
+        };
+        const { id, match } = state;
+        contextValue.navigate(
+          id,
+          match as any,
+          true,
+          "GET",
+          Date.now(),
+          ChangeType.HISTORY
+        );
       };
       window.addEventListener("popstate", handlePopState);
       return () => window.removeEventListener("popstate", handlePopState);

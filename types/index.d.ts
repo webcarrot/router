@@ -47,8 +47,13 @@ export type Payload = GetPayload | PostPayload;
 
 export type Output = {
   url: string;
-  status: Status;
+  status: Success;
   title?: string;
+};
+
+export type RedirectOutput = {
+  url: string;
+  status: Redirection;
 };
 
 export type Action<
@@ -56,7 +61,7 @@ export type Action<
   M extends MatchInfo,
   O extends Output,
   C extends Context
-> = (payload: P, match: M, context: C) => Promise<O>;
+> = (payload: P, match: M, context: C) => Promise<O | RedirectOutput>;
 
 export type Component<
   ID extends any,

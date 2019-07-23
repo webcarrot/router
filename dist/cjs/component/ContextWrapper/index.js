@@ -69,12 +69,14 @@ exports.ContextWrapper = function (_a) {
                     id: state.info.id,
                     match: state.info.match
                 };
+                var _a = state.info.output, title = _a.title, url = _a.url;
+                document.title = title;
                 switch (state.info.payload.changeType) {
                     case enums_1.ChangeType.PUSH:
-                        history.pushState(historyState, state.info.output.title, state.info.output.url);
+                        history.pushState(historyState, title, url);
                         break;
                     case enums_1.ChangeType.REPLACE:
-                        history.replaceState(historyState, state.info.output.title, state.info.output.url);
+                        history.replaceState(historyState, title, url);
                         break;
                 }
             }
@@ -95,10 +97,12 @@ exports.ContextWrapper = function (_a) {
     React.useEffect(function () {
         if (constants_1.NAVIGATION_MODE === enums_1.NavigationMode.MODERN) {
             var handlePopState_1 = function (ev) {
-                if (ev.state) {
-                    var _a = ev.state, id = _a.id, match = _a.match;
-                    contextValue.navigate(id, match, true, "GET", Date.now(), enums_1.ChangeType.HISTORY);
-                }
+                var state = ev.state || {
+                    id: initialInfo.id,
+                    match: initialInfo.match
+                };
+                var id = state.id, match = state.match;
+                contextValue.navigate(id, match, true, "GET", Date.now(), enums_1.ChangeType.HISTORY);
             };
             window.addEventListener("popstate", handlePopState_1);
             return function () { return window.removeEventListener("popstate", handlePopState_1); };

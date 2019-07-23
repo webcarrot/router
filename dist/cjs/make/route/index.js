@@ -73,7 +73,7 @@ exports.make = function (id, path, init) {
                         }
                         return [4, action(payload, m, context)];
                     case 2:
-                        o = _b.sent();
+                        o = (_b.sent());
                         if (!(!doPrepare || isRedirect_1.isRedirect(o.status))) return [3, 3];
                         _a = null;
                         return [3, 5];

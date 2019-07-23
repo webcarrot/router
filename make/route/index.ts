@@ -61,7 +61,7 @@ export const make = <
         if (onStart && onStart(payload.no) === false) {
           return;
         }
-        const o = await action(payload, m, context);
+        const o = (await action(payload, m, context)) as O;
         const Component =
           !doPrepare || isRedirect(o.status) ? null : await prepare(o);
         return {
