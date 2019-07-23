@@ -84,7 +84,7 @@ export const ContextWrapper = <
             break;
           }
         case "END":
-          if (action.no === state.current) {
+          if (action.no === state.next) {
             return {
               ...state,
               current: action.no,
@@ -96,7 +96,7 @@ export const ContextWrapper = <
             break;
           }
         case "ERROR":
-          if (action.no === state.current) {
+          if (action.no === state.next) {
             return {
               ...state,
               current: action.no,

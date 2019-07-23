@@ -95,7 +95,7 @@ export const make = <
         onError
       );
       if (onEnd) {
-        onEnd(id, output);
+        onEnd(no, output);
       }
     } else {
       throw new Error("Unknown link");

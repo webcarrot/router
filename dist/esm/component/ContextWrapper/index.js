@@ -14,14 +14,14 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
                     break;
                 }
             case "END":
-                if (action.no === state.current) {
+                if (action.no === state.next) {
                     return Object.assign({}, state, { current: action.no, info: action.info, error: null, inProgress: false });
                 }
                 else {
                     break;
                 }
             case "ERROR":
-                if (action.no === state.current) {
+                if (action.no === state.next) {
                     return Object.assign({}, state, { current: action.no, error: action.error, inProgress: false });
                 }
                 else {
