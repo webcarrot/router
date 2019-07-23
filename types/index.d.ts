@@ -47,7 +47,7 @@ export type Payload = GetPayload | PostPayload;
 
 export type Output = {
   url: string;
-  status: Success;
+  status: Success | ClientError | ServerError;
   title?: string;
 };
 
