@@ -11,6 +11,7 @@ import {
   BuildCheck
 } from "../../types";
 import { MatchParams, RoutePath } from "./types";
+import { isPlainObject } from "@webcarrot/router/utils";
 
 const matchByRegExp = <M extends MatchInfo>(
   url: URL,
@@ -140,13 +141,41 @@ const parsePath = <P extends Payload, M extends MatchInfo, C extends Context>(
   };
 };
 
+const parseBody = (body: { [key: string]: any }): { [key: string]: any } => {
+  return Object.keys(body).reduce<{ [key: string]: any }>((out, key) => {
+    const value = body[key];
+    if (key.includes(".")) {
+      const keys = key.split(".");
+      keys
+        .map(k => (/^\d+$/.test(k) ? parseInt(k) : k))
+        .reduce((o, k, no) => {
+          if (no === keys.length - 1) {
+            o[k] = value;
+          } else if (!o[k]) {
+            o[k] = typeof keys[no + 1] === "number" ? [] : {};
+          }
+          return o[k];
+        }, out);
+    } else {
+      out[key] = value;
+    }
+    return out;
+  }, {});
+};
+
+const appendBody = <M>(data: M, body: any) => ({
+  ...data,
+  body: isPlainObject(body) ? parseBody(body) : body || {}
+});
+
 const makeMatch = <P extends Payload, M extends MatchInfo, C extends Context>(
   match: Array<Match<P, M, C>>
 ): Match<P, M, C> => async (url: URL, payload: P, context: C) => {
   for (let i = 0; i < match.length; i++) {
     const out = await match[i](url, payload, context);
     if (out !== false) {
-      return out;
+      out.method = payload.method;
+      return payload.method === "POST" ? appendBody(out, payload.body) : out;
     }
   }
   return false;

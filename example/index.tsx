@@ -58,7 +58,7 @@ const App = ({
       <Display bar={1} />
       <Link
         route="b"
-        payload={{ params: { bb: "" }, query: { id: "" } }}
+        payload={{ params: { bb: "99" }, query: { id: "" } }}
         style={{ color: "red" }}
       >
         test a to zz:w

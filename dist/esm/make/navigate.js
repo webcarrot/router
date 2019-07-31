@@ -3,8 +3,8 @@ import { execute } from "../utils/execute";
 import { ChangeType } from "../utils/enums";
 export const make = (routes, context, onStart, onEnd, onError) => {
     const linkProvider = makeLinkProvider(routes, context);
-    const navigateProvider = async (id, payload, prepare = true, method = "GET", no, changeType = ChangeType.PUSH, body) => {
-        const url = linkProvider(id, payload);
+    const navigateProvider = async (id, { match = {}, prepare = true, method = "GET", no = Date.now(), changeType = ChangeType.PUSH }) => {
+        const url = linkProvider(id, match);
         if (url) {
             const payload = method === "POST"
                 ? {
@@ -12,7 +12,7 @@ export const make = (routes, context, onStart, onEnd, onError) => {
                     url,
                     no,
                     changeType,
-                    body
+                    body: match.body
                 }
                 : {
                     method: "GET",

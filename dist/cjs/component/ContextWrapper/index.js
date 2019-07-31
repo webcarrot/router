@@ -102,7 +102,11 @@ exports.ContextWrapper = function (_a) {
                     match: initialInfo.match
                 };
                 var id = state.id, match = state.match;
-                contextValue.navigate(id, match, true, "GET", Date.now(), enums_1.ChangeType.HISTORY);
+                contextValue.navigate(id, {
+                    match: match,
+                    method: "GET",
+                    changeType: enums_1.ChangeType.HISTORY
+                });
             };
             window.addEventListener("popstate", handlePopState_1);
             return function () { return window.removeEventListener("popstate", handlePopState_1); };

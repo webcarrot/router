@@ -41,24 +41,22 @@ var execute_1 = require("../utils/execute");
 var enums_1 = require("../utils/enums");
 exports.make = function (routes, context, onStart, onEnd, onError) {
     var linkProvider = link_1.make(routes, context);
-    var navigateProvider = function (id, payload, prepare, method, no, changeType, body) {
-        if (prepare === void 0) { prepare = true; }
-        if (method === void 0) { method = "GET"; }
-        if (changeType === void 0) { changeType = enums_1.ChangeType.PUSH; }
+    var navigateProvider = function (id, _a) {
+        var _b = _a.match, match = _b === void 0 ? {} : _b, _c = _a.prepare, prepare = _c === void 0 ? true : _c, _d = _a.method, method = _d === void 0 ? "GET" : _d, _e = _a.no, no = _e === void 0 ? Date.now() : _e, _f = _a.changeType, changeType = _f === void 0 ? enums_1.ChangeType.PUSH : _f;
         return __awaiter(_this, void 0, void 0, function () {
-            var url, payload_1, output;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var url, payload, output;
+            return __generator(this, function (_g) {
+                switch (_g.label) {
                     case 0:
-                        url = linkProvider(id, payload);
+                        url = linkProvider(id, match);
                         if (!url) return [3, 2];
-                        payload_1 = method === "POST"
+                        payload = method === "POST"
                             ? {
                                 method: "POST",
                                 url: url,
                                 no: no,
                                 changeType: changeType,
-                                body: body
+                                body: match.body
                             }
                             : {
                                 method: "GET",
@@ -66,9 +64,9 @@ exports.make = function (routes, context, onStart, onEnd, onError) {
                                 no: no,
                                 changeType: changeType
                             };
-                        return [4, execute_1.execute(routes, payload_1, context, prepare, onStart, onError)];
+                        return [4, execute_1.execute(routes, payload, context, prepare, onStart, onError)];
                     case 1:
-                        output = _a.sent();
+                        output = _g.sent();
                         if (onEnd) {
                             onEnd(no, output);
                         }

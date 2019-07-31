@@ -203,14 +203,11 @@ export const ContextWrapper = <
           match: initialInfo.match
         };
         const { id, match } = state;
-        contextValue.navigate(
-          id,
-          match as any,
-          true,
-          "GET",
-          Date.now(),
-          ChangeType.HISTORY
-        );
+        contextValue.navigate(id, {
+          match: match as any,
+          method: "GET",
+          changeType: ChangeType.HISTORY
+        });
       };
       window.addEventListener("popstate", handlePopState);
       return () => window.removeEventListener("popstate", handlePopState);

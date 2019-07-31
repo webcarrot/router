@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "./dist/trash",
     "module": "esnext",
     "target": "esnext",
     "sourceMap": true,
     "declaration": false,
     "noImplicitAny": true,
     "removeComments": true,
+    "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "moduleResolution": "node",

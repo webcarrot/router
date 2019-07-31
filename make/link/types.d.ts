@@ -1,7 +1,17 @@
-import { MatchInfo, Context, Build } from "../../types";
+import {
+  MatchInfo,
+  Context,
+  Build,
+  Payload,
+  Action,
+  Output,
+  ComponentProps,
+  PostPayload,
+  ExecuteOutput
+} from "../../types";
 
-export type LinkPayload<
-  M extends MatchInfo,
-  C extends Context,
-  T extends Build<M, C>
+export type LinkMatch<
+  T extends Build<M, C>,
+  C extends Context = Context,
+  M extends MatchInfo = MatchInfo
 > = T extends (p: infer LP, c: C) => any ? LP : never;

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "./browser",
-    "target": "es5"
+    "target": "es5",
+    "noEmit": false
   }
 }

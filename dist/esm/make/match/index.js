@@ -1,5 +1,6 @@
 import * as pathToRegexp from "path-to-regexp";
 import { compile as pathCompiler } from "path-to-regexp";
+import { isPlainObject } from "@webcarrot/router/utils";
 const matchByRegExp = (url, pathKeys, pathRegExp) => {
     if (!url) {
         return false;
@@ -126,11 +127,36 @@ const parsePath = (info) => {
         build
     };
 };
+const parseBody = (body) => {
+    return Object.keys(body).reduce((out, key) => {
+        const value = body[key];
+        if (key.includes(".")) {
+            const keys = key.split(".");
+            keys
+                .map(k => (/^\d+$/.test(k) ? parseInt(k) : k))
+                .reduce((o, k, no) => {
+                if (no === keys.length - 1) {
+                    o[k] = value;
+                }
+                else if (!o[k]) {
+                    o[k] = typeof keys[no + 1] === "number" ? [] : {};
+                }
+                return o[k];
+            }, out);
+        }
+        else {
+            out[key] = value;
+        }
+        return out;
+    }, {});
+};
+const appendBody = (data, body) => (Object.assign({}, data, { body: isPlainObject(body) ? parseBody(body) : body || {} }));
 const makeMatch = (match) => async (url, payload, context) => {
     for (let i = 0; i < match.length; i++) {
         const out = await match[i](url, payload, context);
         if (out !== false) {
-            return out;
+            out.method = payload.method;
+            return payload.method === "POST" ? appendBody(out, payload.body) : out;
         }
     }
     return false;

@@ -7,10 +7,11 @@ import {
   Context,
   OnStart,
   OnError,
-  OnEnd
+  OnEnd,
+  Method
 } from "../types";
 import { make as makeLinkProvider } from "./link";
-import { LinkPayload } from "./link/types";
+import { LinkMatch } from "./link/types";
 import { execute } from "../utils/execute";
 import { ChangeType } from "../utils/enums";
 
@@ -43,33 +44,43 @@ export const make = <
   type NavigateProvider<D extends MAP> = {
     <N extends keyof D>(
       id: N,
-      payload: LinkPayload<MatchInfo, C, D[N]["build"]>,
-      prepare: boolean,
-      method: "POST",
-      no: number,
-      changeType: ChangeType,
-      body: any
+      data: {
+        match: LinkMatch<D[N]["build"], C>;
+        prepare?: boolean;
+        method: "POST";
+        no?: number;
+        changeType?: ChangeType;
+      }
     ): Promise<void>;
     <N extends keyof D>(
       id: N,
-      payload: LinkPayload<MatchInfo, C, D[N]["build"]>,
-      prepare: boolean,
-      method: "GET",
-      no: number,
-      changeType: ChangeType
+      data: {
+        match: LinkMatch<D[N]["build"], C>;
+        prepare?: boolean;
+        method?: "GET";
+        no?: number;
+        changeType?: ChangeType;
+      }
     ): Promise<void>;
   };
 
   const navigateProvider: NavigateProvider<typeof routes> = async (
     id: any,
-    payload: any,
-    prepare: any = true,
-    method: any = "GET",
-    no: number,
-    changeType: ChangeType = ChangeType.PUSH,
-    body?: any
+    {
+      match = {},
+      prepare = true,
+      method = "GET",
+      no = Date.now(),
+      changeType = ChangeType.PUSH
+    }: {
+      match?: any;
+      prepare?: boolean;
+      method?: Method;
+      no?: number;
+      changeType?: ChangeType;
+    }
   ) => {
-    const url = linkProvider(id, payload);
+    const url = linkProvider(id, match);
     if (url) {
       const payload: P =
         method === "POST"
@@ -78,7 +89,7 @@ export const make = <
               url,
               no,
               changeType,
-              body
+              body: match.body
             } as P)
           : ({
               method: "GET",

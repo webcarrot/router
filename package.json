@@ -9,7 +9,8 @@
     "clean": "rm -rf ./dist/*",
     "build:cjs": "tsc --build ./tsconfig.cjs.json",
     "build:esm": "tsc --build ./tsconfig.esm.json",
-    "build": "npm run clean && npm run build:cjs && npm run build:esm"
+    "build": "npm run clean && npm run build:cjs && npm run build:esm",
+    "test": "tsc"
   },
   "repository": {
     "type": "git",

@@ -10,7 +10,7 @@ import {
   OnEnd
 } from "../../types";
 
-import { LinkPayload } from "../link/types";
+import { LinkMatch } from "../link/types";
 import { ChangeType } from "../../utils/enums";
 
 export type FullContext<
@@ -46,10 +46,7 @@ export type RouteContextLink<
   C extends Context = Context,
   CP extends ComponentProps = ComponentProps,
   D extends MAP = MAP
-> = <N extends keyof D>(
-  id: N,
-  payload: LinkPayload<MatchInfo, C, D[N]["build"]>
-) => string;
+> = <N extends keyof D>(id: N, payload: LinkMatch<D[N]["build"], C>) => string;
 
 export type RouteContextNavigate<
   MAP extends {
@@ -69,20 +66,23 @@ export type RouteContextNavigate<
 > = {
   <N extends keyof D>(
     id: N,
-    payload: LinkPayload<MatchInfo, C, D[N]["build"]>,
-    prepare: boolean,
-    method: "POST",
-    no: number,
-    changeType: ChangeType,
-    body: any
+    info: {
+      method: "POST";
+      match: LinkMatch<D[N]["build"], C>;
+      prepare?: boolean;
+      no?: number;
+      changeType?: ChangeType;
+    }
   ): Promise<void>;
   <N extends keyof D>(
     id: N,
-    payload: LinkPayload<MatchInfo, C, D[N]["build"]>,
-    prepare: boolean,
-    method: "GET",
-    no: number,
-    changeType: ChangeType
+    info: {
+      method?: "GET";
+      match: LinkMatch<D[N]["build"], C>;
+      prepare?: boolean;
+      no?: number;
+      changeType?: ChangeType;
+    }
   ): Promise<void>;
 };
 

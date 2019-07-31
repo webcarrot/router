@@ -7,6 +7,9 @@ export const action: Action = async (payload, match, context) => {
     titleB:
       `${match.params && match.params.bb}` +
       context.foo() +
-      context.route.makeLink("b", { query: { id: "22" }, params: { bb: "d" } })
+      context.route.makeLink("b", {
+        query: { id: "22" },
+        params: { bb: "d" }
+      })
   };
 };

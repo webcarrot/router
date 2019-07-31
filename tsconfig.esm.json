@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "./dist/esm",
     "module": "esnext",
-    "target": "es2017"
+    "target": "es2017",
+    "noEmit": false
   },
   "exclude": ["./example/**/*", "./dist/**/*"]
 }

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "./dist/cjs",
     "module": "commonjs",
-    "target": "es5"
+    "target": "es5",
+    "noEmit": false
   },
   "exclude": ["./example/**/*", "./dist/**/*"]
 }

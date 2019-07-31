@@ -36,10 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var path_1 = require("../path");
+var match_1 = require("../match");
 var isRedirect_1 = require("../../utils/isRedirect");
 exports.make = function (id, path, init) {
-    var _a = path_1.make(path), match = _a.match, build = _a.build;
+    var _a = match_1.make(path), match = _a.match, build = _a.build;
     var _initialization;
     var _prepare;
     var _action;

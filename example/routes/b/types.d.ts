@@ -4,14 +4,18 @@ import {
   Action as ActionInt,
   Component as ComponentInt,
   Payload,
-  RouteInterface
+  RouteInterface,
+  MatchInfo
 } from "@webcarrot/router";
 
 import { RouteContext, ComponentProps } from "../../types";
 
 export type ID = "b";
 
-export type Match = { params: { bb: string }; query: { id: string } };
+export type Match = MatchInfo & {
+  params: { bb: string };
+  query: { id: string };
+} & ({} | { method: "POST"; body: { jasio: string } });
 
 export type Action = ActionInt<Payload, Match, Output, RouteContext>;
 

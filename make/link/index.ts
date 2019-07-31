@@ -7,7 +7,7 @@ import {
   Context
 } from "../../types";
 
-import { LinkPayload } from "./types";
+import { LinkMatch } from "./types";
 
 export const make = <
   MAP extends {
@@ -29,7 +29,7 @@ export const make = <
 ) => {
   type LinkProvider<D extends MAP> = <N extends keyof D>(
     id: N,
-    payload: LinkPayload<MatchInfo, C, D[N]["build"]>
+    payload: LinkMatch<D[N]["build"], C>
   ) => string;
   const linkProvider: LinkProvider<typeof routes> = (id, payload) =>
     routes[id].build(payload, context);

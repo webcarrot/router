@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -38,6 +49,7 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var pathToRegexp = require("path-to-regexp");
 var path_to_regexp_1 = require("path-to-regexp");
+var utils_1 = require("@webcarrot/router/utils");
 var matchByRegExp = function (url, pathKeys, pathRegExp) {
     if (!url) {
         return false;
@@ -164,6 +176,30 @@ var parsePath = function (info) {
         build: build
     };
 };
+var parseBody = function (body) {
+    return Object.keys(body).reduce(function (out, key) {
+        var value = body[key];
+        if (key.includes(".")) {
+            var keys_1 = key.split(".");
+            keys_1
+                .map(function (k) { return (/^\d+$/.test(k) ? parseInt(k) : k); })
+                .reduce(function (o, k, no) {
+                if (no === keys_1.length - 1) {
+                    o[k] = value;
+                }
+                else if (!o[k]) {
+                    o[k] = typeof keys_1[no + 1] === "number" ? [] : {};
+                }
+                return o[k];
+            }, out);
+        }
+        else {
+            out[key] = value;
+        }
+        return out;
+    }, {});
+};
+var appendBody = function (data, body) { return (__assign({}, data, { body: utils_1.isPlainObject(body) ? parseBody(body) : body || {} })); };
 var makeMatch = function (match) { return function (url, payload, context) { return __awaiter(_this, void 0, void 0, function () {
     var i, out;
     return __generator(this, function (_a) {
@@ -177,7 +213,8 @@ var makeMatch = function (match) { return function (url, payload, context) { ret
             case 2:
                 out = _a.sent();
                 if (out !== false) {
-                    return [2, out];
+                    out.method = payload.method;
+                    return [2, payload.method === "POST" ? appendBody(out, payload.body) : out];
                 }
                 _a.label = 3;
             case 3:

@@ -84,7 +84,11 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
                     match: initialInfo.match
                 };
                 const { id, match } = state;
-                contextValue.navigate(id, match, true, "GET", Date.now(), ChangeType.HISTORY);
+                contextValue.navigate(id, {
+                    match: match,
+                    method: "GET",
+                    changeType: ChangeType.HISTORY
+                });
             };
             window.addEventListener("popstate", handlePopState);
             return () => window.removeEventListener("popstate", handlePopState);

@@ -50,7 +50,7 @@ export const Link = <
         onClick(ev);
       }
       if (!ev.defaultPrevented) {
-        navigate(route, payload, true, "GET", Date.now(), changeType);
+        navigate(route, { match: payload, changeType });
         ev.preventDefault();
       }
     },

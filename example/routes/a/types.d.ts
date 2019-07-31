@@ -1,5 +1,6 @@
 import {
   RouteInit,
+  MatchInfo,
   Output as OutputInt,
   Action as ActionInt,
   Component as ComponentInt,
@@ -11,7 +12,7 @@ import { RouteContext, ComponentProps } from "../../types";
 
 export type ID = "a";
 
-export type Match = {
+export type Match = MatchInfo & {
   params?: { aa?: string; zz?: undefined } | { aa?: undefined; zz: string };
 };
 

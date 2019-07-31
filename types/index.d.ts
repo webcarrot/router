@@ -25,7 +25,11 @@ export {
 };
 
 export type ComponentProps = { [key: string]: any };
-export type MatchInfo = { [key: string]: any };
+
+export type MatchInfo = {
+  method?: Method;
+};
+
 export type Context = { [key: string]: any };
 
 export type GetPayload = {
@@ -33,6 +37,7 @@ export type GetPayload = {
   no: number;
   url: string;
   changeType: ChangeType;
+  body?: never;
 };
 
 export type PostPayload = {
@@ -40,7 +45,7 @@ export type PostPayload = {
   no: number;
   url: string;
   changeType: ChangeType;
-  body: any;
+  body: { [key: string]: string };
 };
 
 export type Payload = GetPayload | PostPayload;

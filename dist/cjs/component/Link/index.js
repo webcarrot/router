@@ -32,7 +32,7 @@ exports.Link = function (_a, ref) {
             onClick(ev);
         }
         if (!ev.defaultPrevented) {
-            navigate(route, payload, true, "GET", Date.now(), changeType);
+            navigate(route, { match: payload, changeType: changeType });
             ev.preventDefault();
         }
     }, [route, payload]);
