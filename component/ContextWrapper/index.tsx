@@ -205,7 +205,6 @@ export const ContextWrapper = <
         const { id, match } = state;
         contextValue.navigate(id, {
           match: match as any,
-          method: "GET",
           changeType: ChangeType.HISTORY
         });
       };

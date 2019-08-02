@@ -2,18 +2,27 @@ import { Key, PathFunction } from "path-to-regexp";
 
 import { Match, Build, Payload, MatchInfo, Context } from "../../types";
 
-export type MatchParams = { [key: string]: string | string[] };
+export type MatchParams = {
+  [key: string]: any;
+};
 
-export type Path<P extends Payload, M extends MatchInfo, C extends Context> =
+export type MatchProvider<
+  P extends Payload,
+  M extends MatchInfo,
+  C extends Context
+> =
   | string
   | RegExp
   | {
       match?: Match<P, M, C> | string | RegExp | Array<string | RegExp>;
       build?: Build<M, C> | string;
+      parse?: MatchParser<M>;
     };
 
-export type RoutePath<
+export type MatchParser<M extends MatchInfo> = (data: M) => M;
+
+export type RouteMatchProvider<
   P extends Payload,
   M extends MatchInfo,
   C extends Context
-> = Path<P, M, C> | Array<Path<P, M, C>>;
+> = MatchProvider<P, M, C> | Array<MatchProvider<P, M, C>>;

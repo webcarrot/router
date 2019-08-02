@@ -1,6 +1,6 @@
 import * as pathToRegexp from "path-to-regexp";
 import { compile as pathCompiler } from "path-to-regexp";
-import { isPlainObject } from "@webcarrot/router/utils";
+import { isPlainObject } from "../../utils";
 const matchByRegExp = (url, pathKeys, pathRegExp) => {
     if (!url) {
         return false;
@@ -83,6 +83,7 @@ const buildByCompiler = (input, compiler) => {
 const parsePath = (info) => {
     const match = [];
     const build = [];
+    let parse = null;
     if (info instanceof Array) {
         info.forEach(el => {
             const ret = parsePath(el);
@@ -114,6 +115,9 @@ const parsePath = (info) => {
                 match.push(...ret.match);
             }
         }
+        if (info.parse instanceof Function) {
+            parse = info.parse;
+        }
     }
     else {
         const pathKeys = [];
@@ -124,7 +128,8 @@ const parsePath = (info) => {
     }
     return {
         match,
-        build
+        build,
+        parse
     };
 };
 const parseBody = (body) => {
@@ -150,13 +155,14 @@ const parseBody = (body) => {
         return out;
     }, {});
 };
-const appendBody = (data, body) => (Object.assign({}, data, { body: isPlainObject(body) ? parseBody(body) : body || {} }));
-const makeMatch = (match) => async (url, payload, context) => {
+const appendMethodFields = (data, method, body) => method === "POST"
+    ? Object.assign({}, data, { method, body: isPlainObject(body) ? parseBody(body) : body || {} }) : Object.assign({}, data, { method });
+const makeMatch = (match, parse) => async (url, payload, context) => {
     for (let i = 0; i < match.length; i++) {
         const out = await match[i](url, payload, context);
         if (out !== false) {
-            out.method = payload.method;
-            return payload.method === "POST" ? appendBody(out, payload.body) : out;
+            const data = appendMethodFields(out, payload.method, payload.body);
+            return parse ? parse(data) : data;
         }
     }
     return false;
@@ -171,9 +177,9 @@ const makeBuild = (build) => (match, context) => {
     throw new Error("Cannot build path");
 };
 export const make = (path) => {
-    const { match, build } = parsePath(path);
+    const { match, parse, build } = parsePath(path);
     return {
-        match: makeMatch(match),
+        match: makeMatch(match, parse),
         build: makeBuild(build)
     };
 };

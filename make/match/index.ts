@@ -8,10 +8,11 @@ import {
   Payload,
   MatchInfo,
   Context,
-  BuildCheck
+  BuildCheck,
+  Method
 } from "../../types";
-import { MatchParams, RoutePath } from "./types";
-import { isPlainObject } from "@webcarrot/router/utils";
+import { MatchParams, RouteMatchProvider, MatchParser } from "./types";
+import { isPlainObject } from "../../utils";
 
 const matchByRegExp = <M extends MatchInfo>(
   url: URL,
@@ -97,10 +98,12 @@ const buildByCompiler = (input: any, compiler: PathFunction) => {
 };
 
 const parsePath = <P extends Payload, M extends MatchInfo, C extends Context>(
-  info: RoutePath<P, M, C>
+  info: RouteMatchProvider<P, M, C>
 ) => {
   const match: Array<Match<P, M, C>> = [];
   const build: Array<BuildCheck<M, C>> = [];
+  let parse: MatchParser<M> = null;
+
   if (info instanceof Array) {
     info.forEach(el => {
       const ret = parsePath<P, M, C>(el);
@@ -128,6 +131,9 @@ const parsePath = <P extends Payload, M extends MatchInfo, C extends Context>(
         match.push(...ret.match);
       }
     }
+    if (info.parse instanceof Function) {
+      parse = info.parse;
+    }
   } else {
     const pathKeys: Key[] = [];
     const pathRegExp = pathToRegexp(info, pathKeys);
@@ -137,7 +143,8 @@ const parsePath = <P extends Payload, M extends MatchInfo, C extends Context>(
   }
   return {
     match,
-    build
+    build,
+    parse
   };
 };
 
@@ -163,19 +170,27 @@ const parseBody = (body: { [key: string]: any }): { [key: string]: any } => {
   }, {});
 };
 
-const appendBody = <M>(data: M, body: any) => ({
-  ...data,
-  body: isPlainObject(body) ? parseBody(body) : body || {}
-});
+const appendMethodFields = <M>(data: M, method: Method, body: any) =>
+  method === "POST"
+    ? {
+        ...data,
+        method,
+        body: isPlainObject(body) ? parseBody(body) : body || {}
+      }
+    : {
+        ...data,
+        method
+      };
 
 const makeMatch = <P extends Payload, M extends MatchInfo, C extends Context>(
-  match: Array<Match<P, M, C>>
+  match: Array<Match<P, M, C>>,
+  parse: MatchParser<M>
 ): Match<P, M, C> => async (url: URL, payload: P, context: C) => {
   for (let i = 0; i < match.length; i++) {
     const out = await match[i](url, payload, context);
     if (out !== false) {
-      out.method = payload.method;
-      return payload.method === "POST" ? appendBody(out, payload.body) : out;
+      const data = appendMethodFields(out, payload.method, payload.body);
+      return parse ? parse(data) : data;
     }
   }
   return false;
@@ -194,11 +209,11 @@ const makeBuild = <M extends MatchInfo, C extends Context>(
 };
 
 export const make = <P extends Payload, M extends MatchInfo, C extends Context>(
-  path: RoutePath<P, M, C>
+  path: RouteMatchProvider<P, M, C>
 ) => {
-  const { match, build } = parsePath<P, M, C>(path);
+  const { match, parse, build } = parsePath<P, M, C>(path);
   return {
-    match: makeMatch(match),
+    match: makeMatch(match, parse),
     build: makeBuild(build)
   };
 };

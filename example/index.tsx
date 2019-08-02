@@ -58,7 +58,7 @@ const App = ({
       <Display bar={1} />
       <Link
         route="b"
-        payload={{ params: { bb: "99" }, query: { id: "" } }}
+        match={{ method: "GET", params: { bb: "23" }, query: { id: "3" } }}
         style={{ color: "red" }}
       >
         test a to zz:w
@@ -66,7 +66,12 @@ const App = ({
       <LinkMemo
         ReactContext={ReactRouteContext}
         route="b"
-        payload={{ params: { bb: "23" }, query: { id: "3" } }}
+        match={{
+          method: "POST",
+          params: { bb: "23" },
+          query: { id: "3" },
+          body: { jasio: "" }
+        }}
         style={{ color: "red" }}
       >
         test a to zz:w
@@ -74,7 +79,7 @@ const App = ({
       <NLink
         route="b"
         ReactContext={ReactRouteContext}
-        payload={{ params: { bb: "23" }, query: { id: "3" } }}
+        match={{ method: "GET", params: { bb: "23" }, query: { id: "3" } }}
         style={{ color: "red" }}
       >
         test a to zz:w

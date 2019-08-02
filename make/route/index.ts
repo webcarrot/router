@@ -10,7 +10,7 @@ import {
   OnStart,
   OnError
 } from "../../types";
-import { RoutePath } from "../match/types";
+import { RouteMatchProvider } from "../match/types";
 import { make as makeMatch } from "../match";
 import { isRedirect } from "../../utils/isRedirect";
 import { RouteInit } from "./types";
@@ -24,7 +24,7 @@ export const make = <
   CP extends ComponentProps
 >(
   id: ID,
-  path: RoutePath<P, M, C>,
+  path: RouteMatchProvider<P, M, C>,
   init: RouteInit<ID, P, M, O, C, CP>
 ): RouteInterface<ID, P, M, O, C, CP> => {
   const { match, build } = makeMatch<P, M, C>(path);

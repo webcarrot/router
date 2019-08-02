@@ -12,18 +12,18 @@ var __rest = (this && this.__rest) || function (s, e) {
 import * as React from "react";
 import { ChangeType } from "../../utils/enums";
 export const Link = (_a, ref) => {
-    var { route, payload, ReactContext, onClick, href, changeType = ChangeType.PUSH } = _a, rest = __rest(_a, ["route", "payload", "ReactContext", "onClick", "href", "changeType"]);
+    var { route, match, ReactContext, onClick, href, changeType = ChangeType.PUSH } = _a, rest = __rest(_a, ["route", "match", "ReactContext", "onClick", "href", "changeType"]);
     const { makeLink, navigate } = React.useContext(ReactContext);
     const handleClick = React.useCallback((ev) => {
         if (onClick) {
             onClick(ev);
         }
         if (!ev.defaultPrevented) {
-            navigate(route, { match: payload, changeType });
+            navigate(route, { match, changeType });
             ev.preventDefault();
         }
-    }, [route, payload]);
-    const link = makeLink(route, payload);
+    }, [route, match]);
+    const link = makeLink(route, match);
     return React.createElement("a", Object.assign({}, rest, { href: link || href, onClick: handleClick, ref: ref }));
 };
 export const LinkMemo = React.memo(React.forwardRef(Link));

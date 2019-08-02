@@ -86,7 +86,6 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
                 const { id, match } = state;
                 contextValue.navigate(id, {
                     match: match,
-                    method: "GET",
                     changeType: ChangeType.HISTORY
                 });
             };

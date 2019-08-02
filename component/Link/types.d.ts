@@ -6,7 +6,8 @@ import {
   Output,
   Payload,
   Context,
-  ComponentProps
+  ComponentProps,
+  Method
 } from "../../types";
 
 export interface LinkProps<
@@ -31,6 +32,6 @@ export interface LinkProps<
   > {
   href?: string;
   route: ID;
-  payload: LinkMatch<MAP[ID]["build"], C>;
+  match: LinkMatch<MAP[ID]["build"], C>;
   changeType?: ChangeType;
 }

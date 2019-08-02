@@ -7,7 +7,6 @@ import {
   Action,
   Prepare
 } from "../../types";
-import { RoutePath } from "../match/types";
 
 export type RouteInit<
   ID extends any,

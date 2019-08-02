@@ -27,7 +27,7 @@ export {
 export type ComponentProps = { [key: string]: any };
 
 export type MatchInfo = {
-  method?: Method;
+  method: Method;
 };
 
 export type Context = { [key: string]: any };

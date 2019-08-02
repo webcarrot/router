@@ -5,17 +5,22 @@ import {
   Component as ComponentInt,
   Payload,
   RouteInterface,
-  MatchInfo
+  Method
 } from "@webcarrot/router";
 
 import { RouteContext, ComponentProps } from "../../types";
 
 export type ID = "b";
 
-export type Match = MatchInfo & {
+type MatchBase<M extends Method, P = {}> = {
+  method: M;
   params: { bb: string };
   query: { id: string };
-} & ({} | { method: "POST"; body: { jasio: string } });
+} & { [K in keyof P]: P[K] };
+
+export type Match =
+  | MatchBase<"GET">
+  | MatchBase<"POST", { body: { jasio: string } }>;
 
 export type Action = ActionInt<Payload, Match, Output, RouteContext>;
 

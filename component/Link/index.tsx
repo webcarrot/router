@@ -31,7 +31,7 @@ export const Link = <
 >(
   {
     route,
-    payload,
+    match,
     ReactContext,
     onClick,
     href,
@@ -50,14 +50,14 @@ export const Link = <
         onClick(ev);
       }
       if (!ev.defaultPrevented) {
-        navigate(route, { match: payload, changeType });
+        navigate(route, { match, changeType });
         ev.preventDefault();
       }
     },
-    [route, payload]
+    [route, match]
   );
 
-  const link = makeLink(route, payload);
+  const link = makeLink(route, match);
 
   return <a {...rest} href={link || href} onClick={handleClick} ref={ref} />;
 };

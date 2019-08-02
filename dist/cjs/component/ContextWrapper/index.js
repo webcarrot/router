@@ -104,7 +104,6 @@ exports.ContextWrapper = function (_a) {
                 var id = state.id, match = state.match;
                 contextValue.navigate(id, {
                     match: match,
-                    method: "GET",
                     changeType: enums_1.ChangeType.HISTORY
                 });
             };

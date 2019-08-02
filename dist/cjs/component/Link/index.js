@@ -25,18 +25,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var enums_1 = require("../../utils/enums");
 exports.Link = function (_a, ref) {
-    var route = _a.route, payload = _a.payload, ReactContext = _a.ReactContext, onClick = _a.onClick, href = _a.href, _b = _a.changeType, changeType = _b === void 0 ? enums_1.ChangeType.PUSH : _b, rest = __rest(_a, ["route", "payload", "ReactContext", "onClick", "href", "changeType"]);
+    var route = _a.route, match = _a.match, ReactContext = _a.ReactContext, onClick = _a.onClick, href = _a.href, _b = _a.changeType, changeType = _b === void 0 ? enums_1.ChangeType.PUSH : _b, rest = __rest(_a, ["route", "match", "ReactContext", "onClick", "href", "changeType"]);
     var _c = React.useContext(ReactContext), makeLink = _c.makeLink, navigate = _c.navigate;
     var handleClick = React.useCallback(function (ev) {
         if (onClick) {
             onClick(ev);
         }
         if (!ev.defaultPrevented) {
-            navigate(route, { match: payload, changeType: changeType });
+            navigate(route, { match: match, changeType: changeType });
             ev.preventDefault();
         }
-    }, [route, payload]);
-    var link = makeLink(route, payload);
+    }, [route, match]);
+    var link = makeLink(route, match);
     return React.createElement("a", __assign({}, rest, { href: link || href, onClick: handleClick, ref: ref }));
 };
 exports.LinkMemo = React.memo(React.forwardRef(exports.Link));

@@ -49,7 +49,7 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var pathToRegexp = require("path-to-regexp");
 var path_to_regexp_1 = require("path-to-regexp");
-var utils_1 = require("@webcarrot/router/utils");
+var utils_1 = require("../../utils");
 var matchByRegExp = function (url, pathKeys, pathRegExp) {
     if (!url) {
         return false;
@@ -132,6 +132,7 @@ var buildByCompiler = function (input, compiler) {
 var parsePath = function (info) {
     var match = [];
     var build = [];
+    var parse = null;
     if (info instanceof Array) {
         info.forEach(function (el) {
             var ret = parsePath(el);
@@ -163,6 +164,9 @@ var parsePath = function (info) {
                 match.push.apply(match, ret.match);
             }
         }
+        if (info.parse instanceof Function) {
+            parse = info.parse;
+        }
     }
     else {
         var pathKeys_2 = [];
@@ -173,7 +177,8 @@ var parsePath = function (info) {
     }
     return {
         match: match,
-        build: build
+        build: build,
+        parse: parse
     };
 };
 var parseBody = function (body) {
@@ -199,9 +204,12 @@ var parseBody = function (body) {
         return out;
     }, {});
 };
-var appendBody = function (data, body) { return (__assign({}, data, { body: utils_1.isPlainObject(body) ? parseBody(body) : body || {} })); };
-var makeMatch = function (match) { return function (url, payload, context) { return __awaiter(_this, void 0, void 0, function () {
-    var i, out;
+var appendMethodFields = function (data, method, body) {
+    return method === "POST"
+        ? __assign({}, data, { method: method, body: utils_1.isPlainObject(body) ? parseBody(body) : body || {} }) : __assign({}, data, { method: method });
+};
+var makeMatch = function (match, parse) { return function (url, payload, context) { return __awaiter(_this, void 0, void 0, function () {
+    var i, out, data;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -213,8 +221,8 @@ var makeMatch = function (match) { return function (url, payload, context) { ret
             case 2:
                 out = _a.sent();
                 if (out !== false) {
-                    out.method = payload.method;
-                    return [2, payload.method === "POST" ? appendBody(out, payload.body) : out];
+                    data = appendMethodFields(out, payload.method, payload.body);
+                    return [2, parse ? parse(data) : data];
                 }
                 _a.label = 3;
             case 3:
@@ -234,9 +242,9 @@ var makeBuild = function (build) { return function (match, context) {
     throw new Error("Cannot build path");
 }; };
 exports.make = function (path) {
-    var _a = parsePath(path), match = _a.match, build = _a.build;
+    var _a = parsePath(path), match = _a.match, parse = _a.parse, build = _a.build;
     return {
-        match: makeMatch(match),
+        match: makeMatch(match, parse),
         build: makeBuild(build)
     };
 };
