@@ -1,14 +1,14 @@
 {
   "public": true,
   "name": "@webcarrot/router",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Isomorphic typed react router",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "scripts": {
     "clean": "rm -rf ./dist/*",
-    "build:cjs": "tsc --build ./tsconfig.cjs.json",
-    "build:esm": "tsc --build ./tsconfig.esm.json",
+    "build:cjs": "tsc --build ./tsconfig.cjs.json && copy-declaration-ts ./src ./dist/cjs",
+    "build:esm": "tsc --build ./tsconfig.esm.json && copy-declaration-ts ./src ./dist/esm",
     "build": "npm run clean && npm run build:cjs && npm run build:esm",
     "test": "tsc"
   },
@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@types/react": "^16.8.24",
+    "@webcarrot/copy-declaration-ts": "^1.0.0",
     "csstype": "^2.6.6",
     "typescript": "^3.5.3"
   }
