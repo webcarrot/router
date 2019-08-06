@@ -10,7 +10,8 @@ import {
   makeReactDisplay,
   makeReactLink,
   Link as NLink,
-  LinkMemo
+  LinkMemo,
+  ChangeType
 } from "@webcarrot/router";
 
 import { appContext } from "./context";
@@ -18,7 +19,6 @@ import { routes } from "./routes";
 import { Routes } from "./routes/types";
 
 import { RouteContext, ComponentProps } from "./types";
-import { ChangeType } from "../utils/enums";
 
 const fullContext = makeContext(routes, appContext);
 

@@ -8,10 +8,10 @@ import {
   ComponentProps,
   Context,
   OnStart,
-  OnError
+  OnError,
+  Build,
+  Match
 } from "../../types";
-import { RouteMatchProvider } from "../match/types";
-import { make as makeMatch } from "../match";
 import { isRedirect } from "../../utils/isRedirect";
 import { RouteInit } from "./types";
 
@@ -24,10 +24,15 @@ export const make = <
   CP extends ComponentProps
 >(
   id: ID,
-  path: RouteMatchProvider<P, M, C>,
+  {
+    match,
+    build
+  }: {
+    match: Match<P, M, C>;
+    build: Build<M, C>;
+  },
   init: RouteInit<ID, P, M, O, C, CP>
 ): RouteInterface<ID, P, M, O, C, CP> => {
-  const { match, build } = makeMatch<P, M, C>(path);
   let _initialization: Promise<void>;
   let _prepare: Prepare<ID, P, M, O, C, CP>;
   let _action: Action<P, M, O, C>;

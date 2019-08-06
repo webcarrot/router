@@ -14,10 +14,11 @@
     "lib": ["es7", "es2017", "dom"],
     "jsx": "react",
     "paths": {
-      "@webcarrot/router": ["./index"],
-      "@webcarrot/router/*": ["./*"]
+      "@webcarrot/router": ["./src/index"],
+      "@webcarrot/router/*": ["./src/*"]
     }
   },
+  "include": ["./src/**/*", "./example/*"],
   "exclude": ["./dist/**/*"],
   "esModuleInterop": true,
   "allowSyntheticDefaultImports": true

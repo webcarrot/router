@@ -6,5 +6,5 @@
     "target": "es2017",
     "noEmit": false
   },
-  "exclude": ["./example/**/*", "./dist/**/*"]
+  "include": ["./src/**/*"]
 }

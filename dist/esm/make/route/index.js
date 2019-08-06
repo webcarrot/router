@@ -1,7 +1,5 @@
-import { make as makeMatch } from "../match";
 import { isRedirect } from "../../utils/isRedirect";
-export const make = (id, path, init) => {
-    const { match, build } = makeMatch(path);
+export const make = (id, { match, build }, init) => {
     let _initialization;
     let _prepare;
     let _action;
