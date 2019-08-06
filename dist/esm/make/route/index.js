@@ -1,5 +1,5 @@
 import { isRedirect } from "../../utils/isRedirect";
-export const make = (id, { match, build }, init) => {
+export const make = (id, match, build, init) => {
     let _initialization;
     let _prepare;
     let _action;

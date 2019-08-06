@@ -1,7 +1,7 @@
 {
   "public": true,
   "name": "@webcarrot/router",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Isomorphic typed react router",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -38,7 +38,9 @@
   "devDependencies": {
     "@types/react": "^16.8.24",
     "@webcarrot/copy-declaration-ts": "^1.0.0",
-    "csstype": "^2.6.6",
     "typescript": "^3.5.3"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6"
   }
 }

@@ -1,26 +1,33 @@
 import { makeRoute } from "@webcarrot/router";
-import { Route, Match } from "./types";
+import { Route } from "./types";
 
 export const route: Route = makeRoute(
   "b",
-  {
-    match: (url, { method, body }) => {
-      const match = url.pathname.match(/^\/b(\/.+)?$/);
-      if (match) {
+  (url, { method, body }) => {
+    const match = url.pathname.match(/^\/b(\/.+)?$/);
+    if (match) {
+      const out = {
+        params: {
+          bb: match[1] ? match[1].substring(1) : ""
+        },
+        query: {
+          id: url.searchParams.get("id")
+        }
+      };
+      if (method === "GET") {
+        return { method: "GET", ...out };
+      } else {
         return {
-          method,
-          body,
-          params: {
-            bb: match[1] ? match[1].substring(1) : ""
-          },
-          query: {
-            id: url.searchParams.get("id")
+          method: "POST",
+          ...out,
+          body: {
+            foo: body.foo
           }
-        } as Match;
+        };
       }
-      return false;
-    },
-    build: match => `/b${match.params.bb ? `/${match.params.bb}` : ""}`
+    }
+    return false;
   },
+  match => `/b${match.params.bb ? `/${match.params.bb}` : ""}`,
   () => import("./init")
 );

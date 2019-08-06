@@ -11,7 +11,7 @@ export const action: Action = async (payload, match, context) => {
         method: "POST",
         query: { id: "22" },
         params: { bb: "d" },
-        body: { jasio: "" }
+        body: { foo: "" }
       })
   };
 };

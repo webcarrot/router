@@ -24,13 +24,8 @@ export const make = <
   CP extends ComponentProps
 >(
   id: ID,
-  {
-    match,
-    build
-  }: {
-    match: Match<P, M, C>;
-    build: Build<M, C>;
-  },
+  match: Match<P, M, C>,
+  build: Build<M, C>,
   init: RouteInit<ID, P, M, O, C, CP>
 ): RouteInterface<ID, P, M, O, C, CP> => {
   let _initialization: Promise<void>;

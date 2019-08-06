@@ -37,8 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var isRedirect_1 = require("../../utils/isRedirect");
-exports.make = function (id, _a, init) {
-    var match = _a.match, build = _a.build;
+exports.make = function (id, match, build, init) {
     var _initialization;
     var _prepare;
     var _action;

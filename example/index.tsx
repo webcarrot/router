@@ -70,7 +70,7 @@ const App = ({
           method: "POST",
           params: { bb: "23" },
           query: { id: "3" },
-          body: { jasio: "" }
+          body: { foo: "" }
         }}
         style={{ color: "red" }}
       >

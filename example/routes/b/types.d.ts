@@ -20,7 +20,7 @@ type MatchBase<M extends Method, P = {}> = {
 
 export type Match =
   | MatchBase<"GET">
-  | MatchBase<"POST", { body: { jasio: string } }>;
+  | MatchBase<"POST", { body: { foo: string } }>;
 
 export type Action = ActionInt<Payload, Match, Output, RouteContext>;
 
