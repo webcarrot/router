@@ -7,12 +7,9 @@ import {
   Context,
   OnStart,
   OnError,
-  OnEnd,
-  Method
+  OnEnd
 } from "../types";
-import { make as makeLinkProvider } from "./link";
 import { LinkMatch } from "./link/types";
-import { execute } from "../utils/execute";
 import { ChangeType } from "../utils/enums";
 
 export const make = <
@@ -36,11 +33,6 @@ export const make = <
   onEnd?: OnEnd<typeof routes, P, C, CP>,
   onError?: OnError
 ) => {
-  const linkProvider = makeLinkProvider<typeof routes, P, C, CP>(
-    routes,
-    context
-  );
-
   type NavigateProvider<D extends MAP> = {
     <N extends keyof D>(
       id: N,
@@ -69,21 +61,20 @@ export const make = <
     {
       match = {},
       prepare = true,
-      method = "GET",
       no = Date.now(),
       changeType = ChangeType.PUSH
     }: {
       match?: any;
       prepare?: boolean;
-      method?: Method;
       no?: number;
       changeType?: ChangeType;
     }
   ) => {
-    const url = linkProvider(id, match);
+    const route = routes[id];
+    const url = route.build(match, context);
     if (url) {
       const payload: P =
-        method === "POST"
+        match.method === "POST"
           ? ({
               method: "POST",
               url,
@@ -97,16 +88,22 @@ export const make = <
               no,
               changeType
             } as P);
-      const output = await execute<typeof routes, P, C, CP>(
-        routes,
+      const output = await route.execute(
+        new URL(`route:${payload.url}`),
         payload,
         context,
         prepare,
         onStart,
         onError
       );
-      if (onEnd) {
-        onEnd(no, output);
+      if (!output) {
+        const error = new Error("Invalid payload");
+        if (!onError || onError(no, error)) {
+          throw error;
+        }
+      } else if (onEnd) {
+        // FIXME
+        onEnd(no, output as any);
       }
     } else {
       throw new Error("Unknown link");

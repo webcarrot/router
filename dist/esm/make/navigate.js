@@ -1,12 +1,10 @@
-import { make as makeLinkProvider } from "./link";
-import { execute } from "../utils/execute";
 import { ChangeType } from "../utils/enums";
 export const make = (routes, context, onStart, onEnd, onError) => {
-    const linkProvider = makeLinkProvider(routes, context);
-    const navigateProvider = async (id, { match = {}, prepare = true, method = "GET", no = Date.now(), changeType = ChangeType.PUSH }) => {
-        const url = linkProvider(id, match);
+    const navigateProvider = async (id, { match = {}, prepare = true, no = Date.now(), changeType = ChangeType.PUSH }) => {
+        const route = routes[id];
+        const url = route.build(match, context);
         if (url) {
-            const payload = method === "POST"
+            const payload = match.method === "POST"
                 ? {
                     method: "POST",
                     url,
@@ -20,8 +18,14 @@ export const make = (routes, context, onStart, onEnd, onError) => {
                     no,
                     changeType
                 };
-            const output = await execute(routes, payload, context, prepare, onStart, onError);
-            if (onEnd) {
+            const output = await route.execute(new URL(`route:${payload.url}`), payload, context, prepare, onStart, onError);
+            if (!output) {
+                const error = new Error("Invalid payload");
+                if (!onError || onError(no, error)) {
+                    throw error;
+                }
+            }
+            else if (onEnd) {
                 onEnd(no, output);
             }
         }

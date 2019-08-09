@@ -27,7 +27,12 @@ exports.Display = function (_a) {
     var ReactContext = _a.ReactContext, rest = __rest(_a, ["ReactContext"]);
     var info = React.useContext(ReactContext).info;
     var _b = info(), Component = _b.Component, match = _b.match, output = _b.output, route = _b.route;
-    return (React.createElement(Component, __assign({}, rest, { route: route, match: match, output: output })));
+    if (Component) {
+        return (React.createElement(Component, __assign({}, rest, { route: route, match: match, output: output })));
+    }
+    else {
+        return null;
+    }
 };
 exports.DisplayMemo = React.memo(exports.Display);
 //# sourceMappingURL=Display.js.map

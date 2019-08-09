@@ -36,21 +36,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var link_1 = require("./link");
-var execute_1 = require("../utils/execute");
 var enums_1 = require("../utils/enums");
 exports.make = function (routes, context, onStart, onEnd, onError) {
-    var linkProvider = link_1.make(routes, context);
     var navigateProvider = function (id, _a) {
-        var _b = _a.match, match = _b === void 0 ? {} : _b, _c = _a.prepare, prepare = _c === void 0 ? true : _c, _d = _a.method, method = _d === void 0 ? "GET" : _d, _e = _a.no, no = _e === void 0 ? Date.now() : _e, _f = _a.changeType, changeType = _f === void 0 ? enums_1.ChangeType.PUSH : _f;
+        var _b = _a.match, match = _b === void 0 ? {} : _b, _c = _a.prepare, prepare = _c === void 0 ? true : _c, _d = _a.no, no = _d === void 0 ? Date.now() : _d, _e = _a.changeType, changeType = _e === void 0 ? enums_1.ChangeType.PUSH : _e;
         return __awaiter(_this, void 0, void 0, function () {
-            var url, payload, output;
-            return __generator(this, function (_g) {
-                switch (_g.label) {
+            var route, url, payload, output, error;
+            return __generator(this, function (_f) {
+                switch (_f.label) {
                     case 0:
-                        url = linkProvider(id, match);
+                        route = routes[id];
+                        url = route.build(match, context);
                         if (!url) return [3, 2];
-                        payload = method === "POST"
+                        payload = match.method === "POST"
                             ? {
                                 method: "POST",
                                 url: url,
@@ -64,10 +62,16 @@ exports.make = function (routes, context, onStart, onEnd, onError) {
                                 no: no,
                                 changeType: changeType
                             };
-                        return [4, execute_1.execute(routes, payload, context, prepare, onStart, onError)];
+                        return [4, route.execute(new URL("route:" + payload.url), payload, context, prepare, onStart, onError)];
                     case 1:
-                        output = _g.sent();
-                        if (onEnd) {
+                        output = _f.sent();
+                        if (!output) {
+                            error = new Error("Invalid payload");
+                            if (!onError || onError(no, error)) {
+                                throw error;
+                            }
+                        }
+                        else if (onEnd) {
                             onEnd(no, output);
                         }
                         return [3, 3];

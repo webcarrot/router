@@ -33,14 +33,18 @@ export const Display = <
 }) => {
   const { info } = React.useContext(ReactContext);
   const { Component, match, output, route } = info();
-  return (
-    <Component
-      {...(rest as any) as CP}
-      route={route}
-      match={match}
-      output={output}
-    />
-  );
+  if (Component) {
+    return (
+      <Component
+        {...(rest as any) as CP}
+        route={route}
+        match={match}
+        output={output}
+      />
+    );
+  } else {
+    return null;
+  }
 };
 
 export const DisplayMemo = React.memo(Display);

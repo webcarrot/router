@@ -9,6 +9,7 @@
     "clean": "rm -rf ./dist/*",
     "build:cjs": "tsc --build ./tsconfig.cjs.json && copy-declaration-ts ./src ./dist/cjs",
     "build:esm": "tsc --build ./tsconfig.esm.json && copy-declaration-ts ./src ./dist/esm",
+    "build:dev": "tsc --build ./tsconfig.esm.json --watch",
     "build": "npm run clean && npm run build:cjs && npm run build:esm",
     "test": "tsc"
   },
