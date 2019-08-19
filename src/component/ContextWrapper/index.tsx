@@ -24,7 +24,7 @@ import { compare } from "../../utils/compare";
 import { NAVIGATION_MODE } from "../../utils/constants";
 import { NavigationMode, ChangeType } from "../../utils/enums";
 import { ReactContextState, HistoryState } from "./types";
-import { isRedirect } from "@webcarrot/router/utils";
+import { isRedirect } from "../../utils/isRedirect";
 
 export const ContextWrapper = <
   MAP extends {

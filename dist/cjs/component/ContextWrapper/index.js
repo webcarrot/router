@@ -16,7 +16,7 @@ var context_1 = require("../../make/context");
 var compare_1 = require("../../utils/compare");
 var constants_1 = require("../../utils/constants");
 var enums_1 = require("../../utils/enums");
-var utils_1 = require("@webcarrot/router/utils");
+var isRedirect_1 = require("../../utils/isRedirect");
 exports.ContextWrapper = function (_a) {
     var routes = _a.routes, context = _a.context, initialInfo = _a.initialInfo, ReactContext = _a.ReactContext, children = _a.children;
     var _b = React.useReducer(function (state, action) {
@@ -79,7 +79,7 @@ exports.ContextWrapper = function (_a) {
             }
         };
         var onEnd = function (no, info) {
-            if (utils_1.isRedirect(info.output.status)) {
+            if (isRedirect_1.isRedirect(info.output.status)) {
                 routeContext.navigateToUrl({
                     url: info.output.url,
                     changeType: info.payload.changeType,

@@ -3,7 +3,7 @@ import { make as makeContext } from "../../make/context";
 import { compare } from "../../utils/compare";
 import { NAVIGATION_MODE } from "../../utils/constants";
 import { NavigationMode, ChangeType } from "../../utils/enums";
-import { isRedirect } from "@webcarrot/router/utils";
+import { isRedirect } from "../../utils/isRedirect";
 export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, children }) => {
     const [state, dispatch] = React.useReducer((state, action) => {
         switch (action.type) {
