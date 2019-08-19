@@ -75,6 +75,23 @@ export type RouteContextNavigate<
   ): Promise<void>;
 };
 
+export type RouteContextToUrl<
+  MAP extends {
+    [key: string]: RouteInterface<
+      Extract<keyof MAP, string>,
+      P,
+      MatchInfo,
+      Output,
+      C,
+      CP
+    >;
+  },
+  P extends Payload = Payload,
+  C extends Context = Context,
+  CP extends ComponentProps = ComponentProps,
+  D extends MAP = MAP
+> = (payload: P) => Promise<void>;
+
 export type RouteContext<
   MAP extends {
     [key: string]: RouteInterface<
@@ -92,4 +109,5 @@ export type RouteContext<
 > = {
   makeLink: RouteContextLink<MAP, P, C, CP>;
   navigate: RouteContextNavigate<MAP, P, C, CP>;
+  navigateToUrl: RouteContextToUrl<MAP, P, C, CP>;
 };

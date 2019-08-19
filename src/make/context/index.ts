@@ -14,6 +14,7 @@ import { RouteContext, FullContext } from "./types";
 
 import { make as makeLinkProvider } from "./../link";
 import { make as makeNavigateProvider } from "./../navigate";
+import { make as makeNavigateToUrlProvider } from "./../navigateToUrl";
 
 export const make = <
   MAP extends {
@@ -54,5 +55,12 @@ export const make = <
     onEnd,
     onError
   );
+  routeContext.navigateToUrl = makeNavigateToUrlProvider<
+    typeof routes,
+    P,
+    C,
+    CP
+  >(routes, fullContext, onStart, onEnd, onError);
+
   return fullContext;
 };

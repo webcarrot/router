@@ -3,6 +3,7 @@ import { make as makeContext } from "../../make/context";
 import { compare } from "../../utils/compare";
 import { NAVIGATION_MODE } from "../../utils/constants";
 import { NavigationMode, ChangeType } from "../../utils/enums";
+import { isRedirect } from "@webcarrot/router/utils";
 export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, children }) => {
     const [state, dispatch] = React.useReducer((state, action) => {
         switch (action.type) {
@@ -36,18 +37,6 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
         info: initialInfo,
         inProgress: false
     });
-    const onStart = React.useCallback(no => {
-        dispatch({ type: "START", no });
-        if (NAVIGATION_MODE === NavigationMode.LEGACY) {
-            return false;
-        }
-    }, []);
-    const onEnd = React.useCallback((no, info) => {
-        dispatch({ type: "END", no, info });
-    }, []);
-    const onError = React.useCallback((no, error) => {
-        dispatch({ type: "ERROR", no, error });
-    }, [state.current]);
     React.useEffect(() => {
         if (NAVIGATION_MODE === NavigationMode.MODERN) {
             if (!state.inProgress && state.current > 0) {
@@ -68,7 +57,32 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
             }
         }
     }, [state.inProgress]);
-    const routeContext = React.useMemo(() => makeContext(routes, context, onStart, onEnd, onError).route, [context, onStart, onEnd, onError]);
+    const routeContext = React.useMemo(() => {
+        const onStart = no => {
+            dispatch({ type: "START", no });
+            if (NAVIGATION_MODE === NavigationMode.LEGACY) {
+                return false;
+            }
+        };
+        const onEnd = (no, info) => {
+            if (isRedirect(info.output.status)) {
+                routeContext.navigateToUrl({
+                    url: info.output.url,
+                    changeType: info.payload.changeType,
+                    method: "GET",
+                    no: Date.now()
+                });
+            }
+            else {
+                dispatch({ type: "END", no, info });
+            }
+        };
+        const onError = (no, error) => {
+            dispatch({ type: "ERROR", no, error });
+        };
+        const routeContext = makeContext(routes, context, onStart, onEnd, onError).route;
+        return routeContext;
+    }, [context]);
     const reactRouteContext = React.useMemo(() => ({
         error: () => state.error,
         info: () => state.info,

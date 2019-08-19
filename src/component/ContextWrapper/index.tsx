@@ -24,6 +24,7 @@ import { compare } from "../../utils/compare";
 import { NAVIGATION_MODE } from "../../utils/constants";
 import { NavigationMode, ChangeType } from "../../utils/enums";
 import { ReactContextState, HistoryState } from "./types";
+import { isRedirect } from "@webcarrot/router/utils";
 
 export const ContextWrapper = <
   MAP extends {
@@ -118,27 +119,6 @@ export const ContextWrapper = <
     }
   );
 
-  const onStart: OnStart = React.useCallback(no => {
-    dispatch({ type: "START", no });
-    if (NAVIGATION_MODE === NavigationMode.LEGACY) {
-      return false;
-    }
-  }, []);
-
-  const onEnd: OnEnd<typeof routes, P, C, CP> = React.useCallback(
-    (no, info) => {
-      dispatch({ type: "END", no, info });
-    },
-    []
-  );
-
-  const onError: OnError = React.useCallback(
-    (no, error) => {
-      dispatch({ type: "ERROR", no, error });
-    },
-    [state.current]
-  );
-
   React.useEffect(() => {
     if (NAVIGATION_MODE === NavigationMode.MODERN) {
       if (!state.inProgress && state.current > 0) {
@@ -160,17 +140,38 @@ export const ContextWrapper = <
     }
   }, [state.inProgress]);
 
-  const routeContext = React.useMemo(
-    () =>
-      makeContext<typeof routes, P, C, CP>(
-        routes,
-        context,
-        onStart,
-        onEnd,
-        onError
-      ).route,
-    [context, onStart, onEnd, onError]
-  );
+  const routeContext = React.useMemo(() => {
+    const onStart: OnStart = no => {
+      dispatch({ type: "START", no });
+      if (NAVIGATION_MODE === NavigationMode.LEGACY) {
+        return false;
+      }
+    };
+    const onEnd: OnEnd<typeof routes, P, C, CP> = (no, info) => {
+      if (isRedirect(info.output.status)) {
+        routeContext.navigateToUrl({
+          url: info.output.url,
+          changeType: info.payload.changeType,
+          method: "GET",
+          no: Date.now()
+        } as P);
+      } else {
+        dispatch({ type: "END", no, info });
+      }
+    };
+    const onError: OnError = (no, error) => {
+      dispatch({ type: "ERROR", no, error });
+    };
+    const routeContext = makeContext<typeof routes, P, C, CP>(
+      routes,
+      context,
+      onStart,
+      onEnd,
+      onError
+    ).route;
+
+    return routeContext;
+  }, [context]);
 
   const reactRouteContext = React.useMemo<
     ReactContextInfo<typeof routes, P, C, CP>

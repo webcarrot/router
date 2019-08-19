@@ -16,6 +16,7 @@ var context_1 = require("../../make/context");
 var compare_1 = require("../../utils/compare");
 var constants_1 = require("../../utils/constants");
 var enums_1 = require("../../utils/enums");
+var utils_1 = require("@webcarrot/router/utils");
 exports.ContextWrapper = function (_a) {
     var routes = _a.routes, context = _a.context, initialInfo = _a.initialInfo, ReactContext = _a.ReactContext, children = _a.children;
     var _b = React.useReducer(function (state, action) {
@@ -50,18 +51,6 @@ exports.ContextWrapper = function (_a) {
         info: initialInfo,
         inProgress: false
     }), state = _b[0], dispatch = _b[1];
-    var onStart = React.useCallback(function (no) {
-        dispatch({ type: "START", no: no });
-        if (constants_1.NAVIGATION_MODE === enums_1.NavigationMode.LEGACY) {
-            return false;
-        }
-    }, []);
-    var onEnd = React.useCallback(function (no, info) {
-        dispatch({ type: "END", no: no, info: info });
-    }, []);
-    var onError = React.useCallback(function (no, error) {
-        dispatch({ type: "ERROR", no: no, error: error });
-    }, [state.current]);
     React.useEffect(function () {
         if (constants_1.NAVIGATION_MODE === enums_1.NavigationMode.MODERN) {
             if (!state.inProgress && state.current > 0) {
@@ -83,8 +72,31 @@ exports.ContextWrapper = function (_a) {
         }
     }, [state.inProgress]);
     var routeContext = React.useMemo(function () {
-        return context_1.make(routes, context, onStart, onEnd, onError).route;
-    }, [context, onStart, onEnd, onError]);
+        var onStart = function (no) {
+            dispatch({ type: "START", no: no });
+            if (constants_1.NAVIGATION_MODE === enums_1.NavigationMode.LEGACY) {
+                return false;
+            }
+        };
+        var onEnd = function (no, info) {
+            if (utils_1.isRedirect(info.output.status)) {
+                routeContext.navigateToUrl({
+                    url: info.output.url,
+                    changeType: info.payload.changeType,
+                    method: "GET",
+                    no: Date.now()
+                });
+            }
+            else {
+                dispatch({ type: "END", no: no, info: info });
+            }
+        };
+        var onError = function (no, error) {
+            dispatch({ type: "ERROR", no: no, error: error });
+        };
+        var routeContext = context_1.make(routes, context, onStart, onEnd, onError).route;
+        return routeContext;
+    }, [context]);
     var reactRouteContext = React.useMemo(function () { return ({
         error: function () { return state.error; },
         info: function () { return state.info; },

@@ -13,11 +13,13 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var link_1 = require("./../link");
 var navigate_1 = require("./../navigate");
+var navigateToUrl_1 = require("./../navigateToUrl");
 exports.make = function (routes, context, onStart, onEnd, onError) {
     var routeContext = {};
     var fullContext = __assign({}, context, { route: routeContext });
     routeContext.makeLink = link_1.make(routes, fullContext);
     routeContext.navigate = navigate_1.make(routes, fullContext, onStart, onEnd, onError);
+    routeContext.navigateToUrl = navigateToUrl_1.make(routes, fullContext, onStart, onEnd, onError);
     return fullContext;
 };
 //# sourceMappingURL=index.js.map
