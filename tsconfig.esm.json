@@ -5,6 +5,5 @@
     "module": "esnext",
     "target": "es2017",
     "noEmit": false
-  },
-  "include": ["./src/**/*"]
+  }
 }
