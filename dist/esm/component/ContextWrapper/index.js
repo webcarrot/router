@@ -9,21 +9,36 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
         switch (action.type) {
             case "START":
                 if (action.no > state.next) {
-                    return Object.assign({}, state, { next: action.no, inProgress: true });
+                    return {
+                        ...state,
+                        next: action.no,
+                        inProgress: true
+                    };
                 }
                 else {
                     break;
                 }
             case "END":
                 if (action.no === state.next) {
-                    return Object.assign({}, state, { current: action.no, info: action.info, error: null, inProgress: false });
+                    return {
+                        ...state,
+                        current: action.no,
+                        info: action.info,
+                        error: null,
+                        inProgress: false
+                    };
                 }
                 else {
                     break;
                 }
             case "ERROR":
                 if (action.no === state.next) {
-                    return Object.assign({}, state, { current: action.no, error: action.error, inProgress: false });
+                    return {
+                        ...state,
+                        current: action.no,
+                        error: action.error,
+                        inProgress: false
+                    };
                 }
                 else {
                     break;
@@ -89,7 +104,10 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
         inProgress: () => state.inProgress,
         isCurrent: (id, match) => state.info.id === id && (!match || compare(match, state.info.match))
     }), [state]);
-    const contextValue = React.useMemo(() => (Object.assign({}, routeContext, reactRouteContext)), [routeContext, reactRouteContext]);
+    const contextValue = React.useMemo(() => ({
+        ...routeContext,
+        ...reactRouteContext
+    }), [routeContext, reactRouteContext]);
     React.useEffect(() => {
         if (NAVIGATION_MODE === NavigationMode.MODERN) {
             const handlePopState = (ev) => {

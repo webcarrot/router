@@ -8,4 +8,5 @@ __export(require("./constants"));
 __export(require("./enums"));
 __export(require("./execute"));
 __export(require("./isRedirect"));
+__export(require("./promisfy"));
 //# sourceMappingURL=index.js.map

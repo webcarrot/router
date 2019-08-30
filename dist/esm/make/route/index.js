@@ -1,4 +1,5 @@
 import { isRedirect } from "../../utils/isRedirect";
+import { promisfy } from "../../utils/promisfy";
 export const make = (id, match, build, init) => {
     let _initialization;
     let _prepare;
@@ -14,32 +15,30 @@ export const make = (id, match, build, init) => {
     };
     const prepare = (output) => initialization().then(() => _prepare(output));
     const action = (props, match, context) => initialization().then(() => _action(props, match, context));
-    const execute = async (url, payload, context, doPrepare = true, onStart, onError) => {
-        try {
-            const m = await match(url, payload, context);
-            if (m) {
-                if (onStart && onStart(payload.no) === false) {
-                    return;
-                }
-                const o = (await action(payload, m, context));
-                const Component = !doPrepare || isRedirect(o.status) ? null : await prepare(o);
-                return {
-                    id,
-                    route,
-                    payload,
-                    match: m,
-                    output: o,
-                    Component
-                };
+    const execute = (url, payload, context, doPrepare = true, onStart, onError) => promisfy(() => match(url, payload, context))
+        .then(m => {
+        if (m) {
+            if (onStart && onStart(payload.no) === false) {
+                return;
             }
+            return action(payload, m, context).then((o) => (!doPrepare || isRedirect(o.status)
+                ? Promise.resolve(null)
+                : prepare(o)).then(Component => ({
+                id,
+                route,
+                payload,
+                match: m,
+                output: o,
+                Component
+            })));
         }
-        catch (err) {
-            if (onError && onError(payload.no, err)) {
-                throw err;
-            }
+    })
+        .catch(err => {
+        if (onError && onError(payload.no, err)) {
+            throw err;
         }
         return null;
-    };
+    });
     const route = {
         id,
         match,

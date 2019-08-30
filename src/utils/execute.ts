@@ -10,7 +10,7 @@ import {
   Retrun
 } from "../types";
 
-export const execute = async <
+export const execute = <
   MAP extends {
     [key: string]: RouteInterface<
       Extract<keyof MAP, string>,
@@ -33,20 +33,35 @@ export const execute = async <
   onError?: OnError
 ) => {
   const url = new URL(`route:${payload.url}`);
-  for (let id in routes) {
-    const route = routes[id];
-    const output = await route.execute(
-      url,
-      payload,
-      context,
-      prepare,
-      onStart,
-      onError
-    );
-    if (output) {
-      type Return = Exclude<Retrun<typeof route["execute"]>, false>;
-      return output as Return;
-    }
-  }
-  throw new Error("No route found");
+  type ReturnValue = Exclude<
+    Retrun<typeof routes[keyof MAP]["execute"]>,
+    false
+  >;
+  return Object.keys(routes)
+    .reduce<Promise<ReturnValue>>(
+      (out, id: keyof MAP) =>
+        out.then(result => {
+          if (result) {
+            return result;
+          } else {
+            const route = routes[id];
+            return route.execute(
+              url,
+              payload,
+              context,
+              prepare,
+              onStart,
+              onError
+            ) as Promise<ReturnValue>;
+          }
+        }),
+      Promise.resolve<ReturnValue>(null)
+    )
+    .then(result => {
+      if (!result) {
+        throw new Error("No route found");
+      } else {
+        return result;
+      }
+    });
 };

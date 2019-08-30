@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isRedirect = function (status) {
+exports.isRedirect = (status) => {
     switch (status) {
         case 300:
         case 301:

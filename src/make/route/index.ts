@@ -10,9 +10,11 @@ import {
   OnStart,
   OnError,
   Build,
-  Match
+  Match,
+  Execute
 } from "../../types";
 import { isRedirect } from "../../utils/isRedirect";
+import { promisfy } from "../../utils/promisfy";
 import { RouteInit } from "./types";
 
 export const make = <
@@ -47,39 +49,41 @@ export const make = <
   const action = (props: P, match: M, context: C) =>
     initialization().then(() => _action(props, match, context));
 
-  const execute = async (
+  const execute: Execute<ID, P, M, O, C, CP> = (
     url: URL,
     payload: P,
     context: C,
     doPrepare: boolean = true,
     onStart?: OnStart,
     onError?: OnError
-  ) => {
-    try {
-      const m = await match(url, payload, context);
-      if (m) {
-        if (onStart && onStart(payload.no) === false) {
-          return;
+  ) =>
+    promisfy(() => match(url, payload, context))
+      .then(m => {
+        if (m) {
+          if (onStart && onStart(payload.no) === false) {
+            return;
+          }
+          return action(payload, m, context).then((o: O) =>
+            (!doPrepare || isRedirect(o.status)
+              ? Promise.resolve(null)
+              : prepare(o)
+            ).then(Component => ({
+              id,
+              route,
+              payload,
+              match: m,
+              output: o,
+              Component
+            }))
+          );
         }
-        const o = (await action(payload, m, context)) as O;
-        const Component =
-          !doPrepare || isRedirect(o.status) ? null : await prepare(o);
-        return {
-          id,
-          route,
-          payload,
-          match: m,
-          output: o,
-          Component
-        };
-      }
-    } catch (err) {
-      if (onError && onError(payload.no, err)) {
-        throw err;
-      }
-    }
-    return null;
-  };
+      })
+      .catch(err => {
+        if (onError && onError(payload.no, err)) {
+          throw err;
+        }
+        return null;
+      });
 
   const route = {
     id,

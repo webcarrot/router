@@ -1,6 +1,6 @@
 import { ChangeType } from "../utils/enums";
 export const make = (routes, context, onStart, onEnd, onError) => {
-    const navigateProvider = async (id, { match = {}, prepare = true, no = Date.now(), changeType = ChangeType.PUSH }) => {
+    const navigateProvider = (id, { match = {}, prepare = true, no = Date.now(), changeType = ChangeType.PUSH }) => {
         const route = routes[id];
         const url = route.build(match, context);
         if (url) {
@@ -18,19 +18,22 @@ export const make = (routes, context, onStart, onEnd, onError) => {
                     no,
                     changeType
                 };
-            const output = await route.execute(new URL(`route:${payload.url}`), payload, context, prepare, onStart, onError);
-            if (!output) {
-                const error = new Error("Invalid payload");
-                if (!onError || onError(no, error)) {
-                    throw error;
+            return route
+                .execute(new URL(`route:${payload.url}`), payload, context, prepare, onStart, onError)
+                .then(output => {
+                if (!output) {
+                    const error = new Error("Invalid payload");
+                    if (!onError || onError(no, error)) {
+                        throw error;
+                    }
                 }
-            }
-            else if (onEnd) {
-                onEnd(no, output);
-            }
+                else if (onEnd) {
+                    onEnd(no, output);
+                }
+            });
         }
         else {
-            throw new Error("Unknown link");
+            return Promise.reject(new Error("Unknown link"));
         }
     };
     return navigateProvider;

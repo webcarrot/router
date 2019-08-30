@@ -56,7 +56,7 @@ export const make = <
     ): Promise<void>;
   };
 
-  const navigateProvider: NavigateProvider<typeof routes> = async (
+  const navigateProvider: NavigateProvider<typeof routes> = (
     id: any,
     {
       match = {},
@@ -88,25 +88,28 @@ export const make = <
               no,
               changeType
             } as P);
-      const output = await route.execute(
-        new URL(`route:${payload.url}`),
-        payload,
-        context,
-        prepare,
-        onStart,
-        onError
-      );
-      if (!output) {
-        const error = new Error("Invalid payload");
-        if (!onError || onError(no, error)) {
-          throw error;
-        }
-      } else if (onEnd) {
-        // FIXME
-        onEnd(no, output as any);
-      }
+      return route
+        .execute(
+          new URL(`route:${payload.url}`),
+          payload,
+          context,
+          prepare,
+          onStart,
+          onError
+        )
+        .then(output => {
+          if (!output) {
+            const error = new Error("Invalid payload");
+            if (!onError || onError(no, error)) {
+              throw error;
+            }
+          } else if (onEnd) {
+            // FIXME
+            onEnd(no, output as any);
+          }
+        });
     } else {
-      throw new Error("Unknown link");
+      return Promise.reject(new Error("Unknown link"));
     }
   };
 
