@@ -4,7 +4,6 @@ import {
   RouteInterface,
   Payload,
   Output,
-  ComponentProps,
   MatchInfo,
   Context
 } from "../../types";
@@ -20,13 +19,11 @@ export const Link = <
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload,
   C extends Context,
-  CP extends ComponentProps,
   ID extends keyof MAP
 >(
   {
@@ -37,8 +34,8 @@ export const Link = <
     href,
     changeType = ChangeType.PUSH,
     ...rest
-  }: LinkProps<MAP, P, C, CP, ID> & {
-    ReactContext: React.Context<ReactContextValue<MAP, P, C, CP>>;
+  }: LinkProps<MAP, P, C, ID> & {
+    ReactContext: React.Context<ReactContextValue<MAP, P, C>>;
   },
   ref?: any
 ) => {

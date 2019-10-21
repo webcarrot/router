@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../src/make/reactContextProvider/index.ts"],"names":[],"mappings":"AAWA,OAAO,EAAE,aAAa,EAAE,MAAM,OAAO,CAAC;AAEtC,MAAM,CAAC,MAAM,IAAI,GAAG,GAchB,EAAE,CAAC,aAAa,CAAC,EAAsC,CAAC,CAAC"}
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../src/make/reactContextProvider/index.ts"],"names":[],"mappings":"AAUA,OAAO,EAAE,aAAa,EAAE,MAAM,OAAO,CAAC;AAEtC,MAAM,CAAC,MAAM,IAAI,GAAG,GAYhB,EAAE,CAAC,aAAa,CAA+B,IAAI,CAAC,CAAC"}

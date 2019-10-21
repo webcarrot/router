@@ -1,7 +1,7 @@
 import { NewsApiContextValue } from "../api/news/types";
 import { TodoApiContextValue } from "../api/todo/types";
 
-import { Routes, ComponentProps, RouteContext } from "../routes/types";
+import { Routes, RouteContext } from "../routes/types";
 import { Payload, RouteInfo } from "@webcarrot/router";
 
 export type AppContext = {
@@ -19,5 +19,5 @@ export type AppProps = {
 export type AppState = {
   newsApiEndpoint: string;
   todoApiEndpoint: string;
-  route: RouteInfo<Routes, Payload, RouteContext, ComponentProps>;
+  route: RouteInfo<Routes, Payload, RouteContext>;
 };

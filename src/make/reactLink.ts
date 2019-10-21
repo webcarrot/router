@@ -1,13 +1,6 @@
 import * as React from "react";
 
-import {
-  RouteInterface,
-  Payload,
-  Output,
-  ComponentProps,
-  MatchInfo,
-  Context
-} from "../types";
+import { RouteInterface, Payload, Output, MatchInfo, Context } from "../types";
 
 import { ReactContextValue } from "../make/reactContextProvider/types";
 import { Link } from "../component/Link";
@@ -20,18 +13,16 @@ export const make = <
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload,
-  C extends Context,
-  CP extends ComponentProps
+  C extends Context
 >(
-  ReactContext: React.Context<ReactContextValue<MAP, P, C, CP>>
+  ReactContext: React.Context<ReactContextValue<MAP, P, C>>
 ) => {
   const Wrap = <ID extends keyof MAP>(
-    props: LinkProps<MAP, P, C, CP, ID>,
+    props: LinkProps<MAP, P, C, ID>,
     ref?: any
   ) => Link({ ...props, ReactContext }, ref);
   return React.memo(React.forwardRef(Wrap)) as typeof Wrap;

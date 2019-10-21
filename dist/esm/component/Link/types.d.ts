@@ -6,7 +6,6 @@ import {
   Output,
   Payload,
   Context,
-  ComponentProps,
   Method
 } from "../../types";
 
@@ -17,13 +16,11 @@ export interface LinkProps<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload,
   C extends Context,
-  CP extends ComponentProps,
   ID extends keyof MAP
 >
   extends React.DetailedHTMLProps<

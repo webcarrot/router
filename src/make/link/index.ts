@@ -2,7 +2,6 @@ import {
   RouteInterface,
   Payload,
   Output,
-  ComponentProps,
   MatchInfo,
   Context
 } from "../../types";
@@ -16,13 +15,11 @@ export const make = <
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context,
-  CP extends ComponentProps = ComponentProps
+  C extends Context = Context
 >(
   routes: MAP,
   context: C

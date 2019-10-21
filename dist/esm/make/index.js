@@ -1,5 +1,6 @@
 export { make as makeContext } from "./context";
 export { make as makeLink } from "./link";
+export { make as makeChangeUrl } from "./changeUrl";
 export { make as makeNavigate } from "./navigate";
 export { make as makeNavigateToUrl } from "./navigateToUrl";
 export { make as makeRoute } from "./route";

@@ -24,8 +24,6 @@ export {
   Method
 };
 
-export type ComponentProps = { [key: string]: any };
-
 export type MatchInfo = {
   method: Method;
 };
@@ -73,20 +71,20 @@ export type Component<
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
-  C extends Context,
-  CP extends ComponentProps
-> = ComponentType<
-  CP & { route: RouteInterface<ID, P, M, O, C, CP>; match: M; output: O }
->;
+  C extends Context
+> = ComponentType<{
+  route: RouteInterface<ID, P, M, O, C>;
+  match: M;
+  output: O;
+}>;
 
 export type Prepare<
   ID extends any,
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
-  C extends Context,
-  CP extends ComponentProps
-> = (output: O) => Promise<Component<ID, P, M, O, C, CP> | null>;
+  C extends Context
+> = (output: O) => Promise<Component<ID, P, M, O, C> | null>;
 
 export type Match<P extends Payload, M extends MatchInfo, C extends Context> = (
   url: URL,
@@ -113,13 +111,11 @@ export type OnEnd<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context,
-  CP extends ComponentProps = ComponentProps
+  C extends Context = Context
 > = (
   id: number,
   out: Exclude<
@@ -135,8 +131,7 @@ export type Execute<
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
-  C extends Context,
-  CP extends ComponentProps
+  C extends Context
 > = (
   url: URL,
   payload: P,
@@ -144,22 +139,21 @@ export type Execute<
   doPrepare: boolean,
   onStart?: OnStart,
   onError?: OnError
-) => Promise<ExecuteOutput<ID, P, M, O, C, CP> | false>;
+) => Promise<ExecuteOutput<ID, P, M, O, C> | false>;
 
 export type ExecuteOutput<
   ID extends any,
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
-  C extends Context,
-  CP extends ComponentProps
+  C extends Context
 > = {
   id: ID;
-  route: RouteInterface<ID, P, M, O, C, CP>;
+  route: RouteInterface<ID, P, M, O, C>;
   payload: P;
   match: M;
   output: O;
-  Component: Component<ID, P, M, O, C, CP>;
+  Component: Component<ID, P, M, O, C>;
 };
 
 export interface RouteInterface<
@@ -167,13 +161,12 @@ export interface RouteInterface<
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
-  C extends Context,
-  CP extends ComponentProps
+  C extends Context
 > {
   id: ID;
-  prepare: Prepare<ID, P, M, O, C, CP>;
+  prepare: Prepare<ID, P, M, O, C>;
   action: Action<P, M, O, C>;
   match: Match<P, M, C>;
   build: Build<M, C>;
-  execute: Execute<ID, P, M, O, C, CP>;
+  execute: Execute<ID, P, M, O, C>;
 }

@@ -5,7 +5,6 @@ import {
   Payload,
   RouteInterface,
   MatchInfo,
-  ComponentProps,
   Context,
   OnStart,
   OnError,
@@ -22,16 +21,15 @@ export const make = <
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
-  C extends Context,
-  CP extends ComponentProps
+  C extends Context
 >(
   id: ID,
   match: Match<P, M, C>,
   build: Build<M, C>,
-  init: RouteInit<ID, P, M, O, C, CP>
-): RouteInterface<ID, P, M, O, C, CP> => {
+  init: RouteInit<ID, P, M, O, C>
+): RouteInterface<ID, P, M, O, C> => {
   let _initialization: Promise<void>;
-  let _prepare: Prepare<ID, P, M, O, C, CP>;
+  let _prepare: Prepare<ID, P, M, O, C>;
   let _action: Action<P, M, O, C>;
 
   const initialization = () => {
@@ -49,7 +47,7 @@ export const make = <
   const action = (props: P, match: M, context: C) =>
     initialization().then(() => _action(props, match, context));
 
-  const execute: Execute<ID, P, M, O, C, CP> = (
+  const execute: Execute<ID, P, M, O, C> = (
     url: URL,
     payload: P,
     context: C,

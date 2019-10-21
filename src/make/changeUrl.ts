@@ -54,13 +54,13 @@ export const make = <
     ): Promise<void>;
   };
 
-  const navigateProvider: NavigateProvider<typeof routes> = (
+  const changeUrlProvider: NavigateProvider<typeof routes> = (
     id: any,
     {
       match = {},
       prepare = true,
       no = Date.now(),
-      changeType = ChangeType.PUSH
+      changeType = ChangeType.REPLACE
     }: {
       match?: any;
       prepare?: boolean;
@@ -111,5 +111,5 @@ export const make = <
     }
   };
 
-  return navigateProvider;
+  return changeUrlProvider;
 };

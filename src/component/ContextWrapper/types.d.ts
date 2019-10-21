@@ -3,8 +3,7 @@ import {
   MatchInfo,
   Output,
   Payload,
-  Context,
-  ComponentProps
+  Context
 } from "../../types";
 import { RouteInfo } from "../../make/reactContextProvider/types";
 
@@ -15,19 +14,17 @@ export interface ReactContextState<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload,
-  C extends Context,
-  CP extends ComponentProps
+  C extends Context
 > {
   error?: any;
   firstLoad: boolean;
   current: number;
   next: number;
-  info: RouteInfo<MAP, P, C, CP>;
+  info: RouteInfo<MAP, P, C>;
   inProgress: boolean;
 }
 
@@ -38,13 +35,11 @@ export interface HistoryState<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload,
-  C extends Context,
-  CP extends ComponentProps
+  C extends Context
 > {
   id: Extract<keyof MAP, string>;
   match: MatchInfo;

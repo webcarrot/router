@@ -23,8 +23,6 @@ export type Routes = {
 
 export type RouteContext = FullContext<Routes, Payload, AppContext>;
 
-export type ComponentProps = {};
-
 export type RouteAction<M extends MatchInfo, O extends Output> = Action<
   Payload,
   M,
@@ -38,10 +36,10 @@ export type RouteComponent<
   ID,
   M extends MatchInfo,
   O extends Output
-> = Component<ID, Payload, M, O, RouteContext, ComponentProps>;
+> = Component<ID, Payload, M, O, RouteContext>;
 
 export type RouteInterface<
   ID,
   M extends MatchInfo,
   O extends Output
-> = RouteInterfaceBase<ID, Payload, M, O, RouteContext, ComponentProps>;
+> = RouteInterfaceBase<ID, Payload, M, O, RouteContext>;

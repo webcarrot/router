@@ -2,7 +2,6 @@ import {
   RouteInterface,
   Payload,
   Output,
-  ComponentProps,
   MatchInfo,
   Context,
   OnStart,
@@ -17,13 +16,11 @@ export const execute = <
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context,
-  CP extends ComponentProps = ComponentProps
+  C extends Context = Context
 >(
   routes: MAP,
   payload: P,

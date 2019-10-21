@@ -2,7 +2,6 @@ import {
   RouteInterface,
   Payload,
   Output,
-  ComponentProps,
   MatchInfo,
   Context,
   OnStart,
@@ -20,15 +19,13 @@ export type FullContext<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context,
-  CP extends ComponentProps = ComponentProps
+  C extends Context = Context
 > = C & {
-  route: RouteContext<MAP, P, C, CP>;
+  route: RouteContext<MAP, P, C>;
 };
 
 export type RouteContextLink<
@@ -38,13 +35,11 @@ export type RouteContextLink<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload = Payload,
   C extends Context = Context,
-  CP extends ComponentProps = ComponentProps,
   D extends MAP = MAP
 > = <N extends keyof D>(id: N, match: LinkMatch<D[N]["build"], C>) => string;
 
@@ -55,13 +50,36 @@ export type RouteContextNavigate<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload = Payload,
   C extends Context = Context,
-  CP extends ComponentProps = ComponentProps,
+  D extends MAP = MAP
+> = {
+  <N extends keyof D>(
+    id: N,
+    info: {
+      match: LinkMatch<D[N]["build"], C>;
+      prepare?: boolean;
+      no?: number;
+      changeType?: ChangeType;
+    }
+  ): Promise<void>;
+};
+
+export type RouteContextChangeUrl<
+  MAP extends {
+    [key: string]: RouteInterface<
+      Extract<keyof MAP, string>,
+      P,
+      MatchInfo,
+      Output,
+      C
+    >;
+  },
+  P extends Payload = Payload,
+  C extends Context = Context,
   D extends MAP = MAP
 > = {
   <N extends keyof D>(
@@ -82,13 +100,11 @@ export type RouteContextToUrl<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload = Payload,
   C extends Context = Context,
-  CP extends ComponentProps = ComponentProps,
   D extends MAP = MAP
 > = (payload: P) => Promise<void>;
 
@@ -99,15 +115,14 @@ export type RouteContext<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context,
-  CP extends ComponentProps = ComponentProps
+  C extends Context = Context
 > = {
-  makeLink: RouteContextLink<MAP, P, C, CP>;
-  navigate: RouteContextNavigate<MAP, P, C, CP>;
-  navigateToUrl: RouteContextToUrl<MAP, P, C, CP>;
+  makeLink: RouteContextLink<MAP, P, C>;
+  navigate: RouteContextNavigate<MAP, P, C>;
+  navigateToUrl: RouteContextToUrl<MAP, P, C>;
+  changeUrl: RouteContextChangeUrl<MAP, P, C>;
 };

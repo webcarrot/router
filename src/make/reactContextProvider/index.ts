@@ -2,7 +2,6 @@ import {
   RouteInterface,
   Payload,
   Output,
-  ComponentProps,
   MatchInfo,
   Context
 } from "../../types";
@@ -18,11 +17,9 @@ export const make = <
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload,
-  C extends Context,
-  CP extends ComponentProps
->() => createContext({} as ReactContextValue<MAP, P, C, CP>);
+  C extends Context
+>() => createContext<ReactContextValue<MAP, P, C>>(null);

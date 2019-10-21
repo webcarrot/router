@@ -5,7 +5,6 @@ import {
   Payload,
   Action,
   Output,
-  ComponentProps,
   PostPayload,
   ExecuteOutput,
   Method

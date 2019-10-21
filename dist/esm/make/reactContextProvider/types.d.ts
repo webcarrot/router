@@ -2,7 +2,6 @@ import {
   RouteInterface,
   Payload,
   Output,
-  ComponentProps,
   MatchInfo,
   Context,
   OnStart,
@@ -20,13 +19,11 @@ export type RouteInfo<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload,
-  C extends Context,
-  CP extends ComponentProps
+  C extends Context
 > = Exclude<
   Unpacked<ReturnType<MAP[Extract<keyof MAP, string>]["execute"]>>,
   false
@@ -39,16 +36,14 @@ export type ReactContextInfo<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload,
-  C extends Context,
-  CP extends ComponentProps
+  C extends Context
 > = {
   error: () => any;
-  info: () => RouteInfo<MAP, P, C, CP>;
+  info: () => RouteInfo<MAP, P, C>;
   inProgress: () => boolean;
   isCurrent: (id: Extract<keyof MAP, string>, params?: MatchInfo) => boolean;
 };
@@ -60,11 +55,9 @@ export type ReactContextValue<
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload,
-  C extends Context,
-  CP extends ComponentProps
-> = RouteContext<MAP, P, C, CP> & ReactContextInfo<MAP, P, C, CP>;
+  C extends Context
+> = RouteContext<MAP, P, C> & ReactContextInfo<MAP, P, C>;

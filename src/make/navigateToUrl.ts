@@ -2,7 +2,6 @@ import {
   RouteInterface,
   Payload,
   Output,
-  ComponentProps,
   MatchInfo,
   Context,
   OnStart,
@@ -10,6 +9,7 @@ import {
   OnEnd
 } from "../types";
 import { execute } from "../utils";
+import { FullContext } from "./context/types";
 
 export const make = <
   MAP extends {
@@ -18,21 +18,19 @@ export const make = <
       P,
       MatchInfo,
       Output,
-      C,
-      CP
+      C
     >;
   },
   P extends Payload = Payload,
-  C extends Context = Context,
-  CP extends ComponentProps = ComponentProps
+  C extends Context = Context
 >(
   routes: MAP,
-  context: C,
+  context: FullContext<MAP, P, C>,
   onStart?: OnStart,
-  onEnd?: OnEnd<typeof routes, P, C, CP>,
+  onEnd?: OnEnd<typeof routes, P, C>,
   onError?: OnError
 ) => (payload: P) =>
-  execute<MAP, P, C, CP>(routes, payload, context, true, onStart, onError).then(
+  execute<MAP, P, C>(routes, payload, context, true, onStart, onError).then(
     out => {
       onEnd(payload.no, out);
     }
