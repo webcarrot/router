@@ -1,4 +1,5 @@
 export type ClientError =
+  | number
   | 400 /** Bad Request */
   | 401 /** Unauthorized */
   | 402 /** Payment Required */

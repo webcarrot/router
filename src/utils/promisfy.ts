@@ -1,4 +1,6 @@
-export const promisfy = <T>(action: () => T | Promise<T>): Promise<T> => {
+import { PromiseOrNot } from "../types";
+
+export const promisfy = <T>(action: () => PromiseOrNot<T>): Promise<T> => {
   try {
     const value = action();
     if (value instanceof Promise) {

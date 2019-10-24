@@ -14,6 +14,8 @@
     "lib": ["es7", "es2017", "dom"],
     "jsx": "react",
     "paths": {
+      "@webcarrot/router": ["../src"],
+      "@webcarrot/router/*": ["../src/*"],
       "@webcarrot/router-example/*": ["./src/*"]
     }
   },

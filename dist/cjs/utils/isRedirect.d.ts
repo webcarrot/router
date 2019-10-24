@@ -1,2 +1,1 @@
-import { Status } from "../types/status";
-export declare const isRedirect: (status: Status) => boolean;
+export declare const isRedirect: (status: number) => boolean;

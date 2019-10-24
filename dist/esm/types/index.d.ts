@@ -59,16 +59,14 @@ export type RedirectOutput = {
   status: Redirection;
 };
 
+export type PromiseOrNot<V> = Promise<V> | V;
+
 export type Action<
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
   C extends Context
-> = (
-  payload: P,
-  match: M,
-  context: C
-) => Promise<O | RedirectOutput> | O | RedirectOutput;
+> = (payload: P, match: M, context: C) => PromiseOrNot<O | RedirectOutput>;
 
 export type Component<
   ID extends any,
@@ -88,13 +86,13 @@ export type Prepare<
   M extends MatchInfo,
   O extends Output,
   C extends Context
-> = (output: O) => Promise<Component<ID, P, M, O, C> | null>;
+> = (output: O) => PromiseOrNot<Component<ID, P, M, O, C> | null>;
 
 export type Match<P extends Payload, M extends MatchInfo, C extends Context> = (
   url: URL,
   payload: P,
   context: C
-) => M | false | Promise<M | false>;
+) => PromiseOrNot<M | false>;
 
 export type Build<M extends MatchInfo, C extends Context> = (
   match: M,
@@ -143,10 +141,7 @@ export type Execute<
   doPrepare: boolean,
   onStart?: OnStart,
   onError?: OnError
-) =>
-  | Promise<ExecuteOutput<ID, P, M, O, C> | false>
-  | ExecuteOutput<ID, P, M, O, C>
-  | false;
+) => PromiseOrNot<ExecuteOutput<ID, P, M, O, C> | false>;
 
 export type ExecuteOutput<
   ID extends any,
