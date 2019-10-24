@@ -1,38 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const enums_1 = require("../utils/enums");
-exports.make = (routes, context, onStart, onEnd, onError) => {
-    const changeUrlProvider = (id, { match = {}, prepare = true, no = Date.now(), changeType = enums_1.ChangeType.REPLACE }) => {
+const promisfy_1 = require("../utils/promisfy");
+exports.make = (routes, context, onChange) => {
+    const changeUrlProvider = (id, match, output, changeType = enums_1.ChangeType.REPLACE) => {
         const route = routes[id];
         const url = route.build(match, context);
         if (url) {
-            const payload = match.method === "POST"
-                ? {
-                    method: "POST",
-                    url,
-                    no,
-                    changeType,
-                    body: match.body
-                }
-                : {
-                    method: "GET",
-                    url,
-                    no,
-                    changeType
-                };
-            return route
-                .execute(new URL(`route:${payload.url}`), payload, context, prepare, onStart, onError)
-                .then(output => {
-                if (!output) {
-                    const error = new Error("Invalid payload");
-                    if (!onError || onError(no, error)) {
-                        throw error;
-                    }
-                }
-                else if (onEnd) {
-                    onEnd(no, output);
-                }
-            });
+            const no = Date.now();
+            const payload = {
+                method: "GET",
+                no,
+                url,
+                changeType,
+                body: null
+            };
+            return promisfy_1.promisfy(() => route.prepare(output))
+                .then(Component => ({
+                id,
+                route,
+                payload,
+                match,
+                output,
+                Component
+            }))
+                .then(output => onChange(no, output));
         }
         else {
             return Promise.reject(new Error("Unknown link"));

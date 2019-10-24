@@ -64,7 +64,11 @@ export type Action<
   M extends MatchInfo,
   O extends Output,
   C extends Context
-> = (payload: P, match: M, context: C) => Promise<O | RedirectOutput>;
+> = (
+  payload: P,
+  match: M,
+  context: C
+) => Promise<O | RedirectOutput> | O | RedirectOutput;
 
 export type Component<
   ID extends any,
@@ -139,7 +143,10 @@ export type Execute<
   doPrepare: boolean,
   onStart?: OnStart,
   onError?: OnError
-) => Promise<ExecuteOutput<ID, P, M, O, C> | false>;
+) =>
+  | Promise<ExecuteOutput<ID, P, M, O, C> | false>
+  | ExecuteOutput<ID, P, M, O, C>
+  | false;
 
 export type ExecuteOutput<
   ID extends any,

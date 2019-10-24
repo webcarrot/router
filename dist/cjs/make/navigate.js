@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const enums_1 = require("../utils/enums");
+const promisfy_1 = require("../utils/promisfy");
 exports.make = (routes, context, onStart, onEnd, onError) => {
     const navigateProvider = (id, { match = {}, prepare = true, no = Date.now(), changeType = enums_1.ChangeType.PUSH }) => {
         const route = routes[id];
@@ -20,9 +21,7 @@ exports.make = (routes, context, onStart, onEnd, onError) => {
                     no,
                     changeType
                 };
-            return route
-                .execute(new URL(`route:${payload.url}`), payload, context, prepare, onStart, onError)
-                .then(output => {
+            return promisfy_1.promisfy(() => route.execute(new URL(`route:${payload.url}`), payload, context, prepare, onStart, onError)).then(output => {
                 if (!output) {
                     const error = new Error("Invalid payload");
                     if (!onError || onError(no, error)) {

@@ -31,6 +31,15 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
                 else {
                     break;
                 }
+            case "CHANGE": {
+                return {
+                    ...state,
+                    current: action.no,
+                    info: action.info,
+                    error: null,
+                    inProgress: false
+                };
+            }
             case "ERROR":
                 if (action.no === state.next) {
                     return {
@@ -71,7 +80,7 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
                 }
             }
         }
-    }, [state.inProgress]);
+    }, [state.inProgress, state.current]);
     const routeContext = React.useMemo(() => {
         const onStart = no => {
             dispatch({ type: "START", no });
@@ -95,7 +104,10 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
         const onError = (no, error) => {
             dispatch({ type: "ERROR", no, error });
         };
-        const routeContext = makeContext(routes, context, onStart, onEnd, onError).route;
+        const onChangeUrl = (no, info) => {
+            dispatch({ type: "CHANGE", no, info });
+        };
+        const routeContext = makeContext(routes, context, onStart, onEnd, onError, onChangeUrl).route;
         return routeContext;
     }, [context]);
     const reactRouteContext = React.useMemo(() => ({

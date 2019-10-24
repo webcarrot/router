@@ -1,22 +1,6 @@
-import { RouteInterface, Payload, Output, MatchInfo, Context, OnStart, OnError, OnEnd } from "../types";
-import { LinkMatch } from "./link/types";
+import { RouteInterface, Payload, Output, MatchInfo, Context, OnEnd, Unpacked } from "../types";
 import { ChangeType } from "../utils/enums";
 import { FullContext } from "./context/types";
 export declare const make: <MAP extends {
     [key: string]: RouteInterface<Extract<keyof MAP, string>, P, MatchInfo, Output, C>;
-}, P extends Payload = Payload, C extends Context = Context>(routes: MAP, context: FullContext<MAP, P, C>, onStart?: OnStart, onEnd?: OnEnd<MAP, P, C>, onError?: OnError) => {
-    <N extends keyof MAP>(id: N, data: {
-        match: LinkMatch<MAP[N]["build"], C, MatchInfo>;
-        prepare?: boolean;
-        method: "POST";
-        no?: number;
-        changeType?: ChangeType;
-    }): Promise<void>;
-    <N extends keyof MAP>(id: N, data: {
-        match: LinkMatch<MAP[N]["build"], C, MatchInfo>;
-        prepare?: boolean;
-        method?: "GET";
-        no?: number;
-        changeType?: ChangeType;
-    }): Promise<void>;
-};
+}, P extends Payload = Payload, C extends Context = Context>(routes: MAP, context: FullContext<MAP, P, C>, onChange?: OnEnd<MAP, P, C>) => <N extends keyof MAP>(id: N, match: Exclude<Unpacked<ReturnType<MAP[N]["match"]>>, false>, out: Unpacked<ReturnType<MAP[N]["action"]>>, changeType?: ChangeType) => Promise<void>;

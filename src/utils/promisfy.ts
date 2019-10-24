@@ -7,6 +7,6 @@ export const promisfy = <T>(action: () => T | Promise<T>): Promise<T> => {
       return Promise.resolve(value);
     }
   } catch (err) {
-    Promise.reject(err);
+    return Promise.reject(err);
   }
 };

@@ -1,4 +1,5 @@
 import { ChangeType } from "../utils/enums";
+import { promisfy } from "../utils/promisfy";
 export const make = (routes, context, onStart, onEnd, onError) => {
     const navigateProvider = (id, { match = {}, prepare = true, no = Date.now(), changeType = ChangeType.PUSH }) => {
         const route = routes[id];
@@ -18,9 +19,7 @@ export const make = (routes, context, onStart, onEnd, onError) => {
                     no,
                     changeType
                 };
-            return route
-                .execute(new URL(`route:${payload.url}`), payload, context, prepare, onStart, onError)
-                .then(output => {
+            return promisfy(() => route.execute(new URL(`route:${payload.url}`), payload, context, prepare, onStart, onError)).then(output => {
                 if (!output) {
                     const error = new Error("Invalid payload");
                     if (!onError || onError(no, error)) {

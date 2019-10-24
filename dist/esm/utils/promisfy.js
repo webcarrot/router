@@ -9,7 +9,7 @@ export const promisfy = (action) => {
         }
     }
     catch (err) {
-        Promise.reject(err);
+        return Promise.reject(err);
     }
 };
 //# sourceMappingURL=promisfy.js.map

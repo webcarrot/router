@@ -34,7 +34,7 @@ export const make = <
 
   const initialization = () => {
     if (!_initialization) {
-      _initialization = init().then(config => {
+      _initialization = promisfy(init).then(config => {
         _prepare = config.prepare;
         _action = config.action;
       });

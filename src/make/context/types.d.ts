@@ -6,7 +6,8 @@ import {
   Context,
   OnStart,
   OnError,
-  OnEnd
+  OnEnd,
+  Unpacked
 } from "../../types";
 
 import { LinkMatch } from "../link/types";
@@ -84,12 +85,9 @@ export type RouteContextChangeUrl<
 > = {
   <N extends keyof D>(
     id: N,
-    info: {
-      match: LinkMatch<D[N]["build"], C>;
-      prepare?: boolean;
-      no?: number;
-      changeType?: ChangeType;
-    }
+    match: Exclude<Unpacked<ReturnType<D[N]["match"]>>, false>,
+    out: Unpacked<ReturnType<D[N]["action"]>>,
+    changeType?: ChangeType
   ): Promise<void>;
 };
 

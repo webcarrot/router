@@ -13,7 +13,12 @@ export type RouteInit<
   M extends MatchInfo,
   O extends Output,
   C extends Context
-> = () => Promise<{
-  action: Action<P, M, O, C>;
-  prepare: Prepare<ID, P, M, O, C>;
-}>;
+> = () =>
+  | Promise<{
+      action: Action<P, M, O, C>;
+      prepare: Prepare<ID, P, M, O, C>;
+    }>
+  | {
+      action: Action<P, M, O, C>;
+      prepare: Prepare<ID, P, M, O, C>;
+    };

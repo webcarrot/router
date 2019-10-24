@@ -33,7 +33,8 @@ export const make = <
   context: C,
   onStart?: OnStart,
   onEnd?: OnEnd<typeof routes, P, C>,
-  onError?: OnError
+  onError?: OnError,
+  onChange?: OnEnd<typeof routes, P, C>
 ) => {
   const routeContext = {} as RouteContext<typeof routes, P, typeof context>;
   const fullContext = { ...context, route: routeContext } as FullContext<
@@ -63,9 +64,7 @@ export const make = <
   routeContext.changeUrl = makeChangeUrl<typeof routes, P, C>(
     routes,
     fullContext,
-    onStart,
-    onEnd,
-    onError
+    onChange
   );
 
   return fullContext;

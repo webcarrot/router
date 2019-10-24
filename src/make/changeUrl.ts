@@ -4,13 +4,12 @@ import {
   Output,
   MatchInfo,
   Context,
-  OnStart,
-  OnError,
-  OnEnd
+  OnEnd,
+  Unpacked
 } from "../types";
-import { LinkMatch } from "./link/types";
 import { ChangeType } from "../utils/enums";
 import { FullContext } from "./context/types";
+import { promisfy } from "../utils/promisfy";
 
 export const make = <
   MAP extends {
@@ -27,85 +26,44 @@ export const make = <
 >(
   routes: MAP,
   context: FullContext<MAP, P, C>,
-  onStart?: OnStart,
-  onEnd?: OnEnd<typeof routes, P, C>,
-  onError?: OnError
+  onChange?: OnEnd<typeof routes, P, C>
 ) => {
-  type NavigateProvider<D extends MAP> = {
+  type ChangeUrlProvider<D extends MAP> = {
     <N extends keyof D>(
       id: N,
-      data: {
-        match: LinkMatch<D[N]["build"], C>;
-        prepare?: boolean;
-        method: "POST";
-        no?: number;
-        changeType?: ChangeType;
-      }
-    ): Promise<void>;
-    <N extends keyof D>(
-      id: N,
-      data: {
-        match: LinkMatch<D[N]["build"], C>;
-        prepare?: boolean;
-        method?: "GET";
-        no?: number;
-        changeType?: ChangeType;
-      }
+      match: Exclude<Unpacked<ReturnType<D[N]["match"]>>, false>,
+      out: Unpacked<ReturnType<D[N]["action"]>>,
+      changeType?: ChangeType
     ): Promise<void>;
   };
 
-  const changeUrlProvider: NavigateProvider<typeof routes> = (
-    id: any,
-    {
-      match = {},
-      prepare = true,
-      no = Date.now(),
-      changeType = ChangeType.REPLACE
-    }: {
-      match?: any;
-      prepare?: boolean;
-      no?: number;
-      changeType?: ChangeType;
-    }
+  const changeUrlProvider: ChangeUrlProvider<typeof routes> = (
+    id,
+    match,
+    output,
+    changeType = ChangeType.REPLACE
   ) => {
     const route = routes[id];
     const url = route.build(match, context);
     if (url) {
-      const payload: P =
-        match.method === "POST"
-          ? ({
-              method: "POST",
-              url,
-              no,
-              changeType,
-              body: match.body
-            } as P)
-          : ({
-              method: "GET",
-              url,
-              no,
-              changeType
-            } as P);
-      return route
-        .execute(
-          new URL(`route:${payload.url}`),
+      const no = Date.now();
+      const payload: P = {
+        method: "GET",
+        no,
+        url,
+        changeType,
+        body: null
+      } as P;
+      return promisfy(() => route.prepare(output as Output))
+        .then(Component => ({
+          id,
+          route,
           payload,
-          context,
-          prepare,
-          onStart,
-          onError
-        )
-        .then(output => {
-          if (!output) {
-            const error = new Error("Invalid payload");
-            if (!onError || onError(no, error)) {
-              throw error;
-            }
-          } else if (onEnd) {
-            // FIXME
-            onEnd(no, output as any);
-          }
-        });
+          match,
+          output,
+          Component
+        }))
+        .then(output => onChange(no, output as any));
     } else {
       return Promise.reject(new Error("Unknown link"));
     }

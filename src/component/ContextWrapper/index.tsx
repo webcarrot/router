@@ -64,6 +64,11 @@ export const ContextWrapper = <
         type: "ERROR";
         no: number;
         error: any;
+      }
+    | {
+        type: "CHANGE";
+        no: number;
+        info: RouteInfo<typeof routes, P, C>;
       };
 
   const [state, dispatch] = React.useReducer<
@@ -93,6 +98,15 @@ export const ContextWrapper = <
           } else {
             break;
           }
+        case "CHANGE": {
+          return {
+            ...state,
+            current: action.no,
+            info: action.info,
+            error: null,
+            inProgress: false
+          };
+        }
         case "ERROR":
           if (action.no === state.next) {
             return {
@@ -135,7 +149,7 @@ export const ContextWrapper = <
         }
       }
     }
-  }, [state.inProgress]);
+  }, [state.inProgress, state.current]);
 
   const routeContext = React.useMemo(() => {
     const onStart: OnStart = no => {
@@ -159,12 +173,18 @@ export const ContextWrapper = <
     const onError: OnError = (no, error) => {
       dispatch({ type: "ERROR", no, error });
     };
+
+    const onChangeUrl: OnEnd<typeof routes, P, C> = (no, info) => {
+      dispatch({ type: "CHANGE", no, info });
+    };
+
     const routeContext = makeContext<typeof routes, P, C>(
       routes,
       context,
       onStart,
       onEnd,
-      onError
+      onError,
+      onChangeUrl
     ).route;
 
     return routeContext;

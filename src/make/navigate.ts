@@ -11,6 +11,7 @@ import {
 import { LinkMatch } from "./link/types";
 import { ChangeType } from "../utils/enums";
 import { FullContext } from "./context/types";
+import { promisfy } from "../utils/promisfy";
 
 export const make = <
   MAP extends {
@@ -86,8 +87,8 @@ export const make = <
               no,
               changeType
             } as P);
-      return route
-        .execute(
+      return promisfy(() =>
+        route.execute(
           new URL(`route:${payload.url}`),
           payload,
           context,
@@ -95,17 +96,17 @@ export const make = <
           onStart,
           onError
         )
-        .then(output => {
-          if (!output) {
-            const error = new Error("Invalid payload");
-            if (!onError || onError(no, error)) {
-              throw error;
-            }
-          } else if (onEnd) {
-            // FIXME
-            onEnd(no, output as any);
+      ).then(output => {
+        if (!output) {
+          const error = new Error("Invalid payload");
+          if (!onError || onError(no, error)) {
+            throw error;
           }
-        });
+        } else if (onEnd) {
+          // FIXME
+          onEnd(no, output as any);
+        }
+      });
     } else {
       return Promise.reject(new Error("Unknown link"));
     }

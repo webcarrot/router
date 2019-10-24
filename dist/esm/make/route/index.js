@@ -6,7 +6,7 @@ export const make = (id, match, build, init) => {
     let _action;
     const initialization = () => {
         if (!_initialization) {
-            _initialization = init().then(config => {
+            _initialization = promisfy(init).then(config => {
                 _prepare = config.prepare;
                 _action = config.action;
             });
