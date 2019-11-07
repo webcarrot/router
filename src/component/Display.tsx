@@ -1,19 +1,11 @@
 import * as React from "react";
 
-import { RouteInterface, Payload, Output, MatchInfo, Context } from "../types";
+import { Payload, Context, RoutesMap } from "../types";
 
 import { ReactContextValue } from "../make/reactContextProvider/types";
 
 export const Display = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload,
   C extends Context
 >({

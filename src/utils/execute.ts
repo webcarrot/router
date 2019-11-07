@@ -1,24 +1,14 @@
 import {
-  RouteInterface,
   Payload,
-  Output,
-  MatchInfo,
   Context,
   OnStart,
   OnError,
-  Retrun
+  Retrun,
+  RoutesMap
 } from "../types";
 
 export const execute = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context
 >(
@@ -31,10 +21,10 @@ export const execute = <
 ) => {
   const url = new URL(`route:${payload.url}`);
   type ReturnValue = Exclude<
-    Retrun<typeof routes[keyof MAP]["execute"]>,
+    Retrun<typeof routes[keyof typeof routes]["execute"]>,
     false
   >;
-  return Object.keys(routes)
+  return ((Object.keys(routes) as unknown) as ReadonlyArray<keyof MAP>)
     .reduce<Promise<ReturnValue>>(
       (out, id: keyof MAP) =>
         out.then(result => {

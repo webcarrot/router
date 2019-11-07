@@ -1,14 +1,12 @@
 import * as React from "react";
 
 import {
-  RouteInterface,
   Payload,
-  Output,
-  MatchInfo,
   Context,
   OnStart,
   OnError,
-  OnEnd
+  OnEnd,
+  RoutesMap
 } from "../../types";
 
 import { make as makeContext } from "../../make/context";
@@ -26,15 +24,7 @@ import { ReactContextState, HistoryState } from "./types";
 import { isRedirect } from "../../utils/isRedirect";
 
 export const ContextWrapper = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload,
   C extends Context
 >({

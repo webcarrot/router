@@ -7,21 +7,14 @@ import {
   OnStart,
   OnError,
   OnEnd,
-  Unpacked
+  Unpacked,
+  RoutesMap
 } from "../../types";
 
 import { RouteContext } from "../context/types";
 
 export type RouteInfo<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload,
   C extends Context
 > = Exclude<
@@ -30,15 +23,7 @@ export type RouteInfo<
 >;
 
 export type ReactContextInfo<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload,
   C extends Context
 > = {
@@ -49,15 +34,7 @@ export type ReactContextInfo<
 };
 
 export type ReactContextValue<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload,
   C extends Context
 > = RouteContext<MAP, P, C> & ReactContextInfo<MAP, P, C>;

@@ -18,7 +18,7 @@ import { Html } from "../app/html";
 import { AppProps, AppState } from "../app/types";
 
 import { routes } from "../routes";
-import { Routes } from "../routes/types";
+import { RouteContext } from "../routes/types";
 
 import { make as makeNewsApi } from "../api/news/make";
 import { make as makeTodoApi } from "../api/todo/make";
@@ -56,7 +56,11 @@ export const pageHandler = async (
   const newsApi = await makeNewsApi(appConfiguration.news);
   const todoApi = await makeTodoApi();
 
-  const appContext = makeRouteContext(routes, { newsApi, todoApi });
+  const appContext: RouteContext = makeRouteContext(routes, {
+    rootPath: "",
+    newsApi,
+    todoApi
+  });
 
   const routePayload =
     method === "GET"
@@ -74,11 +78,7 @@ export const pageHandler = async (
           body: body as any
         } as PostPayload);
 
-  const routeState = await executeRoute<Routes>(
-    routes,
-    routePayload,
-    appContext
-  );
+  const routeState = await executeRoute(routes, routePayload, appContext);
 
   if (isRedirect(routeState.output.status)) {
     ctx.status = routeState.output.status;

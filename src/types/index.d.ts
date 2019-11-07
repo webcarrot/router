@@ -107,15 +107,7 @@ export type BuildCheck<M extends MatchInfo, C extends Context> = (
 export type OnStart = (id: number) => void | boolean;
 
 export type OnEnd<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context
 > = (
@@ -172,3 +164,25 @@ export interface RouteInterface<
   build: Build<M, C>;
   execute: Execute<ID, P, M, O, C>;
 }
+
+export type RoutesMap<
+  MAP extends {
+    [key: string]: RouteInterface<
+      Extract<keyof MAP, string>,
+      P,
+      MatchInfo,
+      Output,
+      C
+    >;
+  },
+  P extends Payload,
+  C extends Context
+> = {
+  [key in Extract<keyof MAP, string>]: RouteInterface<
+    Extract<keyof MAP, string>,
+    P,
+    MatchInfo,
+    Output,
+    C
+  >;
+};

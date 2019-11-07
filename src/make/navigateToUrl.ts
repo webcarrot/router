@@ -1,26 +1,9 @@
-import {
-  RouteInterface,
-  Payload,
-  Output,
-  MatchInfo,
-  Context,
-  OnStart,
-  OnError,
-  OnEnd
-} from "../types";
+import { Payload, Context, OnStart, OnError, OnEnd, RoutesMap } from "../types";
 import { execute } from "../utils";
 import { FullContext } from "./context/types";
 
 export const make = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context
 >(

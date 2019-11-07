@@ -3,20 +3,13 @@ import {
   MatchInfo,
   Output,
   Payload,
-  Context
+  Context,
+  RoutesMap
 } from "../../types";
 import { RouteInfo } from "../../make/reactContextProvider/types";
 
 export interface ReactContextState<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload,
   C extends Context
 > {
@@ -29,15 +22,7 @@ export interface ReactContextState<
 }
 
 export interface HistoryState<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload,
   C extends Context
 > {

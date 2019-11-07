@@ -7,22 +7,15 @@ import {
   OnStart,
   OnError,
   OnEnd,
-  Unpacked
+  Unpacked,
+  RoutesMap
 } from "../../types";
 
 import { LinkMatch } from "../link/types";
 import { ChangeType } from "../../utils/enums";
 
 export type FullContext<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context
 > = C & {
@@ -30,30 +23,14 @@ export type FullContext<
 };
 
 export type RouteContextLink<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context,
   D extends MAP = MAP
 > = <N extends keyof D>(id: N, match: LinkMatch<D[N]["build"], C>) => string;
 
 export type RouteContextNavigate<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context,
   D extends MAP = MAP
@@ -70,15 +47,7 @@ export type RouteContextNavigate<
 };
 
 export type RouteContextChangeUrl<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context,
   D extends MAP = MAP
@@ -92,30 +61,14 @@ export type RouteContextChangeUrl<
 };
 
 export type RouteContextToUrl<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context,
   D extends MAP = MAP
 > = (payload: P) => Promise<void>;
 
 export type RouteContext<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context
 > = {

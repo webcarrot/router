@@ -1,23 +1,9 @@
-import {
-  RouteInterface,
-  Payload,
-  Output,
-  MatchInfo,
-  Context
-} from "../../types";
+import { Payload, Context, RoutesMap } from "../../types";
 
 import { LinkMatch } from "./types";
 
 export const make = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context
 >(

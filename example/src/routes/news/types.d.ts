@@ -2,7 +2,7 @@ import {
   RouteAction,
   RouteOutput,
   RouteComponent,
-  RouteInterface
+  RouteInterfaceL
 } from "../types";
 
 import {
@@ -87,4 +87,4 @@ export type ComponentTopHeadlines = RouteComponent<
   OutputsTopHeadlines
 >;
 
-export type Route = RouteInterface<ID, Match, Output>;
+export type Route = RouteInterfaceL<ID, Match, Output>;

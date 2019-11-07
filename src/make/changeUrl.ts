@@ -1,26 +1,10 @@
-import {
-  RouteInterface,
-  Payload,
-  Output,
-  MatchInfo,
-  Context,
-  OnEnd,
-  Unpacked
-} from "../types";
+import { Payload, Output, Context, OnEnd, Unpacked, RoutesMap } from "../types";
 import { ChangeType } from "../utils/enums";
 import { FullContext } from "./context/types";
 import { promisfy } from "../utils/promisfy";
 
 export const make = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context
 >(

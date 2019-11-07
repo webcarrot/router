@@ -6,19 +6,12 @@ import {
   Output,
   Payload,
   Context,
-  Method
+  Method,
+  RoutesMap
 } from "../../types";
 
 export interface LinkProps<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload,
   C extends Context,
   ID extends keyof MAP

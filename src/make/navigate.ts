@@ -1,28 +1,11 @@
-import {
-  RouteInterface,
-  Payload,
-  Output,
-  MatchInfo,
-  Context,
-  OnStart,
-  OnError,
-  OnEnd
-} from "../types";
+import { Payload, Context, OnStart, OnError, OnEnd, RoutesMap } from "../types";
 import { LinkMatch } from "./link/types";
 import { ChangeType } from "../utils/enums";
 import { FullContext } from "./context/types";
 import { promisfy } from "../utils/promisfy";
 
 export const make = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RoutesMap<MAP, P, C>,
   P extends Payload = Payload,
   C extends Context = Context
 >(
@@ -33,7 +16,7 @@ export const make = <
   onError?: OnError
 ) => {
   type NavigateProvider<D extends MAP> = {
-    <N extends keyof D>(
+    <N extends Extract<keyof D, string>>(
       id: N,
       data: {
         match: LinkMatch<D[N]["build"], C>;
@@ -56,7 +39,7 @@ export const make = <
   };
 
   const navigateProvider: NavigateProvider<typeof routes> = (
-    id: any,
+    id: keyof typeof routes,
     {
       match = {},
       prepare = true,
