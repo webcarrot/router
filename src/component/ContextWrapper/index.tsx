@@ -6,7 +6,10 @@ import {
   OnStart,
   OnError,
   OnEnd,
-  RoutesMap
+  RoutesMap,
+  RouteInterface,
+  MatchInfo,
+  Output
 } from "../../types";
 
 import { make as makeContext } from "../../make/context";
@@ -24,7 +27,7 @@ import { ReactContextState, HistoryState } from "./types";
 import { isRedirect } from "../../utils/isRedirect";
 
 export const ContextWrapper = <
-  MAP extends RoutesMap<MAP, P, C>,
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
   P extends Payload,
   C extends Context
 >({
@@ -34,10 +37,10 @@ export const ContextWrapper = <
   ReactContext,
   children
 }: {
-  routes: MAP;
+  routes: RoutesMap<MAP, P, C>;
   context: C;
-  initialInfo: RouteInfo<typeof routes, P, C>;
-  ReactContext: React.Context<ReactContextValue<typeof routes, P, C>>;
+  initialInfo: RouteInfo<MAP, P, C>;
+  ReactContext: React.Context<ReactContextValue<MAP, P, C>>;
   children: React.ReactNode;
 }) => {
   type ReducerActions =
@@ -48,7 +51,7 @@ export const ContextWrapper = <
     | {
         type: "END";
         no: number;
-        info: RouteInfo<typeof routes, P, C>;
+        info: RouteInfo<MAP, P, C>;
       }
     | {
         type: "ERROR";
@@ -58,11 +61,11 @@ export const ContextWrapper = <
     | {
         type: "CHANGE";
         no: number;
-        info: RouteInfo<typeof routes, P, C>;
+        info: RouteInfo<MAP, P, C>;
       };
 
   const [state, dispatch] = React.useReducer<
-    React.Reducer<ReactContextState<typeof routes, P, C>, ReducerActions>
+    React.Reducer<ReactContextState<MAP, P, C>, ReducerActions>
   >(
     (state, action) => {
       switch (action.type) {
@@ -123,7 +126,7 @@ export const ContextWrapper = <
   React.useEffect(() => {
     if (NAVIGATION_MODE === NavigationMode.MODERN) {
       if (!state.inProgress && state.current > 0) {
-        const historyState: HistoryState<typeof routes, P, C> = {
+        const historyState: HistoryState<MAP, P, C> = {
           id: state.info.id,
           match: state.info.match
         };
@@ -148,7 +151,7 @@ export const ContextWrapper = <
         return false;
       }
     };
-    const onEnd: OnEnd<typeof routes, P, C> = (no, info) => {
+    const onEnd: OnEnd<MAP, P, C> = (no, info) => {
       if (isRedirect(info.output.status)) {
         routeContext.navigateToUrl({
           url: info.output.url,
@@ -164,11 +167,11 @@ export const ContextWrapper = <
       dispatch({ type: "ERROR", no, error });
     };
 
-    const onChangeUrl: OnEnd<typeof routes, P, C> = (no, info) => {
+    const onChangeUrl: OnEnd<MAP, P, C> = (no, info) => {
       dispatch({ type: "CHANGE", no, info });
     };
 
-    const routeContext = makeContext<typeof routes, P, C>(
+    const routeContext = makeContext<MAP, P, C>(
       routes,
       context,
       onStart,
@@ -180,9 +183,7 @@ export const ContextWrapper = <
     return routeContext;
   }, [context]);
 
-  const reactRouteContext = React.useMemo<
-    ReactContextInfo<typeof routes, P, C>
-  >(
+  const reactRouteContext = React.useMemo<ReactContextInfo<MAP, P, C>>(
     () => ({
       error: () => state.error,
       info: () => state.info,
@@ -193,7 +194,7 @@ export const ContextWrapper = <
     [state]
   );
 
-  const contextValue = React.useMemo<ReactContextValue<typeof routes, P, C>>(
+  const contextValue = React.useMemo<ReactContextValue<MAP, P, C>>(
     () => ({
       ...routeContext,
       ...reactRouteContext
@@ -204,7 +205,7 @@ export const ContextWrapper = <
   React.useEffect(() => {
     if (NAVIGATION_MODE === NavigationMode.MODERN) {
       const handlePopState = (ev: PopStateEvent) => {
-        const state: HistoryState<typeof routes, P, C> = ev.state || {
+        const state: HistoryState<MAP, P, C> = ev.state || {
           id: initialInfo.id,
           match: initialInfo.match
         };

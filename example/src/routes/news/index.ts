@@ -1,6 +1,6 @@
 import { makeRoute, Payload } from "@webcarrot/router";
-import { Route, Match } from "./types";
-import { RouteContext } from "../types";
+import { Route, Match, Output } from "./types";
+import { RouteContext, RouteInintL } from "../types";
 import { make as makeMatch } from "@webcarrot/router-match";
 
 const { match, build } = makeMatch<Payload, Match, RouteContext>([
@@ -8,6 +8,5 @@ const { match, build } = makeMatch<Payload, Match, RouteContext>([
   "/news"
 ]);
 
-export const route: Route = makeRoute("news", match, build, () =>
-  import("./init")
-);
+export const route: Route = makeRoute("news", match, build, (() =>
+  import("./init")) as RouteInintL<"news", Match, Output>);

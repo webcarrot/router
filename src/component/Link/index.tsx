@@ -1,16 +1,21 @@
 import * as React from "react";
 
-import { Payload, Context, RoutesMap } from "../../types";
+import {
+  Payload,
+  Context,
+  RouteInterface,
+  MatchInfo,
+  Output
+} from "../../types";
 
 import { ReactContextValue } from "../../make/reactContextProvider/types";
 import { ChangeType } from "../../utils/enums";
 import { LinkProps } from "./types";
 
 export const Link = <
-  MAP extends RoutesMap<MAP, P, C>,
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
   P extends Payload,
-  C extends Context,
-  ID extends keyof MAP
+  C extends Context
 >(
   {
     route,
@@ -20,7 +25,7 @@ export const Link = <
     href,
     changeType = ChangeType.PUSH,
     ...rest
-  }: LinkProps<MAP, P, C, ID> & {
+  }: LinkProps<MAP, P, C> & {
     ReactContext: React.Context<ReactContextValue<MAP, P, C>>;
   },
   ref?: any

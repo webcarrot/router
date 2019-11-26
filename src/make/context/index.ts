@@ -4,7 +4,10 @@ import {
   OnStart,
   OnError,
   OnEnd,
-  RoutesMap
+  RoutesMap,
+  RouteInterface,
+  MatchInfo,
+  Output
 } from "../../types";
 
 import { RouteContext, FullContext } from "./types";
@@ -15,16 +18,16 @@ import { make as makeNavigateToUrlProvider } from "./../navigateToUrl";
 import { makeChangeUrl } from "..";
 
 export const make = <
-  MAP extends RoutesMap<MAP, P, any>,
+  MAP extends RouteInterface<any, P, MatchInfo, Output, any>,
   P extends Payload,
   C extends Context
 >(
-  routes: MAP,
+  routes: RoutesMap<MAP, P, any>,
   context: C,
   onStart?: OnStart,
-  onEnd?: OnEnd<MAP, P, C>,
+  onEnd?: OnEnd<MAP, P, any>,
   onError?: OnError,
-  onChange?: OnEnd<MAP, P, C>
+  onChange?: OnEnd<MAP, P, any>
 ): FullContext<MAP, P, C> => {
   const routeContext = {} as RouteContext<MAP, P, C>;
   const fullContext = { ...context, route: routeContext } as FullContext<

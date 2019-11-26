@@ -8,17 +8,18 @@ import {
   isRedirect,
   GetPayload,
   PostPayload,
-  ChangeType
+  ChangeType,
+  Payload
 } from "@webcarrot/router";
 
 import { getManifests } from "../lib/build/manifest";
 
 import { App } from "../app/app";
 import { Html } from "../app/html";
-import { AppProps, AppState } from "../app/types";
+import { AppProps, AppState, AppContext } from "../app/types";
 
 import { routes } from "../routes";
-import { RouteContext } from "../routes/types";
+import { RouteContext, RoutesType } from "../routes/types";
 
 import { make as makeNewsApi } from "../api/news/make";
 import { make as makeTodoApi } from "../api/todo/make";
@@ -56,13 +57,20 @@ export const pageHandler = async (
   const newsApi = await makeNewsApi(appConfiguration.news);
   const todoApi = await makeTodoApi();
 
-  const appContext: RouteContext = makeRouteContext(routes, {
+  const appContext: RouteContext = makeRouteContext<
+    RoutesType,
+    Payload,
+    AppContext
+  >(routes, {
     rootPath: "",
     newsApi,
     todoApi
   });
 
-  const routePayload =
+  appContext.route.makeLink("home", {});
+  appContext.route.makeLink("news", { type: "everything" });
+
+  const routePayload: Payload =
     method === "GET"
       ? ({
           method: "GET",

@@ -10,6 +10,7 @@ import {
 import { ComponentType } from "react";
 import { Method } from "./method";
 import { ChangeType } from "../utils/enums";
+import { RouteInfo } from "../make/reactContextProvider/types";
 
 export type Unpacked<T> = T extends Promise<infer U> ? U : T;
 export type Retrun<T extends (...args: any) => any> = Unpacked<ReturnType<T>>;
@@ -25,13 +26,13 @@ export {
 };
 
 export type MatchInfo = {
-  method: Method;
+  method?: Method;
 };
 
 export type Context = { [key: string]: any };
 
 export type GetPayload = {
-  method: "GET";
+  method?: "GET";
   no: number;
   url: string;
   changeType: ChangeType;
@@ -69,7 +70,7 @@ export type Action<
 > = (payload: P, match: M, context: C) => PromiseOrNot<O | RedirectOutput>;
 
 export type Component<
-  ID extends any,
+  ID,
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
@@ -81,7 +82,7 @@ export type Component<
 }>;
 
 export type Prepare<
-  ID extends any,
+  ID,
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
@@ -107,29 +108,15 @@ export type BuildCheck<M extends MatchInfo, C extends Context> = (
 export type OnStart = (id: number) => void | boolean;
 
 export type OnEnd<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
   P extends Payload = Payload,
   C extends Context = Context
-> = (
-  id: number,
-  out: Exclude<
-    Unpacked<ReturnType<MAP[Extract<keyof MAP, string>]["execute"]>>,
-    false
-  >
-) => void;
+> = (id: number, out: RouteInfo<MAP, P, C>) => void;
 
 export type OnError = (id: number, err: any) => boolean | void;
 
 export type Execute<
-  ID extends any,
+  ID,
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
@@ -144,7 +131,7 @@ export type Execute<
 ) => PromiseOrNot<ExecuteOutput<ID, P, M, O, C> | false>;
 
 export type ExecuteOutput<
-  ID extends any,
+  ID,
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
@@ -159,7 +146,7 @@ export type ExecuteOutput<
 };
 
 export interface RouteInterface<
-  ID extends any,
+  ID,
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
@@ -172,3 +159,32 @@ export interface RouteInterface<
   build: Build<M, C>;
   execute: Execute<ID, P, M, O, C>;
 }
+
+export type ExtractRoute<ID, U> = U extends { id: ID } ? U : never;
+
+export type RoutesMap<
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
+  P extends Payload,
+  C extends Context
+> = { [ID in MAP["id"]]: ExtractRoute<ID, MAP> };
+
+export type ExtractRouteInfo<
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
+  ID extends MAP["id"],
+  P extends Payload,
+  C extends Context
+> = ExtractRoute<ID, MAP>;
+
+export type ExtractRouteMatch<
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
+  ID extends MAP["id"],
+  P extends Payload,
+  C extends Context
+> = Exclude<Unpacked<ReturnType<ExtractRoute<ID, MAP>["match"]>>, false>;
+
+export type ExtractRouteOutput<
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
+  ID extends MAP["id"],
+  P extends Payload,
+  C extends Context
+> = Unpacked<ReturnType<ExtractRoute<ID, MAP>["action"]>>;

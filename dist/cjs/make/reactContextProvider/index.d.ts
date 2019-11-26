@@ -1,6 +1,4 @@
 /// <reference types="react" />
-import { RouteInterface, Payload, Output, MatchInfo, Context } from "../../types";
+import { Payload, Context, RouteInterface, MatchInfo, Output } from "../../types";
 import { ReactContextValue } from "./types";
-export declare const make: <MAP extends {
-    [key: string]: RouteInterface<Extract<keyof MAP, string>, P, MatchInfo, Output, C>;
-}, P extends Payload, C extends Context>() => import("react").Context<ReactContextValue<MAP, P, C>>;
+export declare const make: <MAP extends RouteInterface<any, P, MatchInfo, Output, C>, P extends Payload, C extends Context>() => import("react").Context<ReactContextValue<MAP, P, C>>;

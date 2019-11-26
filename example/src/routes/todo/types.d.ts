@@ -2,16 +2,15 @@ import {
   RouteAction,
   RouteOutput,
   RouteComponent,
-  RouteInterfaceL
+  RouteInterfaceL,
+  RouteMatch
 } from "../types";
 
 import { Method } from "@webcarrot/router";
 
 export type ID = "todo";
 
-export type Match = {
-  method: Method;
-};
+export type Match = RouteMatch<{}>;
 
 export type Output = RouteOutput<{}>;
 

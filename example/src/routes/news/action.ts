@@ -6,8 +6,8 @@ import {
 } from "./types";
 
 export const action: Action = async (payload, match, { newsApi }) => {
-  if (match.params && match.params.type) {
-    switch (match.params.type) {
+  if (match.type) {
+    switch (match.type) {
       case "everything":
         return {
           url: payload.url,

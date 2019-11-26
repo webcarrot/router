@@ -1,4 +1,3 @@
-import { LinkMatch } from "../../make/link/types";
 import { ChangeType } from "../../utils/enums";
 import {
   RouteInterface,
@@ -7,21 +6,18 @@ import {
   Payload,
   Context,
   Method,
-  RoutesMap
+  RoutesMap,
+  ExtractRouteMatch
 } from "../../types";
 
-export interface LinkProps<
-  MAP extends RoutesMap<MAP, P, C>,
+export type LinkProps<
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
   P extends Payload,
   C extends Context,
-  ID extends keyof MAP
->
-  extends React.DetailedHTMLProps<
-    React.AnchorHTMLAttributes<HTMLAnchorElement>,
-    HTMLAnchorElement
-  > {
+  ID extends MAP["id"] = MAP["id"]
+> = {
   href?: string;
   route: ID;
-  match: LinkMatch<MAP[ID]["build"], C>;
+  match: ExtractRouteMatch<MAP, ID, P, C>;
   changeType?: ChangeType;
-}
+} & React.AnchorHTMLAttributes<HTMLAnchorElement>;

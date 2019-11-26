@@ -1,5 +1,2 @@
-import { RouteInterface, Payload, Output, MatchInfo, Context } from "../../types";
-import { LinkMatch } from "./types";
-export declare const make: <MAP extends {
-    [key: string]: RouteInterface<Extract<keyof MAP, string>, P, MatchInfo, Output, C>;
-}, P extends Payload = Payload, C extends Context = Context>(routes: MAP, context: C) => <N extends keyof MAP>(id: N, payload: LinkMatch<MAP[N]["build"], C, MatchInfo>) => string;
+import { Payload, Context, RoutesMap, RouteInterface, MatchInfo, Output } from "../../types";
+export declare const make: <MAP extends RouteInterface<any, P, MatchInfo, Output, C>, P extends Payload = Payload, C extends Context = Context>(routes: RoutesMap<MAP, P, C>, context: C) => <ID extends MAP["id"]>(id: ID, payload: Exclude<import("../../types").Unpacked<ReturnType<import("../../types").ExtractRoute<ID, MAP>["match"]>>, false>) => string;

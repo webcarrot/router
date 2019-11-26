@@ -17,7 +17,7 @@ import { promisfy } from "../../utils/promisfy";
 import { RouteInit } from "./types";
 
 export const make = <
-  ID extends string,
+  ID,
   P extends Payload,
   M extends MatchInfo,
   O extends Output,

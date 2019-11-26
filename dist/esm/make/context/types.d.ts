@@ -7,22 +7,16 @@ import {
   OnStart,
   OnError,
   OnEnd,
-  Unpacked
+  Unpacked,
+  RoutesMap,
+  ExtractRouteMatch,
+  ExtractRouteOutput
 } from "../../types";
 
-import { LinkMatch } from "../link/types";
 import { ChangeType } from "../../utils/enums";
 
 export type FullContext<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
   P extends Payload = Payload,
   C extends Context = Context
 > = C & {
@@ -30,92 +24,47 @@ export type FullContext<
 };
 
 export type RouteContextLink<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
   P extends Payload = Payload,
-  C extends Context = Context,
-  D extends MAP = MAP
-> = <N extends keyof D>(id: N, match: LinkMatch<D[N]["build"], C>) => string;
+  C extends Context = Context
+> = <ID extends MAP["id"]>(
+  id: ID,
+  match: ExtractRouteMatch<MAP, ID, P, C>
+) => string;
 
 export type RouteContextNavigate<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
   P extends Payload = Payload,
-  C extends Context = Context,
-  D extends MAP = MAP
-> = {
-  <N extends keyof D>(
-    id: N,
-    info: {
-      match: LinkMatch<D[N]["build"], C>;
-      prepare?: boolean;
-      no?: number;
-      changeType?: ChangeType;
-    }
-  ): Promise<void>;
-};
+  C extends Context = Context
+> = <ID extends MAP["id"]>(
+  id: ID,
+  info: {
+    match: ExtractRouteMatch<MAP, ID, P, C>;
+    prepare?: boolean;
+    no?: number;
+    changeType?: ChangeType;
+  }
+) => Promise<void>;
 
 export type RouteContextChangeUrl<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
   P extends Payload = Payload,
-  C extends Context = Context,
-  D extends MAP = MAP
-> = {
-  <N extends keyof D>(
-    id: N,
-    match: Exclude<Unpacked<ReturnType<D[N]["match"]>>, false>,
-    out: Unpacked<ReturnType<D[N]["action"]>>,
-    changeType?: ChangeType
-  ): Promise<void>;
-};
+  C extends Context = Context
+> = <ID extends MAP["id"]>(
+  id: ID,
+  match: ExtractRouteMatch<MAP, ID, P, C>,
+  output: ExtractRouteOutput<MAP, ID, P, C>,
+  changeType?: ChangeType
+) => Promise<void>;
 
 export type RouteContextToUrl<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
   P extends Payload = Payload,
-  C extends Context = Context,
-  D extends MAP = MAP
+  C extends Context = Context
 > = (payload: P) => Promise<void>;
 
 export type RouteContext<
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
+  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
   P extends Payload = Payload,
   C extends Context = Context
 > = {

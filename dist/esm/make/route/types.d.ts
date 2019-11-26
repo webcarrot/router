@@ -9,7 +9,7 @@ import {
 } from "../../types";
 
 export type RouteInit<
-  ID extends any,
+  ID,
   P extends Payload,
   M extends MatchInfo,
   O extends Output,
