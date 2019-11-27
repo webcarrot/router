@@ -5,7 +5,6 @@ import {
   OnEnd,
   RoutesMap,
   RouteInterface,
-  MatchInfo,
   ExtractRouteMatch,
   ExtractRouteOutput
 } from "../types";
@@ -14,31 +13,30 @@ import { FullContext } from "./context/types";
 import { promisfy } from "../utils/promisfy";
 
 export const make = <
-  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
-  P extends Payload = Payload,
+  MAP extends RouteInterface<any, any, any, C>,
   C extends Context = Context
 >(
-  routes: RoutesMap<MAP, P, C>,
-  context: FullContext<MAP, P, C>,
-  onChange?: OnEnd<MAP, P, C>
+  routes: RoutesMap<MAP>,
+  context: FullContext<MAP, C>,
+  onChange?: OnEnd<MAP, C>
 ) => {
   const changeUrlProvider = <ID extends MAP["id"]>(
     id: ID,
-    match: ExtractRouteMatch<MAP, ID, P, C>,
-    output: ExtractRouteOutput<MAP, ID, P, C>,
+    match: ExtractRouteMatch<MAP, ID, C>,
+    output: ExtractRouteOutput<MAP, ID, C>,
     changeType: ChangeType = ChangeType.REPLACE
   ) => {
     const route = routes[id];
     const url = route.build(match, context);
     if (url) {
       const no = Date.now();
-      const payload: P = {
+      const payload: Payload = {
         method: "GET",
         no,
         url,
         changeType,
         body: null
-      } as P;
+      } as Payload;
       return promisfy(() => route.prepare(output as Output))
         .then(Component => ({
           id,

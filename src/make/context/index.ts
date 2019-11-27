@@ -1,13 +1,10 @@
 import {
-  Payload,
   Context,
   OnStart,
   OnError,
   OnEnd,
   RoutesMap,
-  RouteInterface,
-  MatchInfo,
-  Output
+  RouteInterface
 } from "../../types";
 
 import { RouteContext, FullContext } from "./types";
@@ -18,32 +15,30 @@ import { make as makeNavigateToUrlProvider } from "./../navigateToUrl";
 import { makeChangeUrl } from "..";
 
 export const make = <
-  MAP extends RouteInterface<any, P, MatchInfo, Output, any>,
-  P extends Payload,
+  MAP extends RouteInterface<any, any, any, any>,
   C extends Context
 >(
-  routes: RoutesMap<MAP, P, any>,
+  routes: RoutesMap<MAP>,
   context: C,
   onStart?: OnStart,
-  onEnd?: OnEnd<MAP, P, any>,
+  onEnd?: OnEnd<MAP, any>,
   onError?: OnError,
-  onChange?: OnEnd<MAP, P, any>
-): FullContext<MAP, P, C> => {
-  const routeContext = {} as RouteContext<MAP, P, C>;
+  onChange?: OnEnd<MAP, any>
+): FullContext<MAP, C> => {
+  const routeContext = {} as RouteContext<MAP, C>;
   const fullContext = { ...context, route: routeContext } as FullContext<
     MAP,
-    P,
     C
   >;
-  routeContext.makeLink = makeLinkProvider<MAP, P, C>(routes, fullContext);
-  routeContext.navigate = makeNavigateProvider<MAP, P, C>(
+  routeContext.makeLink = makeLinkProvider<MAP, C>(routes, fullContext);
+  routeContext.navigate = makeNavigateProvider<MAP, C>(
     routes,
     fullContext,
     onStart,
     onEnd,
     onError
   );
-  routeContext.navigateToUrl = makeNavigateToUrlProvider<MAP, P, C>(
+  routeContext.navigateToUrl = makeNavigateToUrlProvider<MAP, C>(
     routes,
     fullContext,
     onStart,
@@ -51,11 +46,7 @@ export const make = <
     onError
   );
 
-  routeContext.changeUrl = makeChangeUrl<MAP, P, C>(
-    routes,
-    fullContext,
-    onChange
-  );
+  routeContext.changeUrl = makeChangeUrl<MAP, C>(routes, fullContext, onChange);
 
   return fullContext;
 };

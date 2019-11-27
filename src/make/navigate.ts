@@ -5,23 +5,20 @@ import {
   OnError,
   OnEnd,
   RoutesMap,
-  RouteInterface,
-  MatchInfo,
-  Output
+  RouteInterface
 } from "../types";
 import { ChangeType } from "../utils/enums";
 import { FullContext } from "./context/types";
 import { promisfy } from "../utils/promisfy";
 
 export const make = <
-  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
-  P extends Payload = Payload,
+  MAP extends RouteInterface<any, any, any, C>,
   C extends Context = Context
 >(
-  routes: RoutesMap<MAP, P, C>,
-  context: FullContext<MAP, P, C>,
+  routes: RoutesMap<MAP>,
+  context: FullContext<MAP, C>,
   onStart?: OnStart,
-  onEnd?: OnEnd<MAP, P, C>,
+  onEnd?: OnEnd<MAP, C>,
   onError?: OnError
 ) => <ID extends MAP["id"]>(
   id: ID,
@@ -40,7 +37,7 @@ export const make = <
   const route = routes[id];
   const url = route.build(match, context);
   if (url) {
-    const payload: P =
+    const payload: Payload =
       match.method === "POST"
         ? ({
             method: "POST",
@@ -48,13 +45,13 @@ export const make = <
             no,
             changeType,
             body: match.body
-          } as P)
+          } as Payload)
         : ({
             method: "GET",
             url,
             no,
             changeType
-          } as P);
+          } as Payload);
     return promisfy(() =>
       route.execute(
         new URL(`route:${payload.url}`),

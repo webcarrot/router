@@ -16,10 +16,10 @@ import { getManifests } from "../lib/build/manifest";
 
 import { App } from "../app/app";
 import { Html } from "../app/html";
-import { AppProps, AppState, AppContext } from "../app/types";
+import { AppProps, AppState } from "../app/types";
 
 import { routes } from "../routes";
-import { RouteContext, RoutesType } from "../routes/types";
+import { RouteContext } from "../routes/types";
 
 import { make as makeNewsApi } from "../api/news/make";
 import { make as makeTodoApi } from "../api/todo/make";
@@ -57,17 +57,13 @@ export const pageHandler = async (
   const newsApi = await makeNewsApi(appConfiguration.news);
   const todoApi = await makeTodoApi();
 
-  const appContext: RouteContext = makeRouteContext<
-    RoutesType,
-    Payload,
-    AppContext
-  >(routes, {
+  const appContext: RouteContext = makeRouteContext(routes, {
     rootPath: "",
     newsApi,
     todoApi
   });
 
-  appContext.route.makeLink("home", {});
+  appContext.route.makeLink("home", { jasio: 2 });
   appContext.route.makeLink("news", { type: "everything" });
 
   const routePayload: Payload =

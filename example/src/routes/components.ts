@@ -1,15 +1,13 @@
 import {
   makeReactContextProvider,
   makeReactDisplay,
-  makeReactLink,
-  Payload
+  makeReactLink
 } from "@webcarrot/router";
 import { RoutesType } from "./types";
 import { AppContext } from "../app/types";
 
 export const ReactRouteContext = makeReactContextProvider<
   RoutesType,
-  Payload,
   AppContext
 >();
 

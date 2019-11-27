@@ -1,20 +1,12 @@
+import { RefAttributes } from "react";
 import {
-  MemoExoticComponent,
-  ForwardRefExoticComponent,
-  RefAttributes
-} from "react";
-
-import {
-  Context,
   RouteInterface,
   ExtractRouteMatch,
-  Unpacked,
-  RoutesMap,
-  ExtractRoute
+  ExtractRoute,
+  Context
 } from "../types";
-
-import { ReactContextValue } from "./reactContextProvider/types";
 import { ChangeType } from "../utils/enums";
+import { ReactContextValue } from "../make/reactContextProvider/types";
 
 type RouteProps<
   R extends RouteInterface<any, any, any, C>,
@@ -25,15 +17,15 @@ type RouteProps<
   match: ExtractRouteMatch<R, ID, C>;
 };
 
-export declare const make: <
+export declare const Link: <
   MAP extends RouteInterface<any, any, any, C>,
-  C extends Context
+  C extends Context,
+  ID extends MAP["id"]
 >(
-  ReactContext: React.Context<ReactContextValue<MAP, C>>
-) => <ID extends MAP["id"]>(
   props: RouteProps<ExtractRoute<ID, MAP>, C, ID> & {
     changeType?: ChangeType;
     children?: React.ReactNode;
+    ReactContext: React.Context<ReactContextValue<MAP, C>>;
   } & React.AnchorHTMLAttributes<HTMLAnchorElement> &
     RefAttributes<"a">
 ) => JSX.Element;

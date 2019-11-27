@@ -1,21 +1,23 @@
 import * as React from "react";
 
-import {
-  Payload,
-  Context,
-  RouteInterface,
-  MatchInfo,
-  Output
-} from "../../types";
+import { Context, RouteInterface, ExtractRouteMatch } from "../types";
 
-import { ReactContextValue } from "../../make/reactContextProvider/types";
-import { ChangeType } from "../../utils/enums";
-import { LinkProps } from "./types";
+import { ReactContextValue } from "../make/reactContextProvider/types";
+import { ChangeType } from "../utils/enums";
+
+type RouteProps<
+  R extends RouteInterface<any, any, any, C>,
+  C extends Context,
+  ID = R["id"]
+> = {
+  route: ID;
+  match: ExtractRouteMatch<R, ID, C>;
+};
 
 export const Link = <
-  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
-  P extends Payload,
-  C extends Context
+  MAP extends RouteInterface<any, any, any, C>,
+  C extends Context,
+  ID extends MAP["id"]
 >(
   {
     route,
@@ -25,9 +27,11 @@ export const Link = <
     href,
     changeType = ChangeType.PUSH,
     ...rest
-  }: LinkProps<MAP, P, C> & {
-    ReactContext: React.Context<ReactContextValue<MAP, P, C>>;
-  },
+  }: RouteProps<MAP, C, ID> & {
+    changeType?: ChangeType;
+    children?: React.ReactNode;
+    ReactContext: React.Context<ReactContextValue<MAP, C>>;
+  } & React.AnchorHTMLAttributes<HTMLAnchorElement>,
   ref?: any
 ) => {
   const { makeLink, navigate } = React.useContext(ReactContext);
@@ -49,5 +53,3 @@ export const Link = <
 
   return <a {...rest} href={link || href} onClick={handleClick} ref={ref} />;
 };
-
-export const LinkMemo = React.memo(React.forwardRef(Link)) as typeof Link;

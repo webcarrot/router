@@ -10,7 +10,9 @@ import { Method } from "@webcarrot/router";
 
 export type ID = "home";
 
-export type Match = RouteMatch<{}>;
+export type Match = RouteMatch<{
+  jasio: number;
+}>;
 
 export type Output = RouteOutput<{}>;
 

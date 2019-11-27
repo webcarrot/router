@@ -1,10 +1,12 @@
-import * as React from "react";
-import { make as makeContext } from "../../make/context";
-import { compare } from "../../utils/compare";
-import { NAVIGATION_MODE } from "../../utils/constants";
-import { NavigationMode, ChangeType } from "../../utils/enums";
-import { isRedirect } from "../../utils/isRedirect";
-export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, children }) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const React = require("react");
+const context_1 = require("../make/context");
+const compare_1 = require("../utils/compare");
+const constants_1 = require("../utils/constants");
+const enums_1 = require("../utils/enums");
+const isRedirect_1 = require("../utils/isRedirect");
+exports.ContextProvider = React.memo(({ routes, context, initialInfo, ReactContext, children }) => {
     const [state, dispatch] = React.useReducer((state, action) => {
         switch (action.type) {
             case "START":
@@ -62,7 +64,7 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
         inProgress: false
     });
     React.useEffect(() => {
-        if (NAVIGATION_MODE === NavigationMode.MODERN) {
+        if (constants_1.NAVIGATION_MODE === enums_1.NavigationMode.MODERN) {
             if (!state.inProgress && state.current > 0) {
                 const historyState = {
                     id: state.info.id,
@@ -71,10 +73,10 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
                 const { title, url } = state.info.output;
                 document.title = title;
                 switch (state.info.payload.changeType) {
-                    case ChangeType.PUSH:
+                    case enums_1.ChangeType.PUSH:
                         history.pushState(historyState, title, url);
                         break;
-                    case ChangeType.REPLACE:
+                    case enums_1.ChangeType.REPLACE:
                         history.replaceState(historyState, title, url);
                         break;
                 }
@@ -84,12 +86,12 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
     const routeContext = React.useMemo(() => {
         const onStart = no => {
             dispatch({ type: "START", no });
-            if (NAVIGATION_MODE === NavigationMode.LEGACY) {
+            if (constants_1.NAVIGATION_MODE === enums_1.NavigationMode.LEGACY) {
                 return false;
             }
         };
         const onEnd = (no, info) => {
-            if (isRedirect(info.output.status)) {
+            if (isRedirect_1.isRedirect(info.output.status)) {
                 routeContext.navigateToUrl({
                     url: info.output.url,
                     changeType: info.payload.changeType,
@@ -107,21 +109,21 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
         const onChangeUrl = (no, info) => {
             dispatch({ type: "CHANGE", no, info });
         };
-        const routeContext = makeContext(routes, context, onStart, onEnd, onError, onChangeUrl).route;
+        const routeContext = context_1.make(routes, context, onStart, onEnd, onError, onChangeUrl).route;
         return routeContext;
     }, [context]);
     const reactRouteContext = React.useMemo(() => ({
         error: () => state.error,
         info: () => state.info,
         inProgress: () => state.inProgress,
-        isCurrent: (id, match) => state.info.id === id && (!match || compare(match, state.info.match))
+        isCurrent: (id, match) => state.info.id === id && (!match || compare_1.compare(match, state.info.match))
     }), [state]);
     const contextValue = React.useMemo(() => ({
         ...routeContext,
         ...reactRouteContext
     }), [routeContext, reactRouteContext]);
     React.useEffect(() => {
-        if (NAVIGATION_MODE === NavigationMode.MODERN) {
+        if (constants_1.NAVIGATION_MODE === enums_1.NavigationMode.MODERN) {
             const handlePopState = (ev) => {
                 const state = ev.state || {
                     id: initialInfo.id,
@@ -130,7 +132,7 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
                 const { id, match } = state;
                 contextValue.navigate(id, {
                     match: match,
-                    changeType: ChangeType.HISTORY
+                    changeType: enums_1.ChangeType.HISTORY
                 });
             };
             window.addEventListener("popstate", handlePopState);
@@ -138,6 +140,5 @@ export const ContextWrapper = ({ routes, context, initialInfo, ReactContext, chi
         }
     }, [contextValue]);
     return (React.createElement(ReactContext.Provider, { value: contextValue }, children));
-};
-export const ContextWrapperMemo = React.memo(ContextWrapper);
-//# sourceMappingURL=index.js.map
+});
+//# sourceMappingURL=ContextProvider.js.map

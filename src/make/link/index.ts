@@ -1,21 +1,16 @@
 import {
-  Payload,
   Context,
   RoutesMap,
   RouteInterface,
-  MatchInfo,
-  Output,
   ExtractRouteMatch
 } from "../../types";
+import { FullContext } from "..";
 
 export const make = <
-  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
-  P extends Payload = Payload,
+  MAP extends RouteInterface<any, any, any, C>,
   C extends Context = Context
 >(
-  routes: RoutesMap<MAP, P, C>,
-  context: C
-) => <ID extends MAP["id"]>(
-  id: ID,
-  payload: ExtractRouteMatch<MAP, ID, P, C>
-) => routes[id].build(payload, context);
+  routes: RoutesMap<MAP>,
+  context: FullContext<MAP, C>
+) => <ID extends MAP["id"]>(id: ID, payload: ExtractRouteMatch<MAP, ID, C>) =>
+  routes[id].build(payload, context);

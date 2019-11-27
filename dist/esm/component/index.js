@@ -1,4 +1,2 @@
-export * from "./ContextWrapper";
-export * from "./Display";
-export * from "./Link";
+export { ContextProvider } from "./ContextProvider";
 //# sourceMappingURL=index.js.map

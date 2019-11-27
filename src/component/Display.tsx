@@ -1,17 +1,16 @@
 import * as React from "react";
 
-import { Payload, Context, RouteInterface, MatchInfo, Output } from "../types";
+import { Context, RouteInterface } from "../types";
 
 import { ReactContextValue } from "../make/reactContextProvider/types";
 
 export const Display = <
-  MAP extends RouteInterface<any, P, MatchInfo, Output, C>,
-  P extends Payload,
+  MAP extends RouteInterface<any, any, any, C>,
   C extends Context
 >({
   ReactContext
 }: {
-  ReactContext: React.Context<ReactContextValue<MAP, P, C>>;
+  ReactContext: React.Context<ReactContextValue<MAP, C>>;
 }) => {
   const { info } = React.useContext(ReactContext);
   const { Component, match, output, route } = info();
