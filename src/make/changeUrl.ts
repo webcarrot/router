@@ -1,59 +1,42 @@
 import {
-  RouteInterface,
   Payload,
   Output,
-  MatchInfo,
   Context,
   OnEnd,
-  Unpacked
+  RoutesMap,
+  RouteInterface,
+  ExtractRouteMatch,
+  ExtractRouteOutput
 } from "../types";
 import { ChangeType } from "../utils/enums";
 import { FullContext } from "./context/types";
 import { promisfy } from "../utils/promisfy";
 
 export const make = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
-  P extends Payload = Payload,
+  MAP extends RouteInterface<any, any, any, C>,
   C extends Context = Context
 >(
-  routes: MAP,
-  context: FullContext<MAP, P, C>,
-  onChange?: OnEnd<typeof routes, P, C>
+  routes: RoutesMap<MAP>,
+  context: FullContext<MAP, C>,
+  onChange?: OnEnd<MAP, C>
 ) => {
-  type ChangeUrlProvider<D extends MAP> = {
-    <N extends keyof D>(
-      id: N,
-      match: Exclude<Unpacked<ReturnType<D[N]["match"]>>, false>,
-      out: Unpacked<ReturnType<D[N]["action"]>>,
-      changeType?: ChangeType
-    ): Promise<void>;
-  };
-
-  const changeUrlProvider: ChangeUrlProvider<typeof routes> = (
-    id,
-    match,
-    output,
-    changeType = ChangeType.REPLACE
+  const changeUrlProvider = <ID extends MAP["id"]>(
+    id: ID,
+    match: ExtractRouteMatch<MAP, ID, C>,
+    output: ExtractRouteOutput<MAP, ID, C>,
+    changeType: ChangeType = ChangeType.REPLACE
   ) => {
     const route = routes[id];
     const url = route.build(match, context);
     if (url) {
       const no = Date.now();
-      const payload: P = {
+      const payload: Payload = {
         method: "GET",
         no,
         url,
         changeType,
         body: null
-      } as P;
+      } as Payload;
       return promisfy(() => route.prepare(output as Output))
         .then(Component => ({
           id,

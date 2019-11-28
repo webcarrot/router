@@ -9,12 +9,11 @@ import {
 } from "../../types";
 
 export type RouteInit<
-  ID extends any,
-  P extends Payload,
+  ID,
   M extends MatchInfo,
   O extends Output,
   C extends Context
 > = () => PromiseOrNot<{
-  action: Action<P, M, O, C>;
-  prepare: Prepare<ID, P, M, O, C>;
+  action: Action<M, O, C>;
+  prepare: Prepare<ID, M, O, C>;
 }>;

@@ -1,42 +1,30 @@
 import {
-  RouteInterface,
   Payload,
-  Output,
-  MatchInfo,
   Context,
   OnStart,
   OnError,
-  Retrun
+  RoutesMap,
+  RouteInterface
 } from "../types";
+import { RouteInfo } from "../make/reactContextProvider/types";
+import { FullContext } from "..";
 
 export const execute = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
-  P extends Payload = Payload,
+  MAP extends RouteInterface<any, any, any, C>,
   C extends Context = Context
 >(
-  routes: MAP,
-  payload: P,
-  context: C,
+  routes: RoutesMap<MAP>,
+  payload: Payload,
+  context: FullContext<MAP, C>,
   prepare: boolean = true,
   onStart?: OnStart,
   onError?: OnError
 ) => {
   const url = new URL(`route:${payload.url}`);
-  type ReturnValue = Exclude<
-    Retrun<typeof routes[keyof MAP]["execute"]>,
-    false
-  >;
-  return Object.keys(routes)
+  type ReturnValue = RouteInfo<MAP, C>;
+  return (Object.keys(routes) as ReadonlyArray<MAP["id"]>)
     .reduce<Promise<ReturnValue>>(
-      (out, id: keyof MAP) =>
+      (out, id) =>
         out.then(result => {
           if (result) {
             return result;

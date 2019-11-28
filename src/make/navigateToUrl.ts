@@ -1,36 +1,26 @@
 import {
-  RouteInterface,
   Payload,
-  Output,
-  MatchInfo,
   Context,
   OnStart,
   OnError,
-  OnEnd
+  OnEnd,
+  RoutesMap,
+  RouteInterface
 } from "../types";
 import { execute } from "../utils";
 import { FullContext } from "./context/types";
 
 export const make = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
-  P extends Payload = Payload,
+  MAP extends RouteInterface<any, any, any, C>,
   C extends Context = Context
 >(
-  routes: MAP,
-  context: FullContext<MAP, P, C>,
+  routes: RoutesMap<MAP>,
+  context: FullContext<MAP, C>,
   onStart?: OnStart,
-  onEnd?: OnEnd<typeof routes, P, C>,
+  onEnd?: OnEnd<MAP, C>,
   onError?: OnError
-) => (payload: P) =>
-  execute<MAP, P, C>(routes, payload, context, true, onStart, onError).then(
+) => (payload: Payload) =>
+  execute<MAP, C>(routes, payload, context, true, onStart, onError).then(
     out => {
       onEnd(payload.no, out);
     }

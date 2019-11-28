@@ -2,7 +2,8 @@ import {
   RouteAction,
   RouteOutput,
   RouteComponent,
-  RouteInterface
+  RouteInterfaceL,
+  RouteMatch
 } from "../types";
 
 import {
@@ -17,39 +18,27 @@ import { Method } from "@webcarrot/router";
 export type ID = "news";
 
 type MatchNone = {
-  method: Method;
-  params?: undefined;
+  type?: undefined;
 };
 
 export type MatchEverything = {
-  method: Method;
-  params: {
-    type: "everything";
-  };
+  type: "everything";
   query?: NewsEverythingPayload;
 };
 
 export type MatchSources = {
-  method: Method;
-  params: {
-    type: "sources";
-  };
+  type: "sources";
   query?: NewsSourcesPayload;
 };
 
 export type MatchTopHeadlines = {
-  method: Method;
-  params: {
-    type: "topHeadlines";
-  };
+  type: "topHeadlines";
   query?: NewsTopHeadlinesPayload;
 };
 
-export type Match =
-  | MatchNone
-  | MatchEverything
-  | MatchSources
-  | MatchTopHeadlines;
+export type Match = RouteMatch<
+  MatchNone | MatchEverything | MatchSources | MatchTopHeadlines
+>;
 
 export type OutputNone = RouteOutput<{ type: "none" }>;
 
@@ -87,4 +76,4 @@ export type ComponentTopHeadlines = RouteComponent<
   OutputsTopHeadlines
 >;
 
-export type Route = RouteInterface<ID, Match, Output>;
+export type Route = RouteInterfaceL<ID, Match, Output>;

@@ -17,20 +17,19 @@ import { promisfy } from "../../utils/promisfy";
 import { RouteInit } from "./types";
 
 export const make = <
-  ID extends string,
-  P extends Payload,
+  ID,
   M extends MatchInfo,
   O extends Output,
   C extends Context
 >(
   id: ID,
-  match: Match<P, M, C>,
+  match: Match<M, C>,
   build: Build<M, C>,
-  init: RouteInit<ID, P, M, O, C>
-): RouteInterface<ID, P, M, O, C> => {
+  init: RouteInit<ID, M, O, C>
+): RouteInterface<ID, M, O, C> => {
   let _initialization: Promise<void>;
-  let _prepare: Prepare<ID, P, M, O, C>;
-  let _action: Action<P, M, O, C>;
+  let _prepare: Prepare<ID, M, O, C>;
+  let _action: Action<M, O, C>;
 
   const initialization = () => {
     if (!_initialization) {
@@ -44,12 +43,12 @@ export const make = <
 
   const prepare = (output: O) => initialization().then(() => _prepare(output));
 
-  const action = (props: P, match: M, context: C) =>
+  const action = (props: Payload, match: M, context: C) =>
     initialization().then(() => _action(props, match, context));
 
-  const execute: Execute<ID, P, M, O, C> = (
+  const execute: Execute<ID, M, O, C> = (
     url: URL,
-    payload: P,
+    payload: Payload,
     context: C,
     doPrepare: boolean = true,
     onStart?: OnStart,

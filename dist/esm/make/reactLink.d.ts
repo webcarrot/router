@@ -1,7 +1,39 @@
-import * as React from "react";
-import { RouteInterface, Payload, Output, MatchInfo, Context } from "../types";
-import { ReactContextValue } from "../make/reactContextProvider/types";
-import { LinkProps } from "../component/Link/types";
-export declare const make: <MAP extends {
-    [key: string]: RouteInterface<Extract<keyof MAP, string>, P, MatchInfo, Output, C>;
-}, P extends Payload, C extends Context>(ReactContext: React.Context<ReactContextValue<MAP, P, C>>) => <ID extends keyof MAP>(props: LinkProps<MAP, P, C, ID>, ref?: any) => JSX.Element;
+import {
+  MemoExoticComponent,
+  ForwardRefExoticComponent,
+  RefAttributes
+} from "react";
+
+import {
+  Context,
+  RouteInterface,
+  ExtractRouteMatch,
+  Unpacked,
+  RoutesMap,
+  ExtractRoute
+} from "../types";
+
+import { ReactContextValue } from "./reactContextProvider/types";
+import { ChangeType } from "../utils/enums";
+
+type RouteProps<
+  R extends RouteInterface<any, any, any, C>,
+  C extends Context,
+  ID = R["id"]
+> = {
+  route: ID;
+  match: ExtractRouteMatch<R, ID, C>;
+};
+
+export declare const make: <
+  MAP extends RouteInterface<any, any, any, C>,
+  C extends Context
+>(
+  ReactContext: React.Context<ReactContextValue<MAP, C>>
+) => <ID extends MAP["id"]>(
+  props: RouteProps<ExtractRoute<ID, MAP>, C, ID> & {
+    changeType?: ChangeType;
+    children?: React.ReactNode;
+  } & React.AnchorHTMLAttributes<HTMLAnchorElement> &
+    RefAttributes<"a">
+) => JSX.Element;

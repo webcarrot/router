@@ -1,34 +1,16 @@
 import {
+  Context,
+  RoutesMap,
   RouteInterface,
-  Payload,
-  Output,
-  MatchInfo,
-  Context
+  ExtractRouteMatch
 } from "../../types";
-
-import { LinkMatch } from "./types";
+import { FullContext } from "..";
 
 export const make = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
-  P extends Payload = Payload,
+  MAP extends RouteInterface<any, any, any, C>,
   C extends Context = Context
 >(
-  routes: MAP,
-  context: C
-) => {
-  type LinkProvider<D extends MAP> = <N extends keyof D>(
-    id: N,
-    payload: LinkMatch<D[N]["build"], C>
-  ) => string;
-  const linkProvider: LinkProvider<typeof routes> = (id, payload) =>
-    routes[id].build(payload, context);
-  return linkProvider;
-};
+  routes: RoutesMap<MAP>,
+  context: FullContext<MAP, C>
+) => <ID extends MAP["id"]>(id: ID, payload: ExtractRouteMatch<MAP, ID, C>) =>
+  routes[id].build(payload, context);

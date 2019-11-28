@@ -1,5 +1,3 @@
-import { RouteInterface, Payload, Output, MatchInfo, Context, OnStart, OnError, OnEnd } from "../types";
+import { Payload, Context, OnStart, OnError, OnEnd, RoutesMap, RouteInterface } from "../types";
 import { FullContext } from "./context/types";
-export declare const make: <MAP extends {
-    [key: string]: RouteInterface<Extract<keyof MAP, string>, P, MatchInfo, Output, C>;
-}, P extends Payload = Payload, C extends Context = Context>(routes: MAP, context: FullContext<MAP, P, C>, onStart?: OnStart, onEnd?: OnEnd<MAP, P, C>, onError?: OnError) => (payload: P) => Promise<void>;
+export declare const make: <MAP extends RouteInterface<any, any, any, C>, C extends Context = Context>(routes: RoutesMap<MAP>, context: FullContext<MAP, C>, onStart?: OnStart, onEnd?: OnEnd<MAP, C>, onError?: OnError) => (payload: Payload) => Promise<void>;

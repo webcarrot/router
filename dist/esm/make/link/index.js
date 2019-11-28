@@ -1,5 +1,2 @@
-export const make = (routes, context) => {
-    const linkProvider = (id, payload) => routes[id].build(payload, context);
-    return linkProvider;
-};
+export const make = (routes, context) => (id, payload) => routes[id].build(payload, context);
 //# sourceMappingURL=index.js.map

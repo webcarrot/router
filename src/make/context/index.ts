@@ -1,12 +1,10 @@
 import {
-  RouteInterface,
-  Payload,
-  Output,
-  MatchInfo,
   Context,
   OnStart,
   OnError,
-  OnEnd
+  OnEnd,
+  RoutesMap,
+  RouteInterface
 } from "../../types";
 
 import { RouteContext, FullContext } from "./types";
@@ -17,43 +15,30 @@ import { make as makeNavigateToUrlProvider } from "./../navigateToUrl";
 import { makeChangeUrl } from "..";
 
 export const make = <
-  MAP extends {
-    [key: string]: RouteInterface<
-      Extract<keyof MAP, string>,
-      P,
-      MatchInfo,
-      Output,
-      C
-    >;
-  },
-  P extends Payload,
+  MAP extends RouteInterface<any, any, any, any>,
   C extends Context
 >(
-  routes: MAP,
+  routes: RoutesMap<MAP>,
   context: C,
   onStart?: OnStart,
-  onEnd?: OnEnd<typeof routes, P, C>,
+  onEnd?: OnEnd<MAP, any>,
   onError?: OnError,
-  onChange?: OnEnd<typeof routes, P, C>
-) => {
-  const routeContext = {} as RouteContext<typeof routes, P, typeof context>;
+  onChange?: OnEnd<MAP, any>
+): FullContext<MAP, C> => {
+  const routeContext = {} as RouteContext<MAP, C>;
   const fullContext = { ...context, route: routeContext } as FullContext<
-    typeof routes,
-    P,
-    typeof context
+    MAP,
+    C
   >;
-  routeContext.makeLink = makeLinkProvider<typeof routes, P, C>(
-    routes,
-    fullContext
-  );
-  routeContext.navigate = makeNavigateProvider<typeof routes, P, C>(
+  routeContext.makeLink = makeLinkProvider<MAP, C>(routes, fullContext);
+  routeContext.navigate = makeNavigateProvider<MAP, C>(
     routes,
     fullContext,
     onStart,
     onEnd,
     onError
   );
-  routeContext.navigateToUrl = makeNavigateToUrlProvider<typeof routes, P, C>(
+  routeContext.navigateToUrl = makeNavigateToUrlProvider<MAP, C>(
     routes,
     fullContext,
     onStart,
@@ -61,11 +46,7 @@ export const make = <
     onError
   );
 
-  routeContext.changeUrl = makeChangeUrl<typeof routes, P, C>(
-    routes,
-    fullContext,
-    onChange
-  );
+  routeContext.changeUrl = makeChangeUrl<MAP, C>(routes, fullContext, onChange);
 
   return fullContext;
 };
