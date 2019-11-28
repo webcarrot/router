@@ -1,4 +1,5 @@
 node_modules
-./dist/trash
 ./example
 .DS_Store
+.vscode
+tsconfig.*
