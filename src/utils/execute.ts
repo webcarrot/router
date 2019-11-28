@@ -4,9 +4,9 @@ import {
   OnStart,
   OnError,
   RoutesMap,
-  RouteInterface
+  RouteInterface,
+  ExtractRouteFullOutput
 } from "../types";
-import { RouteInfo } from "../make/reactContextProvider/types";
 import { FullContext } from "..";
 
 export const execute = <
@@ -21,7 +21,7 @@ export const execute = <
   onError?: OnError
 ) => {
   const url = new URL(`route:${payload.url}`);
-  type ReturnValue = RouteInfo<MAP, C>;
+  type ReturnValue = ExtractRouteFullOutput<MAP, MAP["id"], C>;
   return (Object.keys(routes) as ReadonlyArray<MAP["id"]>)
     .reduce<Promise<ReturnValue>>(
       (out, id) =>

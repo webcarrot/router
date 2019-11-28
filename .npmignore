@@ -1,5 +1,5 @@
 node_modules
-./example
+example
 .DS_Store
 .vscode
 tsconfig.*

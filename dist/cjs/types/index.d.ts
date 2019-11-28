@@ -10,7 +10,6 @@ import {
 import { ComponentType } from "react";
 import { Method } from "./method";
 import { ChangeType } from "../utils/enums";
-import { RouteInfo } from "../make/reactContextProvider/types";
 
 export type Unpacked<T> = T extends Promise<infer U> ? U : T;
 export type Retrun<T extends (...args: any) => any> = Unpacked<ReturnType<T>>;
@@ -110,7 +109,7 @@ export type OnStart = (id: number) => void | boolean;
 export type OnEnd<
   MAP extends RouteInterface<any, any, any, C>,
   C extends Context = Context
-> = (id: number, out: RouteInfo<MAP, C>) => void;
+> = (id: number, out: ExtractRouteFullOutput<MAP, MAP["id"], C>) => void;
 
 export type OnError = (id: number, err: any) => boolean | void;
 
@@ -179,3 +178,9 @@ export type ExtractRouteOutput<
   ID extends MAP["id"],
   C extends Context
 > = Unpacked<ReturnType<ExtractRoute<ID, MAP>["action"]>>;
+
+export type ExtractRouteFullOutput<
+  MAP extends RouteInterface<any, any, any, C>,
+  ID extends MAP["id"],
+  C extends Context
+> = Exclude<Unpacked<ReturnType<ExtractRoute<ID, MAP>["execute"]>>, false>;

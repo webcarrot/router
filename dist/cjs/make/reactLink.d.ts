@@ -16,7 +16,7 @@ import {
 import { ReactContextValue } from "./reactContextProvider/types";
 import { ChangeType } from "../utils/enums";
 
-type RouteProps<
+export type RouteProps<
   R extends RouteInterface<any, any, any, C>,
   C extends Context,
   ID = R["id"]

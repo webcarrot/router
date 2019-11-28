@@ -8,24 +8,20 @@ import {
   OnError,
   OnEnd,
   Unpacked,
-  RoutesMap
+  RoutesMap,
+  ExtractRouteFullOutput
 } from "../../types";
 
 import { RouteContext } from "../context/types";
-
-export type RouteInfo<
-  MAP extends RouteInterface<any, any, any, C>,
-  C extends Context
-> = { id: MAP["id"] } & Exclude<Unpacked<ReturnType<MAP["execute"]>>, false>;
 
 export type ReactContextInfo<
   MAP extends RouteInterface<any, any, any, C>,
   C extends Context
 > = {
   error: () => any;
-  info: () => RouteInfo<MAP, C>;
+  info: <ID extends MAP["id"]>() => ExtractRouteFullOutput<MAP, ID, C>;
   inProgress: () => boolean;
-  isCurrent: (id: Extract<keyof MAP, string>, params?: MatchInfo) => boolean;
+  isCurrent: <ID extends MAP["id"]>(id: ID, params?: MatchInfo) => boolean;
 };
 
 export type ReactContextValue<

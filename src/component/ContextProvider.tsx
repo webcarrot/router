@@ -8,13 +8,13 @@ import {
   OnEnd,
   RoutesMap,
   RouteInterface,
-  MatchInfo
+  ExtractRouteFullOutput,
+  ExtractRouteMatch
 } from "../types";
 
 import { make as makeContext } from "../make/context";
 import {
   ReactContextValue,
-  RouteInfo,
   ReactContextInfo
 } from "../make/reactContextProvider/types";
 
@@ -23,7 +23,6 @@ import { compare } from "../utils/compare";
 import { NAVIGATION_MODE } from "../utils/constants";
 import { NavigationMode, ChangeType } from "../utils/enums";
 import { isRedirect } from "../utils/isRedirect";
-import { FullContext } from "@webcarrot/router";
 
 interface ReactContextState<
   MAP extends RouteInterface<any, any, any, C>,
@@ -33,7 +32,7 @@ interface ReactContextState<
   firstLoad: boolean;
   current: number;
   next: number;
-  info: RouteInfo<MAP, C>;
+  info: ExtractRouteFullOutput<MAP, MAP["id"], C>;
   inProgress: boolean;
 }
 
@@ -42,7 +41,7 @@ interface HistoryState<
   C extends Context
 > {
   id: MAP["id"];
-  match: MatchInfo;
+  match: ExtractRouteMatch<MAP, MAP["id"], C>;
 }
 
 export const ContextProvider = React.memo(
@@ -54,8 +53,8 @@ export const ContextProvider = React.memo(
     children
   }: {
     routes: RoutesMap<MAP>;
-    context: FullContext<MAP, C>;
-    initialInfo: RouteInfo<MAP, C>;
+    context: C;
+    initialInfo: ExtractRouteFullOutput<MAP, MAP["id"], C>;
     ReactContext: React.Context<ReactContextValue<MAP, C>>;
     children: React.ReactNode;
   }) => {
@@ -67,7 +66,7 @@ export const ContextProvider = React.memo(
       | {
           type: "END";
           no: number;
-          info: RouteInfo<MAP, C>;
+          info: ExtractRouteFullOutput<MAP, MAP["id"], C>;
         }
       | {
           type: "ERROR";
@@ -77,7 +76,7 @@ export const ContextProvider = React.memo(
       | {
           type: "CHANGE";
           no: number;
-          info: RouteInfo<MAP, C>;
+          info: ExtractRouteFullOutput<MAP, MAP["id"], C>;
         };
 
     const [state, dispatch] = React.useReducer<
