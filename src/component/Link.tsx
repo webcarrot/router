@@ -26,6 +26,7 @@ export const Link = <
     onClick,
     href,
     changeType = ChangeType.PUSH,
+    target,
     ...rest
   }: RouteProps<MAP, C, ID> & {
     changeType?: ChangeType;
@@ -41,15 +42,23 @@ export const Link = <
       if (onClick) {
         onClick(ev);
       }
-      if (!ev.defaultPrevented) {
+      if (!ev.defaultPrevented && !target) {
         navigate(route, { match, changeType });
         ev.preventDefault();
       }
     },
-    [route, match]
+    [route, match, target]
   );
 
   const link = makeLink(route, match);
 
-  return <a {...rest} href={link || href} onClick={handleClick} ref={ref} />;
+  return (
+    <a
+      {...rest}
+      href={link || href}
+      onClick={handleClick}
+      target={target}
+      ref={ref}
+    />
+  );
 };
