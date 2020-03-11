@@ -6,11 +6,11 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "scripts": {
-    "clean": "rm -rf ./dist/*",
     "build:cjs": "tsc --build ./tsconfig.cjs.json && copy-declaration-ts ./src ./dist/cjs",
     "build:esm": "tsc --build ./tsconfig.esm.json && copy-declaration-ts ./src ./dist/esm",
-    "build:dev": "tsc --build ./tsconfig.esm.json --watch",
-    "build": "npm run clean && npm run build:cjs && npm run build:esm",
+    "build": "rimraf ./dist && npm run build:cjs && npm run build:esm",
+    "prepack": "npm run build",
+    "postpack": "rimraf ./dist",
     "test": "tsc --noEmit"
   },
   "repository": {
@@ -39,6 +39,7 @@
   "devDependencies": {
     "@types/react": "^16.9.23",
     "@webcarrot/copy-declaration-ts": "^1.0.0",
+    "rimraf": "^3.0.2",
     "typescript": "^3.8.3"
   },
   "peerDependencies": {

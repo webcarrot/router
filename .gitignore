@@ -2,3 +2,4 @@ node_modules
 ./dist/trash
 .DS_Store
 .vscode
+dist
