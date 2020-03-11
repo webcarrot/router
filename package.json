@@ -11,7 +11,7 @@
     "build:esm": "tsc --build ./tsconfig.esm.json && copy-declaration-ts ./src ./dist/esm",
     "build:dev": "tsc --build ./tsconfig.esm.json --watch",
     "build": "npm run clean && npm run build:cjs && npm run build:esm",
-    "test": "tsc"
+    "test": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -37,11 +37,11 @@
     "registry": "https://registry.npmjs.org"
   },
   "devDependencies": {
-    "@types/react": "^16.9.13",
+    "@types/react": "^16.9.23",
     "@webcarrot/copy-declaration-ts": "^1.0.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.8.3"
   },
   "peerDependencies": {
-    "react": "^16.12.0"
+    "react": "^16.13.0"
   }
 }
