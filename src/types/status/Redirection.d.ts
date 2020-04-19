@@ -1,5 +1,4 @@
 export type Redirection =
-  | number
   | 300 /** Multiple Choices */
   | 301 /** Moved Permanently */
   | 302 /** Found */

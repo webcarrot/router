@@ -1,5 +1,4 @@
 export type ServerError =
-  | number
   | 500 /** Internal Server Error */
   | 501 /** Not Implemented */
   | 502 /** Bad Gateway */

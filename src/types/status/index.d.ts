@@ -5,7 +5,6 @@ import { ServerError } from "./ServerError";
 import { Success } from "./Success";
 
 export type Status =
-  | number
   | Informational
   | Success
   | Redirection
