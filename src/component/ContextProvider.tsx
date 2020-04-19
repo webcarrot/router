@@ -9,13 +9,12 @@ import {
   RoutesMap,
   RouteInterface,
   ExtractRouteFullOutput,
-  ExtractRouteMatch
 } from "../types";
 
 import { make as makeContext } from "../make/context";
 import {
   ReactContextValue,
-  ReactContextInfo
+  ReactContextInfo,
 } from "../make/reactContextProvider/types";
 
 import { compare } from "../utils/compare";
@@ -36,12 +35,8 @@ interface ReactContextState<
   inProgress: boolean;
 }
 
-interface HistoryState<
-  MAP extends RouteInterface<any, any, any, C>,
-  C extends Context
-> {
-  id: MAP["id"];
-  match: ExtractRouteMatch<MAP, MAP["id"], C>;
+interface HistoryState {
+  url: string;
 }
 
 export const ContextProvider = React.memo(
@@ -50,7 +45,7 @@ export const ContextProvider = React.memo(
     context,
     initialInfo,
     ReactContext,
-    children
+    children,
   }: {
     routes: RoutesMap<MAP>;
     context: C;
@@ -89,7 +84,7 @@ export const ContextProvider = React.memo(
               return {
                 ...state,
                 next: action.no,
-                inProgress: true
+                inProgress: true,
               };
             } else {
               break;
@@ -101,7 +96,7 @@ export const ContextProvider = React.memo(
                 current: action.no,
                 info: action.info,
                 error: null,
-                inProgress: false
+                inProgress: false,
               };
             } else {
               break;
@@ -112,7 +107,7 @@ export const ContextProvider = React.memo(
               current: action.no,
               info: action.info,
               error: null,
-              inProgress: false
+              inProgress: false,
             };
           }
           case "ERROR":
@@ -121,7 +116,7 @@ export const ContextProvider = React.memo(
                 ...state,
                 current: action.no,
                 error: action.error,
-                inProgress: false
+                inProgress: false,
               };
             } else {
               break;
@@ -134,18 +129,17 @@ export const ContextProvider = React.memo(
         current: 0,
         next: 0,
         info: initialInfo,
-        inProgress: false
+        inProgress: false,
       }
     );
 
     React.useEffect(() => {
       if (NAVIGATION_MODE === NavigationMode.MODERN) {
         if (!state.inProgress && state.current > 0) {
-          const historyState: HistoryState<MAP, C> = {
-            id: state.info.id,
-            match: state.info.match
-          };
           const { title, url } = state.info.output;
+          const historyState: HistoryState = {
+            url,
+          };
           document.title = title;
           switch (state.info.payload.changeType) {
             case ChangeType.PUSH:
@@ -160,7 +154,7 @@ export const ContextProvider = React.memo(
     }, [state.inProgress, state.current]);
 
     const routeContext = React.useMemo(() => {
-      const onStart: OnStart = no => {
+      const onStart: OnStart = (no) => {
         dispatch({ type: "START", no });
         if (NAVIGATION_MODE === NavigationMode.LEGACY) {
           return false;
@@ -172,7 +166,7 @@ export const ContextProvider = React.memo(
             url: info.output.url,
             changeType: info.payload.changeType,
             method: "GET",
-            no: Date.now()
+            no: Date.now(),
           } as Payload);
         } else {
           dispatch({ type: "END", no, info });
@@ -204,7 +198,7 @@ export const ContextProvider = React.memo(
         info: () => state.info,
         inProgress: () => state.inProgress,
         isCurrent: (id, match) =>
-          state.info.id === id && (!match || compare(match, state.info.match))
+          state.info.id === id && (!match || compare(match, state.info.match)),
       }),
       [state]
     );
@@ -212,7 +206,7 @@ export const ContextProvider = React.memo(
     const contextValue = React.useMemo<ReactContextValue<MAP, C>>(
       () => ({
         ...routeContext,
-        ...reactRouteContext
+        ...reactRouteContext,
       }),
       [routeContext, reactRouteContext]
     );
@@ -220,14 +214,15 @@ export const ContextProvider = React.memo(
     React.useEffect(() => {
       if (NAVIGATION_MODE === NavigationMode.MODERN) {
         const handlePopState = (ev: PopStateEvent) => {
-          const state: HistoryState<MAP, C> = ev.state || {
-            id: initialInfo.id,
-            match: initialInfo.match
+          const state: HistoryState = ev.state || {
+            url: initialInfo.output.url,
+            title: initialInfo.output.title,
           };
-          const { id, match } = state;
-          contextValue.navigate(id, {
-            match: match as any,
-            changeType: ChangeType.HISTORY
+          contextValue.navigateToUrl({
+            url: state.url,
+            method: "GET",
+            no: Date.now(),
+            changeType: ChangeType.HISTORY,
           });
         };
         window.addEventListener("popstate", handlePopState);
