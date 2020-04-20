@@ -68,7 +68,6 @@ export const make = <
           throw error;
         }
       } else if (onEnd) {
-        // FIXME
         onEnd(no, output as any);
       }
     });

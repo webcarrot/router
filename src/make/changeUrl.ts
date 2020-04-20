@@ -1,6 +1,5 @@
 import {
   Payload,
-  Output,
   Context,
   OnEnd,
   RoutesMap,
@@ -23,7 +22,7 @@ export const make = <
   const changeUrlProvider = <ID extends MAP["id"]>(
     id: ID,
     match: ExtractRouteMatch<MAP, ID, C>,
-    output: ExtractRouteOutput<MAP, ID, C>,
+    baseOutput: ExtractRouteOutput<MAP, ID, C>,
     changeType: ChangeType = ChangeType.REPLACE
   ) => {
     const route = routes[id];
@@ -37,7 +36,8 @@ export const make = <
         changeType,
         body: null,
       } as Payload;
-      return promisfy(() => route.prepare({ ...output, url } as Output))
+      const output = { ...baseOutput, url };
+      return promisfy(() => route.prepare(output))
         .then((Component) => ({
           id,
           route,
