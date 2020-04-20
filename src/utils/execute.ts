@@ -17,8 +17,8 @@ export const execute = <
   payload: Payload,
   context: FullContext<MAP, C>,
   prepare: boolean = true,
-  onStart: OnStart,
-  onError: OnError
+  onStart?: OnStart,
+  onError?: OnError
 ) => {
   const url = new URL(`route:${payload.url}`);
   type ReturnValue = ExtractRouteFullOutput<MAP, MAP["id"], C>;

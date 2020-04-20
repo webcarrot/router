@@ -20,10 +20,10 @@ export const make = <
 >(
   routes: RoutesMap<MAP>,
   context: C,
-  onStart: OnStart,
-  onEnd: OnEnd<MAP, any>,
-  onError: OnError,
-  onChange: OnEnd<MAP, any>
+  onStart?: OnStart,
+  onEnd?: OnEnd<MAP, any>,
+  onError?: OnError,
+  onChange?: OnEnd<MAP, any>
 ): FullContext<MAP, C> => {
   const routeContext = {} as RouteContext<MAP, C>;
   const fullContext = { ...context, route: routeContext } as FullContext<

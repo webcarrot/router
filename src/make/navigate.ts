@@ -17,9 +17,9 @@ export const make = <
 >(
   routes: RoutesMap<MAP>,
   context: FullContext<MAP, C>,
-  onStart: OnStart,
-  onEnd: OnEnd<MAP, C>,
-  onError: OnError
+  onStart?: OnStart,
+  onEnd?: OnEnd<MAP, C>,
+  onError?: OnError
 ) => <ID extends MAP["id"]>(
   id: ID,
   {

@@ -123,8 +123,8 @@ export type Execute<
   payload: Payload,
   context: C,
   doPrepare: boolean,
-  onStart: OnStart,
-  onError: OnError
+  onStart?: OnStart,
+  onError?: OnError
 ) => PromiseOrNot<ExecuteOutput<ID, M, O, C> | false>;
 
 export type ExecuteOutput<

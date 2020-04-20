@@ -18,7 +18,7 @@ export const make = <
 >(
   routes: RoutesMap<MAP>,
   context: FullContext<MAP, C>,
-  onChange: OnEnd<MAP, C>
+  onChange?: OnEnd<MAP, C>
 ) => {
   const changeUrlProvider = <ID extends MAP["id"]>(
     id: ID,
@@ -46,7 +46,11 @@ export const make = <
           output,
           Component,
         }))
-        .then((output) => onChange(no, output as any));
+        .then((output) => {
+          if (onChange) {
+            onChange(no, output as any);
+          }
+        });
     } else {
       return Promise.reject(new Error("Unknown link"));
     }

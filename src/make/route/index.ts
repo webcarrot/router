@@ -51,8 +51,8 @@ export const make = <
     payload: Payload,
     context: C,
     doPrepare: boolean = true,
-    onStart: OnStart,
-    onError: OnError
+    onStart?: OnStart,
+    onError?: OnError
   ) =>
     promisfy(() => match(url, payload, context))
       .then((m) => {
