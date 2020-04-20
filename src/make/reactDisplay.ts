@@ -10,4 +10,5 @@ export const make = <
   C extends Context
 >(
   ReactContext: React.Context<ReactContextValue<MAP, C>>
-) => React.memo(() => Display<MAP, C>({ ReactContext }));
+) =>
+  React.memo(() => Display<MAP, C>({ ReactContext }));

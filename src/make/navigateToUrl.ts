@@ -5,7 +5,7 @@ import {
   OnError,
   OnEnd,
   RoutesMap,
-  RouteInterface
+  RouteInterface,
 } from "../types";
 import { execute } from "../utils";
 import { FullContext } from "./context/types";
@@ -16,12 +16,12 @@ export const make = <
 >(
   routes: RoutesMap<MAP>,
   context: FullContext<MAP, C>,
-  onStart?: OnStart,
-  onEnd?: OnEnd<MAP, C>,
-  onError?: OnError
+  onStart: OnStart,
+  onEnd: OnEnd<MAP, C>,
+  onError: OnError
 ) => (payload: Payload) =>
   execute<MAP, C>(routes, payload, context, true, onStart, onError).then(
-    out => {
+    (out) => {
       onEnd(payload.no, out);
     }
   );

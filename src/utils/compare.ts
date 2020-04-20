@@ -14,8 +14,9 @@ export const compare = <T = any>(a: T, b: T): boolean => {
       return false;
     }
     return (
-      Object.keys(a).findIndex(k => !compare((a as any)[k], (b as any)[k])) ===
-      -1
+      Object.keys(a).findIndex(
+        (k) => !compare((a as any)[k], (b as any)[k])
+      ) === -1
     );
   } else {
     return false;

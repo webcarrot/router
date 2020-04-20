@@ -6,7 +6,7 @@ import {
   RoutesMap,
   RouteInterface,
   ExtractRouteMatch,
-  ExtractRouteOutput
+  ExtractRouteOutput,
 } from "../types";
 import { ChangeType } from "../utils/enums";
 import { FullContext } from "./context/types";
@@ -18,7 +18,7 @@ export const make = <
 >(
   routes: RoutesMap<MAP>,
   context: FullContext<MAP, C>,
-  onChange?: OnEnd<MAP, C>
+  onChange: OnEnd<MAP, C>
 ) => {
   const changeUrlProvider = <ID extends MAP["id"]>(
     id: ID,
@@ -35,18 +35,18 @@ export const make = <
         no,
         url,
         changeType,
-        body: null
+        body: null,
       } as Payload;
-      return promisfy(() => route.prepare(output as Output))
-        .then(Component => ({
+      return promisfy(() => route.prepare({ ...output, url } as Output))
+        .then((Component) => ({
           id,
           route,
           payload,
           match,
           output,
-          Component
+          Component,
         }))
-        .then(output => onChange(no, output as any));
+        .then((output) => onChange(no, output as any));
     } else {
       return Promise.reject(new Error("Unknown link"));
     }

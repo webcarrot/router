@@ -5,7 +5,7 @@ import {
   OnError,
   OnEnd,
   RoutesMap,
-  RouteInterface
+  RouteInterface,
 } from "../types";
 import { ChangeType } from "../utils/enums";
 import { FullContext } from "./context/types";
@@ -17,16 +17,16 @@ export const make = <
 >(
   routes: RoutesMap<MAP>,
   context: FullContext<MAP, C>,
-  onStart?: OnStart,
-  onEnd?: OnEnd<MAP, C>,
-  onError?: OnError
+  onStart: OnStart,
+  onEnd: OnEnd<MAP, C>,
+  onError: OnError
 ) => <ID extends MAP["id"]>(
   id: ID,
   {
     match = {},
     prepare = true,
     no = Date.now(),
-    changeType = ChangeType.PUSH
+    changeType = ChangeType.PUSH,
   }: {
     match?: any;
     prepare?: boolean;
@@ -44,13 +44,13 @@ export const make = <
             url,
             no,
             changeType,
-            body: match.body
+            body: match.body,
           } as Payload)
         : ({
             method: "GET",
             url,
             no,
-            changeType
+            changeType,
           } as Payload);
     return promisfy(() =>
       route.execute(
@@ -61,7 +61,7 @@ export const make = <
         onStart,
         onError
       )
-    ).then(output => {
+    ).then((output) => {
       if (!output) {
         const error = new Error("Invalid payload");
         if (!onError || onError(no, error)) {

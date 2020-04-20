@@ -1,16 +1,9 @@
 import {
   RouteInterface,
   Payload,
-  Output,
-  MatchInfo,
   Context,
-  OnStart,
-  OnError,
-  OnEnd,
-  Unpacked,
-  RoutesMap,
   ExtractRouteMatch,
-  ExtractRouteOutput
+  ExtractRouteOutput,
 } from "../../types";
 
 import { ChangeType } from "../../utils/enums";
@@ -53,10 +46,7 @@ export type RouteContextChangeUrl<
   changeType?: ChangeType
 ) => Promise<void>;
 
-export type RouteContextToUrl<
-  MAP extends RouteInterface<any, any, any, C>,
-  C extends Context = Context
-> = (payload: Payload) => Promise<void>;
+export type RouteContextToUrl = (payload: Payload) => Promise<void>;
 
 export type RouteContext<
   MAP extends RouteInterface<any, any, any, C>,
@@ -64,6 +54,6 @@ export type RouteContext<
 > = {
   makeLink: RouteContextLink<MAP, C>;
   navigate: RouteContextNavigate<MAP, C>;
-  navigateToUrl: RouteContextToUrl<MAP, C>;
+  navigateToUrl: RouteContextToUrl;
   changeUrl: RouteContextChangeUrl<MAP, C>;
 };

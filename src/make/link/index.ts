@@ -2,7 +2,7 @@ import {
   Context,
   RoutesMap,
   RouteInterface,
-  ExtractRouteMatch
+  ExtractRouteMatch,
 } from "../../types";
 import { FullContext } from "..";
 

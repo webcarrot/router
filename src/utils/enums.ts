@@ -1,11 +1,11 @@
 export enum NavigationMode {
   NONE,
   LEGACY,
-  MODERN
+  MODERN,
 }
 
 export enum ChangeType {
   REPLACE,
   PUSH,
-  HISTORY
+  HISTORY,
 }

@@ -5,7 +5,7 @@ import {
   OnError,
   RoutesMap,
   RouteInterface,
-  ExtractRouteFullOutput
+  ExtractRouteFullOutput,
 } from "../types";
 import { FullContext } from "..";
 
@@ -17,15 +17,15 @@ export const execute = <
   payload: Payload,
   context: FullContext<MAP, C>,
   prepare: boolean = true,
-  onStart?: OnStart,
-  onError?: OnError
+  onStart: OnStart,
+  onError: OnError
 ) => {
   const url = new URL(`route:${payload.url}`);
   type ReturnValue = ExtractRouteFullOutput<MAP, MAP["id"], C>;
   return (Object.keys(routes) as ReadonlyArray<MAP["id"]>)
     .reduce<Promise<ReturnValue>>(
       (out, id) =>
-        out.then(result => {
+        out.then((result) => {
           if (result) {
             return result;
           } else {
@@ -42,7 +42,7 @@ export const execute = <
         }),
       Promise.resolve<ReturnValue>(null)
     )
-    .then(result => {
+    .then((result) => {
       if (!result) {
         throw new Error("No route found");
       } else {

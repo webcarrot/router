@@ -10,7 +10,7 @@ import {
   OnError,
   Build,
   Match,
-  Execute
+  Execute,
 } from "../../types";
 import { isRedirect } from "../../utils/isRedirect";
 import { promisfy } from "../../utils/promisfy";
@@ -33,7 +33,7 @@ export const make = <
 
   const initialization = () => {
     if (!_initialization) {
-      _initialization = promisfy(init).then(config => {
+      _initialization = promisfy(init).then((config) => {
         _prepare = config.prepare;
         _action = config.action;
       });
@@ -51,11 +51,11 @@ export const make = <
     payload: Payload,
     context: C,
     doPrepare: boolean = true,
-    onStart?: OnStart,
-    onError?: OnError
+    onStart: OnStart,
+    onError: OnError
   ) =>
     promisfy(() => match(url, payload, context))
-      .then(m => {
+      .then((m) => {
         if (m) {
           if (onStart && onStart(payload.no) === false) {
             return;
@@ -64,18 +64,18 @@ export const make = <
             (!doPrepare || isRedirect(o.status)
               ? Promise.resolve(null)
               : prepare(o)
-            ).then(Component => ({
+            ).then((Component) => ({
               id,
               route,
               payload,
               match: m,
               output: o,
-              Component
+              Component,
             }))
           );
         }
       })
-      .catch(err => {
+      .catch((err) => {
         if (onError && onError(payload.no, err)) {
           throw err;
         }
@@ -88,7 +88,7 @@ export const make = <
     build,
     prepare,
     action,
-    execute
+    execute,
   };
 
   return route;

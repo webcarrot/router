@@ -4,7 +4,7 @@ import {
   OnError,
   OnEnd,
   RoutesMap,
-  RouteInterface
+  RouteInterface,
 } from "../../types";
 
 import { RouteContext, FullContext } from "./types";
@@ -20,10 +20,10 @@ export const make = <
 >(
   routes: RoutesMap<MAP>,
   context: C,
-  onStart?: OnStart,
-  onEnd?: OnEnd<MAP, any>,
-  onError?: OnError,
-  onChange?: OnEnd<MAP, any>
+  onStart: OnStart,
+  onEnd: OnEnd<MAP, any>,
+  onError: OnError,
+  onChange: OnEnd<MAP, any>
 ): FullContext<MAP, C> => {
   const routeContext = {} as RouteContext<MAP, C>;
   const fullContext = { ...context, route: routeContext } as FullContext<
@@ -45,8 +45,6 @@ export const make = <
     onEnd,
     onError
   );
-
   routeContext.changeUrl = makeChangeUrl<MAP, C>(routes, fullContext, onChange);
-
   return fullContext;
 };

@@ -4,7 +4,7 @@ import {
   Informational,
   Redirection,
   ServerError,
-  Success
+  Success,
 } from "./status";
 
 import { ComponentType } from "react";
@@ -21,7 +21,7 @@ export {
   Redirection,
   ServerError,
   Success,
-  Method
+  Method,
 };
 
 export type MatchInfo = {
@@ -123,8 +123,8 @@ export type Execute<
   payload: Payload,
   context: C,
   doPrepare: boolean,
-  onStart?: OnStart,
-  onError?: OnError
+  onStart: OnStart,
+  onError: OnError
 ) => PromiseOrNot<ExecuteOutput<ID, M, O, C> | false>;
 
 export type ExecuteOutput<

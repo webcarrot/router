@@ -1,16 +1,10 @@
-import {
-  MemoExoticComponent,
-  ForwardRefExoticComponent,
-  RefAttributes
-} from "react";
+import { RefAttributes } from "react";
 
 import {
   Context,
   RouteInterface,
   ExtractRouteMatch,
-  Unpacked,
-  RoutesMap,
-  ExtractRoute
+  ExtractRoute,
 } from "../types";
 
 import { ReactContextValue } from "./reactContextProvider/types";
