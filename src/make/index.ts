@@ -8,3 +8,4 @@ export { make as makeRoute } from "./route";
 export { make as makeReactContextProvider } from "./reactContextProvider";
 export { make as makeReactDisplay } from "./reactDisplay";
 export { make as makeReactLink } from "./reactLink";
+export { make as makeUseConfirm } from "./useConfirm";

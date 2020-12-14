@@ -56,10 +56,14 @@ export const make = <
   ) =>
     promisfy(() => match(url, payload, context))
       .then((m) => {
+        return m
+          ? onStart
+            ? onStart(payload.no).then((out) => (out === false ? false : m))
+            : m
+          : false;
+      })
+      .then((m) => {
         if (m) {
-          if (onStart && onStart(payload.no) === false) {
-            return;
-          }
           return action(payload, m, context).then((o: O) =>
             (!doPrepare || isRedirect(o.status)
               ? Promise.resolve(null)
