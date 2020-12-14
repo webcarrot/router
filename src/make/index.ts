@@ -1,4 +1,14 @@
-export * from "./types";
+export type {
+  FullContext,
+  ReactContextInfo,
+  ReactContextValue,
+  RouteContext,
+  RouteContextChangeUrl,
+  RouteContextLink,
+  RouteContextNavigate,
+  RouteContextToUrl,
+  RouteInit,
+} from "./types";
 export { make as makeContext } from "./context";
 export { make as makeLink } from "./link";
 export { make as makeChangeUrl } from "./changeUrl";
