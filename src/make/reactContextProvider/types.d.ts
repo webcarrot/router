@@ -15,6 +15,7 @@ export type ReactContextInfo<
   info: <ID extends MAP["id"]>() => ExtractRouteFullOutput<MAP, ID, C>;
   inProgress: () => boolean;
   isCurrent: <ID extends MAP["id"]>(id: ID, params?: MatchInfo) => boolean;
+  confirm: (onConfirm: () => Promise<boolean>) => () => void;
 };
 
 export type ReactContextValue<

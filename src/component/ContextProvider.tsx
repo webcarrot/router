@@ -74,6 +74,8 @@ export const ContextProvider = React.memo(
           info: ExtractRouteFullOutput<MAP, MAP["id"], C>;
         };
 
+    const confirmRef = React.useRef<() => Promise<boolean>>(null);
+
     const [state, dispatch] = React.useReducer<
       React.Reducer<ReactContextState<MAP, C>, ReducerActions>
     >(
@@ -154,12 +156,24 @@ export const ContextProvider = React.memo(
     }, [state.inProgress, state.current]);
 
     const routeContext = React.useMemo(() => {
-      const onStart: OnStart = (no) => {
-        dispatch({ type: "START", no });
-        if (NAVIGATION_MODE === NavigationMode.LEGACY) {
-          return false;
-        }
-      };
+      const onStart: OnStart = (no) =>
+        new Promise<boolean>((resolve, reject) => {
+          if (NAVIGATION_MODE === NavigationMode.LEGACY) {
+            resolve(false);
+          } else if (confirmRef.current) {
+            confirmRef.current().then((allow: boolean) => {
+              if (allow) {
+                dispatch({ type: "START", no });
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            }, reject);
+          } else {
+            dispatch({ type: "START", no });
+            resolve(true);
+          }
+        });
       const onEnd: OnEnd<MAP, C> = (no, info) => {
         if (isRedirect(info.output.status)) {
           routeContext.navigateToUrl({
@@ -199,6 +213,14 @@ export const ContextProvider = React.memo(
         inProgress: () => state.inProgress,
         isCurrent: (id, match) =>
           state.info.id === id && (!match || compare(match, state.info.match)),
+        confirm: (cb) => {
+          confirmRef.current = cb;
+          return () => {
+            if (confirmRef.current === cb) {
+              confirmRef.current = null;
+            }
+          };
+        },
       }),
       [state]
     );

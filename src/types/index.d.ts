@@ -104,7 +104,8 @@ export type BuildCheck<M extends MatchInfo, C extends Context> = (
   context: C
 ) => string | false;
 
-export type OnStart = (id: number) => void | boolean;
+export type OnStart = (id: number) => Promise<void | boolean>;
+export type OnBeforeStart = (cb: () => void) => void;
 
 export type OnEnd<
   MAP extends RouteInterface<any, any, any, C>,
