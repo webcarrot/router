@@ -15,5 +15,5 @@ export const useConfirm = <
     if (onConfirm) {
       return confirm(onConfirm);
     }
-  });
+  }, [onConfirm]);
 };
