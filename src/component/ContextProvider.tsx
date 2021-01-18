@@ -74,7 +74,9 @@ export const ContextProvider = React.memo(
           info: ExtractRouteFullOutput<MAP, MAP["id"], C>;
         };
 
-    const confirmRef = React.useRef<() => Promise<boolean>>(null);
+    const confirmRef = React.useRef<ReadonlyArray<() => Promise<boolean>>>(
+      null
+    );
 
     const [state, dispatch] = React.useReducer<
       React.Reducer<ReactContextState<MAP, C>, ReducerActions>
@@ -156,19 +158,22 @@ export const ContextProvider = React.memo(
     }, [state.inProgress, state.current]);
 
     const routeContext = React.useMemo(() => {
-      const onStart: OnStart = (no) =>
+      const onStart: OnStart = (no, ignoreConfirm) =>
         new Promise<boolean>((resolve, reject) => {
           if (NAVIGATION_MODE === NavigationMode.LEGACY) {
             resolve(false);
-          } else if (confirmRef.current) {
-            confirmRef.current().then((allow: boolean) => {
-              if (allow) {
-                dispatch({ type: "START", no });
-                resolve(true);
-              } else {
-                resolve(false);
-              }
-            }, reject);
+          } else if (!ignoreConfirm && confirmRef.current) {
+            Promise.all(confirmRef.current.map((cb) => cb())).then(
+              (allow: ReadonlyArray<boolean>) => {
+                if (!allow.includes(false)) {
+                  dispatch({ type: "START", no });
+                  resolve(true);
+                } else {
+                  resolve(false);
+                }
+              },
+              reject
+            );
           } else {
             dispatch({ type: "START", no });
             resolve(true);
@@ -214,10 +219,14 @@ export const ContextProvider = React.memo(
         isCurrent: (id, match) =>
           state.info.id === id && (!match || compare(match, state.info.match)),
         confirm: (cb) => {
-          confirmRef.current = cb;
+          confirmRef.current = [...(confirmRef.current || []), cb];
           return () => {
-            if (confirmRef.current === cb) {
-              confirmRef.current = null;
+            if (confirmRef.current && confirmRef.current.includes(cb)) {
+              if (confirmRef.current.length > 1) {
+                confirmRef.current = confirmRef.current.filter((v) => v !== cb);
+              } else {
+                confirmRef.current = null;
+              }
             }
           };
         },

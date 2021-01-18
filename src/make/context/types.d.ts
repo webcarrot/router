@@ -30,6 +30,7 @@ export type RouteContextNavigate<
   id: ID,
   info: {
     match: ExtractRouteMatch<MAP, ID, C>;
+    ignoreConfirm?: boolean;
     prepare?: boolean;
     no?: number;
     changeType?: ChangeType;

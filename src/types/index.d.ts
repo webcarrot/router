@@ -104,7 +104,10 @@ export type BuildCheck<M extends MatchInfo, C extends Context> = (
   context: C
 ) => string | false;
 
-export type OnStart = (id: number) => Promise<void | boolean>;
+export type OnStart = (
+  id: number,
+  ignoreConfirm: boolean
+) => Promise<void | boolean>;
 export type OnBeforeStart = (cb: () => void) => void;
 
 export type OnEnd<
@@ -123,6 +126,7 @@ export type Execute<
   url: URL,
   payload: Payload,
   context: C,
+  ignoreConfirm: boolean,
   doPrepare: boolean,
   onStart?: OnStart,
   onError?: OnError

@@ -50,18 +50,21 @@ export const make = <
     url: URL,
     payload: Payload,
     context: C,
+    ignoreConfirm: boolean = false,
     doPrepare: boolean = true,
     onStart?: OnStart,
     onError?: OnError
   ) =>
     promisfy(() => match(url, payload, context))
-      .then((m) => {
-        return m
+      .then((m) =>
+        m
           ? onStart
-            ? onStart(payload.no).then((out) => (out === false ? false : m))
+            ? onStart(payload.no, ignoreConfirm).then((out) =>
+                out === false ? false : m
+              )
             : m
-          : false;
-      })
+          : false
+      )
       .then((m) => {
         if (m) {
           return action(payload, m, context).then((o: O) =>

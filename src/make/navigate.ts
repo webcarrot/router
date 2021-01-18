@@ -24,11 +24,13 @@ export const make = <
   id: ID,
   {
     match = {},
+    ignoreConfirm = false,
     prepare = true,
     no = Date.now(),
     changeType = ChangeType.PUSH,
   }: {
     match?: any;
+    ignoreConfirm?: boolean;
     prepare?: boolean;
     no?: number;
     changeType?: ChangeType;
@@ -57,6 +59,7 @@ export const make = <
         new URL(`route:${payload.url}`),
         payload,
         context,
+        ignoreConfirm,
         prepare,
         onStart,
         onError
