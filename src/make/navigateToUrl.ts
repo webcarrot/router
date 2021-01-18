@@ -20,7 +20,7 @@ export const make = <
   onEnd?: OnEnd<MAP, C>,
   onError?: OnError
 ) => (payload: Payload) =>
-  execute<MAP, C>(routes, payload, context, true, onStart, onError).then(
+  execute<MAP, C>(routes, payload, context, true, true, onStart, onError).then(
     (out) => {
       if (onEnd) {
         onEnd(payload.no, out);

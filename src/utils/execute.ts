@@ -16,6 +16,7 @@ export const execute = <
   routes: RoutesMap<MAP>,
   payload: Payload,
   context: FullContext<MAP, C>,
+  ignoreConfirm: boolean = false,
   prepare: boolean = true,
   onStart?: OnStart,
   onError?: OnError
@@ -34,6 +35,7 @@ export const execute = <
               url,
               payload,
               context,
+              ignoreConfirm,
               prepare,
               onStart,
               onError
