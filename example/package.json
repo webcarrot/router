@@ -14,7 +14,7 @@
     "@webcarrot/api": "^1.8.0",
     "@webcarrot/router": "^1.6.0",
     "@webcarrot/router-match": "^1.3.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "co-body": "^6.1.0",
     "etag": "^1.8.1",
     "fresh": "^0.5.2",
