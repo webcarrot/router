@@ -29,10 +29,13 @@ const argv = yargs
   // misc
   .help().argv;
 
-startServer({
-  port: argv.port,
-  news: {
-    apiUrl: argv["news-api-url"],
-    apiKey: argv["news-api-key"]
-  }
-});
+(async () => {
+  const args = await argv;
+  startServer({
+    port: args.port,
+    news: {
+      apiUrl: args["news-api-url"],
+      apiKey: args["news-api-key"],
+    },
+  });
+})();

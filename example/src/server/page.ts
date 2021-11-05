@@ -9,7 +9,7 @@ import {
   GetPayload,
   PostPayload,
   ChangeType,
-  Payload
+  Payload,
 } from "@webcarrot/router";
 
 import { getManifests } from "../lib/build/manifest";
@@ -27,6 +27,23 @@ import { make as makeTodoApi } from "../api/todo/make";
 import { AppConfiguration } from "./types";
 import { getBody } from "./utils";
 
+const charMap: { [key: string]: string } = {
+  "<": "\\u003C",
+  ">": "\\u003E",
+  "/": "\\u002F",
+  "\\": "\\\\",
+  "\b": "\\b",
+  "\f": "\\f",
+  "\n": "\\n",
+  "\r": "\\r",
+  "\t": "\\t",
+  "\0": "\\0",
+  "\u2028": "\\u2028",
+  "\u2029": "\\u2029",
+};
+const escapeUnsafeChars = (str: string) =>
+  str.replace(/[<>\b\f\n\r\t\0\u2028\u2029]/g, (x) => charMap[x]);
+
 const makeInit = async (): Promise<string> => {
   const { manifests } = await getManifests();
   const legacy = manifests.get("legacy");
@@ -39,7 +56,9 @@ const makeInit = async (): Promise<string> => {
   );
   return `window.process={env:{NODE_ENV:"${
     process.env.NODE_ENV === "development" ? "development" : "production"
-  }"}};function onPolyfill(){(function(d,w,l,m,i){function a(s,e){e=d.createElement('script');e.src=s;d.head.appendChild(e);}i=setInterval(function(){if(window.React&&window.ReactDOM){clearInterval(i);(l&&!(w.fetch&&w.Proxy&&!/(Edge|Trident\\/7\\.)/.test(navigator.userAgent))?l:m).forEach(a);}},5)})(document,window,${legacyFiles},${modernFiles})};`;
+  }"}};function onPolyfill(){(function(d,w,l,m,i){function a(s,e){e=d.createElement('script');e.src=s;d.head.appendChild(e);}i=setInterval(function(){if(window.React&&window.ReactDOM){clearInterval(i);(l&&!(w.fetch&&w.Proxy&&!/(Edge|Trident\\/7\\.)/.test(navigator.userAgent))?l:m).forEach(a);}},5)})(document,window,${escapeUnsafeChars(
+    legacyFiles
+  )},${escapeUnsafeChars(modernFiles)})};`;
 };
 
 export const pageHandler = async (
@@ -60,7 +79,7 @@ export const pageHandler = async (
   const appContext: RouteContext = makeRouteContext(routes, {
     rootPath: "",
     newsApi,
-    todoApi
+    todoApi,
   });
 
   appContext.route.makeLink("home", { jasio: 2 });
@@ -72,14 +91,14 @@ export const pageHandler = async (
           method: "GET",
           no: 0,
           changeType: ChangeType.PUSH,
-          url: ctx.originalUrl || "/"
+          url: ctx.originalUrl || "/",
         } as GetPayload)
       : ({
           method: "POST",
           no: 0,
           changeType: ChangeType.PUSH,
           url: ctx.originalUrl || "/",
-          body: body as any
+          body: body as any,
         } as PostPayload);
 
   const routeState = await executeRoute(routes, routePayload, appContext);
@@ -98,14 +117,14 @@ export const pageHandler = async (
     route: {
       ...routeState,
       route: null,
-      Component: null
-    }
+      Component: null,
+    },
   };
 
   const props: AppProps = {
     newsApiContext: newsApi,
     todoApiContext: todoApi,
-    route: routeState
+    route: routeState,
   };
   const sheets = new ServerStyleSheets();
 
@@ -122,7 +141,7 @@ export const pageHandler = async (
         sheets,
         init,
         state,
-        html
+        html,
       })
     );
 };
