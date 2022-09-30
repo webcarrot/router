@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/webcarrot/router-match.git"
+    "url": "git+https://github.com/webcarrot/router.git"
   },
   "keywords": [
     "router",
