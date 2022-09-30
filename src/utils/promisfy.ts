@@ -1,6 +1,6 @@
 import { PromiseOrNot } from "../types";
 
-export const promisfy = <T>(action: () => PromiseOrNot<T>): Promise<T> => {
+export function promisfy<T>(action: () => PromiseOrNot<T>): Promise<T> {
   try {
     const value = action();
     if (value instanceof Promise) {
@@ -11,4 +11,4 @@ export const promisfy = <T>(action: () => PromiseOrNot<T>): Promise<T> => {
   } catch (err) {
     return Promise.reject(err);
   }
-};
+}

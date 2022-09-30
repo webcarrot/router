@@ -1,4 +1,4 @@
-import {
+import type {
   Context,
   OnStart,
   OnError,
@@ -14,7 +14,7 @@ import { make as makeNavigateProvider } from "./../navigate";
 import { make as makeNavigateToUrlProvider } from "./../navigateToUrl";
 import { makeChangeUrl } from "..";
 
-export const make = <
+export function make<
   MAP extends RouteInterface<any, any, any, any>,
   C extends Context
 >(
@@ -24,7 +24,7 @@ export const make = <
   onEnd?: OnEnd<MAP, any>,
   onError?: OnError,
   onChange?: OnEnd<MAP, any>
-): FullContext<MAP, C> => {
+): FullContext<MAP, C> {
   const routeContext = {} as RouteContext<MAP, C>;
   const fullContext = { ...context, route: routeContext } as FullContext<
     MAP,
@@ -47,4 +47,4 @@ export const make = <
   );
   routeContext.changeUrl = makeChangeUrl<MAP, C>(routes, fullContext, onChange);
   return fullContext;
-};
+}

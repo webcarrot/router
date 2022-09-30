@@ -1,6 +1,6 @@
 import { Status } from "../types/status";
 
-export const isRedirect = (status: Status) => {
+export function isRedirect(status: Status) {
   switch (status) {
     case 300:
     case 301:
@@ -15,4 +15,4 @@ export const isRedirect = (status: Status) => {
     default:
       return false;
   }
-};
+}

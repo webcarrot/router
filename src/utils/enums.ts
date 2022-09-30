@@ -1,6 +1,5 @@
 export enum NavigationMode {
   NONE,
-  LEGACY,
   MODERN,
 }
 

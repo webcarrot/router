@@ -11,14 +11,14 @@ import { ChangeType } from "../utils/enums";
 import { FullContext } from "./context/types";
 import { promisfy } from "../utils/promisfy";
 
-export const make = <
+export function make<
   MAP extends RouteInterface<any, any, any, C>,
   C extends Context = Context
 >(
   routes: RoutesMap<MAP>,
   context: FullContext<MAP, C>,
   onChange?: OnEnd<MAP, C>
-) => {
+) {
   const changeUrlProvider = <ID extends MAP["id"]>(
     id: ID,
     match: ExtractRouteMatch<MAP, ID, C>,
@@ -34,7 +34,6 @@ export const make = <
         no,
         url,
         changeType,
-        body: null,
       } as Payload;
       const output = { ...baseOutput, url };
       return promisfy(() => route.prepare(output))
@@ -57,4 +56,4 @@ export const make = <
   };
 
   return changeUrlProvider;
-};
+}

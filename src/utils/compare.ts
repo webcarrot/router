@@ -1,7 +1,8 @@
-export const isPlainObject = (e: any): boolean =>
-  e !== null && typeof e === "object" && e.constructor === Object;
+export function isPlainObject(e: any): boolean {
+  return e !== null && typeof e === "object" && e.constructor === Object;
+}
 
-export const compare = <T = any>(a: T, b: T): boolean => {
+export function compare<T = any>(a: T, b: T): boolean {
   if (a === b) {
     return true;
   } else if (a instanceof Array) {
@@ -14,11 +15,11 @@ export const compare = <T = any>(a: T, b: T): boolean => {
       return false;
     }
     return (
-      Object.keys(a).findIndex(
+      Object.keys(a as any).findIndex(
         (k) => !compare((a as any)[k], (b as any)[k])
       ) === -1
     );
   } else {
     return false;
   }
-};
+}

@@ -10,7 +10,7 @@ import {
 import { execute } from "../utils";
 import { FullContext } from "./context/types";
 
-export const make = <
+export function make<
   MAP extends RouteInterface<any, any, any, C>,
   C extends Context = Context
 >(
@@ -19,11 +19,20 @@ export const make = <
   onStart?: OnStart,
   onEnd?: OnEnd<MAP, C>,
   onError?: OnError
-) => (payload: Payload) =>
-  execute<MAP, C>(routes, payload, context, true, true, onStart, onError).then(
-    (out) => {
+) {
+  return function (payload: Payload) {
+    return execute<MAP, C>(
+      routes,
+      payload,
+      context,
+      true,
+      true,
+      onStart,
+      onError
+    ).then((out) => {
       if (onEnd) {
         onEnd(payload.no, out);
       }
-    }
-  );
+    });
+  };
+}

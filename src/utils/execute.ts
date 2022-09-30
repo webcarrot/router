@@ -9,7 +9,7 @@ import {
 } from "../types";
 import { FullContext } from "..";
 
-export const execute = <
+export function execute<
   MAP extends RouteInterface<any, any, any, C>,
   C extends Context = Context
 >(
@@ -20,7 +20,7 @@ export const execute = <
   prepare: boolean = true,
   onStart?: OnStart,
   onError?: OnError
-) => {
+) {
   const url = new URL(`route:${payload.url}`);
   type ReturnValue = ExtractRouteFullOutput<MAP, MAP["id"], C>;
   return (Object.keys(routes) as ReadonlyArray<MAP["id"]>)
@@ -42,7 +42,7 @@ export const execute = <
             ) as Promise<ReturnValue>;
           }
         }),
-      Promise.resolve<ReturnValue>(null)
+      Promise.resolve<ReturnValue>(null as any)
     )
     .then((result) => {
       if (!result) {
@@ -51,4 +51,4 @@ export const execute = <
         return result;
       }
     });
-};
+}
