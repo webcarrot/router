@@ -1,4 +1,12 @@
-import * as React from "react";
+import {
+  ReactNode,
+  useCallback,
+  useContext,
+  ForwardedRef,
+  Context as RContext,
+  AnchorHTMLAttributes,
+  MouseEvent as RMouseEvent,
+} from "react";
 
 import { Context, RouteInterface, ExtractRouteMatch } from "../types";
 
@@ -14,7 +22,7 @@ type RouteProps<
   match: ExtractRouteMatch<R, ID, C>;
 };
 
-export const Link = <
+export function Link<
   MAP extends RouteInterface<any, any, any, C>,
   C extends Context,
   ID extends MAP["id"]
@@ -30,15 +38,15 @@ export const Link = <
     ...rest
   }: RouteProps<MAP, C, ID> & {
     changeType?: ChangeType;
-    children?: React.ReactNode;
-    ReactContext: React.Context<ReactContextValue<MAP, C>>;
-  } & React.AnchorHTMLAttributes<HTMLAnchorElement>,
-  ref?: any
-) => {
-  const { makeLink, navigate } = React.useContext(ReactContext);
+    children?: ReactNode;
+    ReactContext: RContext<ReactContextValue<MAP, C>>;
+  } & AnchorHTMLAttributes<HTMLAnchorElement>,
+  ref?: ForwardedRef<"a">
+) {
+  const { makeLink, navigate } = useContext(ReactContext);
 
-  const handleClick = React.useCallback(
-    (ev: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const handleClick = useCallback(
+    (ev: RMouseEvent<HTMLAnchorElement, MouseEvent>) => {
       if (onClick) {
         onClick(ev);
       }
@@ -58,7 +66,7 @@ export const Link = <
       href={link || href}
       onClick={handleClick}
       target={target}
-      ref={ref}
+      ref={ref as any}
     />
   );
-};
+}

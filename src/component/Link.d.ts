@@ -1,9 +1,14 @@
-import { RefAttributes } from "react";
+import {
+  RefAttributes,
+  ReactNode,
+  Context as RContext,
+  AnchorHTMLAttributes,
+} from "react";
 import {
   RouteInterface,
   ExtractRouteMatch,
   ExtractRoute,
-  Context
+  Context,
 } from "../types";
 import { ChangeType } from "../utils/enums";
 import { ReactContextValue } from "../make/reactContextProvider/types";
@@ -24,8 +29,8 @@ export declare const Link: <
 >(
   props: RouteProps<ExtractRoute<ID, MAP>, C, ID> & {
     changeType?: ChangeType;
-    children?: React.ReactNode;
-    ReactContext: React.Context<ReactContextValue<MAP, C>>;
-  } & React.AnchorHTMLAttributes<HTMLAnchorElement> &
+    children?: ReactNode;
+    ReactContext: RContext<ReactContextValue<MAP, C>>;
+  } & AnchorHTMLAttributes<HTMLAnchorElement> &
     RefAttributes<"a">
 ) => JSX.Element;

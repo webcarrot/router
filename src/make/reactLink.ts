@@ -1,18 +1,42 @@
-import * as React from "react";
+import {
+  memo,
+  forwardRef,
+  Context as RContext,
+  RefAttributes,
+  ReactNode,
+} from "react";
 
-import { Context, RouteInterface } from "../types";
+import {
+  Context,
+  ExtractRoute,
+  ExtractRouteMatch,
+  RouteInterface,
+} from "../types";
 
 import { ReactContextValue } from "../make/reactContextProvider/types";
 import { Link } from "../component/Link";
+import { ChangeType } from "../utils/enums";
 
-export const make = <
+export type RouteProps<
+  R extends RouteInterface<any, any, any, C>,
+  C extends Context,
+  ID = R["id"]
+> = {
+  route: ID;
+  match: ExtractRouteMatch<R, ID, C>;
+};
+
+export function make<
   MAP extends RouteInterface<any, any, any, C>,
   C extends Context
->(
-  ReactContext: React.Context<ReactContextValue<MAP, C>>
-) =>
-  React.memo(
-    React.forwardRef<"a", any>((props, ref) =>
-      Link({ ...props, ReactContext }, ref)
-    )
-  );
+>(ReactContext: RContext<ReactContextValue<MAP, C>>) {
+  return memo(
+    forwardRef<"a", any>((props, ref) => Link({ ...props, ReactContext }, ref))
+  ) as <ID extends MAP["id"]>(
+    props: RouteProps<ExtractRoute<ID, MAP>, C, ID> & {
+      changeType?: ChangeType;
+      children?: ReactNode;
+    } & React.AnchorHTMLAttributes<HTMLAnchorElement> &
+      RefAttributes<"a">
+  ) => JSX.Element;
+}

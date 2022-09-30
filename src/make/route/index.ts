@@ -16,7 +16,7 @@ import { isRedirect } from "../../utils/isRedirect";
 import { promisfy } from "../../utils/promisfy";
 import { RouteInit } from "./types";
 
-export const make = <
+export function make<
   ID,
   M extends MatchInfo,
   O extends Output,
@@ -26,7 +26,7 @@ export const make = <
   match: Match<M, C>,
   build: Build<M, C>,
   init: RouteInit<ID, M, O, C>
-): RouteInterface<ID, M, O, C> => {
+): RouteInterface<ID, M, O, C> {
   let _initialization: Promise<void>;
   let _prepare: Prepare<ID, M, O, C>;
   let _action: Action<M, O, C>;
@@ -67,26 +67,28 @@ export const make = <
       )
       .then((m) => {
         if (m) {
-          return action(payload, m, context).then((o: O) =>
-            (!doPrepare || isRedirect(o.status)
-              ? Promise.resolve(null)
-              : prepare(o)
-            ).then((Component) => ({
-              id,
-              route,
-              payload,
-              match: m,
-              output: o,
-              Component,
-            }))
+          return action(payload, m, context).then(
+            (o) =>
+              (!doPrepare || isRedirect(o.status)
+                ? Promise.resolve(null as any)
+                : prepare(o as O)
+              ).then((Component) => ({
+                id,
+                route,
+                payload,
+                match: m,
+                output: o,
+                Component,
+              })) as any
           );
         }
+        return false;
       })
       .catch((err) => {
         if (onError && onError(payload.no, err)) {
           throw err;
         }
-        return null;
+        return false;
       });
 
   const route = {
@@ -99,4 +101,4 @@ export const make = <
   };
 
   return route;
-};
+}
